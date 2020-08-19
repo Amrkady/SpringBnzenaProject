@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Frameset//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-frameset.dtd">
+
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:f="http://xmlns.jcp.org/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
+
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title></title>
+
+</head>
+<h:body>
+	<ui:composition template="/template1.xhtml">
+		<ui:define name="content">
+			<h:form dir="rtl" id="form">
+				<p:messages id="msg" autoUpdate="true" closable="true"></p:messages>
+				<h1 style="color: #1565C0; text-align: center;">انواع الجاز</h1>
+				<div class="image-box-footer" align="left">
+					<p:commandButton id="cBadd" value="اضافة نوع جاز" immediate="true"
+						icon="ui-icon ui-icon-plus" onclick="PF('whsdlAdd').show();">
+					</p:commandButton>
+				</div>
+				<br />
+				<br />
+				<p:dataTable id="myTable" var="gas" value="#{gasBean.gasList}"
+					emptyMessage="لايوجد بيانات" rowIndexVar="rowIndex" editable="true"
+					widgetVar="cellemp" paginatorPosition="bottom"
+					paginatorTemplate="{FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink}"
+					paginator="true" rows="10">
+					<p:ajax event="rowEdit" listener="#{gasBean.onRowEdit}"
+						update=":form:msg  :form:myTable" />
+					<p:ajax event="rowEditCancel" listener="#{gasBean.onRowCancel}"
+						update=":form:msg" />
+					<p:column headerText="رقم" style="width: 5%">
+						<h:outputText value="#{rowIndex+1}" />
+					</p:column>
+					<p:column headerText="الأسم" style="width: 20%"
+						filterBy="#{gas.name}" filterMatchMode="contains">
+						<p:cellEditor>
+							<f:facet name="output">
+								<h:outputText value="#{gas.name}" />
+							</f:facet>
+							<f:facet name="input">
+								<p:inputText id="nameInput" value="#{gas.name}" required="true"
+									requiredMessage="الاسم مطلوب" style="width:100%" />
+							</f:facet>
+						</p:cellEditor>
+					</p:column>
+					<p:column headerText="السعر" style="width: 20%"
+						filterBy="#{gas.price}" filterMatchMode="contains">
+						<p:cellEditor>
+							<f:facet name="output">
+								<h:outputText value="#{gas.price}" />
+							</f:facet>
+							<f:facet name="input">
+								<p:inputText value="#{gas.price}" required="true"
+									requiredMessage="السعر مطلوب" style="width:100%" />
+							</f:facet>
+						</p:cellEditor>
+					</p:column>
+					<p:column headerText="اسم المحطة" style="width: 20%"
+						filterBy="#{gas.name}" filterMatchMode="contains">
+						<h:outputText value="#{gas.name}" />
+					</p:column>
+					<p:column headerText="تعديل" style="width:5%">
+						<p:rowEditor />
+					</p:column>
+					<p:column headerText="حذف" style="width:5%">
+						<p:commandButton update=":form:myTable"
+							style="background-color:red" icon="ui-icon ui-icon-remove"
+							title="حذف" action="#{gasBean.deleteGas(gas)}">
+
+						</p:commandButton>
+					</p:column>
+				</p:dataTable>
+			</h:form>
+			<h:form>
+				<p:dialog position="center" widgetVar="whsdlAdd" responsive="true"
+					hideEffect="explode" showEffect="fade" width="60%" closable="true"
+					 resizable="true" modal="true" dir="rtl">
+					<h:panelGroup id="panelGroupAdd" width="60%">
+						<p:fieldset legend="بيانات نوع الجاز" width="100%">
+							<div class="ui-g">
+								<div class="ui-g-2">
+									<h:outputLabel value=" الاسم" />
+								</div>
+								<div class="ui-g-3">
+									<p:inputText value="#{gasBean.gasAdd.name}" required="true"
+										requiredMessage="اسم الجاز مطلوب" />
+								</div>
+								<p:spacer height="10" width="10"></p:spacer>
+								<div class="ui-g-2">
+									<h:outputLabel value="السعر" />
+								</div>
+								<div class="ui-g-2">
+									<p:inputNumber value="#{gasBean.gasAdd.price}" required="true"
+										requiredMessage="السعر مطلوب" />
+								</div>
+							</div>
+							<br />
+							<div class="iamge-box-footer" align="left">
+								<p:commandButton value="حفظ" onsuccess="PF('whsdlAdd').hide();"
+									icon="ui-icon ui-icon-save" process="@all"
+									action="#{gasBean.addGas}" update="form">
+								</p:commandButton>
+								<p:spacer height="4"></p:spacer>
+								<p:commandButton styleClass="orange-btn" value="عودة"
+									icon="ui-icon ui-icon-arrow" immediate="true"
+									onclick="PF('whsdlAdd').hide();" />
+							</div>
+						</p:fieldset>
+					</h:panelGroup>
+				</p:dialog>
+			</h:form>
+		</ui:define>
+	</ui:composition>
+</h:body>
+</html>

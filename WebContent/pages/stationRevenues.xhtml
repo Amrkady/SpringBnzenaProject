@@ -1,0 +1,274 @@
+<?xml version="1.0" encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Frameset//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-frameset.dtd">
+
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:f="http://xmlns.jcp.org/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
+
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title></title>
+
+</head>
+<h:body>
+	<ui:composition template="/template1.xhtml">
+		<ui:define name="content">
+			<h:form dir="rtl" id="form">
+				<p:messages id="msg" autoUpdate="true" closable="true"></p:messages>
+				<h1 style="color: #1565C0; text-align: center;">الايرادات</h1>
+				<div class="image-box-footer" align="left">
+					<p:commandButton id="cBadd" value="اضافة " immediate="true"
+						icon="ui-icon ui-icon-plus" onclick="PF('whsdlAdd').show();">
+					</p:commandButton>
+					<p:spacer width="10" height="10"></p:spacer>
+					<p:commandButton value="طباعة الايرادات" process="@all"
+						icon="ui-icon ui-icon-print " immediate="true"
+						action="#{revenuesBean.printAll}"
+						onclick="this.form.target='_blank'" ajax="false">
+					</p:commandButton>
+				</div>
+				<h:panelGroup id="png">
+					<div class="ui-g">
+						<div class="ui-g-1">
+							<p:outputLabel value="نوع الوقود" />
+						</div>
+						<div class="ui-g-2">
+							<p:selectOneMenu style="width:70%" value="#{revenuesBean.gasId}">
+								<f:selectItem itemLabel="اختر نوع الوقود"
+									noSelectionOption="true" />
+								<f:selectItems value="#{revenuesBean.gasList}" var="gs"
+									itemLabel="#{gs.name}" itemValue="#{gs.id}" />
+							</p:selectOneMenu>
+						</div>
+						<div class="ui-g-1">
+							<p:outputLabel value="من تاريخ"></p:outputLabel>
+						</div>
+						<div class="ui-g-2">
+							<p:calendar style="width:100%" id="dtfrom" pattern="yyyy-MM-dd"
+								value="#{revenuesBean.dateFrom}">
+								<!-- 								<p:ajax process="@form" event="blur" immediate="true" delay="100" update="vcs:cnt,vcs:calc"  -->
+								<!-- 									listener="#{billReceiveBean.update}"></p:ajax> -->
+							</p:calendar>
+						</div>
+						<div class="ui-g-1">
+							<p:outputLabel value="الي تاريخ"></p:outputLabel>
+						</div>
+						<div class="ui-g-2">
+							<p:calendar style="width:100%" id="dtto" pattern="yyyy-MM-dd"
+								value="#{revenuesBean.dateTo}">
+							</p:calendar>
+
+						</div>
+						<div class="ui-g-1">
+							<p:commandButton styleClass="green-btn" process="png"
+								action="#{revenuesBean.loadListByDates}" value="استعلام"
+								update="myTable png1">
+							</p:commandButton>
+						</div>
+					</div>
+				</h:panelGroup>
+				<br />
+				<p:dataTable id="myTable" var="gunR"
+					value="#{revenuesBean.gunsRevenuList}" emptyMessage="لايوجد بيانات"
+					rowIndexVar="rowIndex" widgetVar="cellemp"
+					paginatorPosition="bottom"
+					paginatorTemplate="{FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink}"
+					paginator="true" rows="10">
+					<p:column headerText="رقم" style="width: 5%">
+						<h:outputText value="#{rowIndex+1}" />
+					</p:column>
+					<p:column headerText="التاريخ " style="width: 20%"
+						filterBy="#{gunR.revDate}" filterMatchMode="contains">
+						<h:outputText value="#{gunR.revDate}">
+							<f:convertDateTime pattern="yyyy/MM/dd" />
+						</h:outputText>
+					</p:column>
+					<p:column headerText="نوع الوقود" style="width: 10%"
+						filterBy="#{gunR.gasName}" filterMatchMode="contains">
+						<h:outputText value="#{gunR.gasName}" />
+					</p:column>
+					<p:column headerText="رقم العداد" style="width: 10%"
+						filterBy="#{gunR.gunNum}" filterMatchMode="contains">
+						<h:outputText value="#{gunR.gunNum}" />
+					</p:column>
+					<p:column headerText="اول قراءة" style="width: 15%"
+						filterBy="#{gunR.firstRead}" filterMatchMode="contains">
+						<h:outputText value="#{gunR.firstRead}" />
+					</p:column>
+					<p:column headerText="ثاني قراءة " style="width: 15%"
+						filterBy="#{gunR.lastRead}" filterMatchMode="contains">
+						<h:outputText value="#{gunR.lastRead}" />
+					</p:column>
+					<p:column headerText="عدد اللترات " style="width: 10%"
+						filterBy="#{gunR.litersNum}" filterMatchMode="contains">
+						<h:outputText value="#{gunR.litersNum}" />
+					</p:column>
+					<p:column headerText="القيمة" style="width: 20%"
+						filterBy="#{gunR.totalPrice}" filterMatchMode="contains">
+						<h:outputText value="#{gunR.totalPrice}" />
+					</p:column>
+
+					<p:column headerText="حذف" style="width:5%">
+						<p:commandButton update=":form:myTable"
+							style="background-color:red" icon="ui-icon ui-icon-remove"
+							title="حذف" action="#{revenuesBean.deleteGas(gunR)}">
+						</p:commandButton>
+					</p:column>
+					<p:columnGroup type="footer">
+						<p:row>
+							<p:column colspan="2" footerText="اجمالى الايرادات"
+								style="FONT-WEIGHT:bold ;color : RED " />
+							<p:column colspan="1" footerText="" />
+							<p:column colspan="1" footerText="عدد اللترات"
+								style="FONT-WEIGHT:bold ;color : RED " />
+							<p:column colspan="2"
+								footerText="#{revenuesBean.gunsRevenuList.stream().map(fdet->fdet.litersNum).sum()}"
+								style="FONT-WEIGHT:bold ;color : RED " />
+							<p:column colspan="1" footerText="القيمة الكلية"
+								style="FONT-WEIGHT:bold ;color : RED " />
+							<p:column colspan="2"
+								footerText="#{revenuesBean.gunsRevenuList.stream().map(fdet->fdet.totalPrice).sum()}"
+								style="FONT-WEIGHT:bold ;color : RED " />
+							<p:column colspan="1" footerText="" />
+
+						</p:row>
+
+					</p:columnGroup>
+					<!-- 					#{penalitiesListBean.reqFinesMaster.reqFinesDetailsList.stream().map(fdet->fdet.fineTotalValue).sum()} -->
+				</p:dataTable>
+				<br />
+				<p:fieldset>
+					<h:panelGroup id="png1">
+						<div class="ui-g">
+							<div class="ui-g-3">
+								<p:outputLabel style="FONT-WEIGHT:bold ;color : RED "
+									value="اجمالى الايرادات قبل الضريبة"></p:outputLabel>
+							</div>
+							<div class="ui-g-3">
+								<p:outputLabel style="FONT-WEIGHT:bold ;color : RED "
+									value="#{revenuesBean.gunsRevenuList.stream().map(fdet->fdet.totalPrice).sum()}">
+								</p:outputLabel>
+							</div>
+							<div class="ui-g-2">
+								<p:outputLabel style="FONT-WEIGHT:bold ;color : RED "
+									value="قيمة الضريبة "></p:outputLabel>
+							</div>
+							<div class="ui-g-1">
+								<p:outputLabel style="FONT-WEIGHT:bold ;color : RED "
+									value="#{(revenuesBean.gunsRevenuList.stream().map(fdet->fdet.totalPrice).sum()) * (revenuesBean.taxsList.get(0).taxValue / 100)}"></p:outputLabel>
+							</div>
+							
+						</div>
+						<div class="ui-g">
+							<div class="ui-g-3">
+								<p:outputLabel style="FONT-WEIGHT:bold ;color : RED "
+									value="اجمالى الايرادات بعد الضريبة"></p:outputLabel>
+
+							</div>
+							<div class="ui-g-2">
+								<p:outputLabel style="FONT-WEIGHT:bold ;color : RED "
+									value="#{(revenuesBean.gunsRevenuList.stream().map(fdet->fdet.totalPrice).sum())-((revenuesBean.gunsRevenuList.stream().map(fdet->fdet.totalPrice).sum()) * (revenuesBean.taxsList.get(0).taxValue / 100))}">
+								</p:outputLabel>
+							</div>
+						</div>
+					</h:panelGroup>
+				</p:fieldset>
+			</h:form>
+			<h:form>
+				<p:dialog position="center" widgetVar="whsdlAdd" responsive="true"
+					id="dlg" dynamic="true" hideEffect="explode" showEffect="fade"
+					width="70%" closable="true" resizable="true" modal="true" dir="rtl">
+					<h:panelGroup id="panelGroupAdd" width="70%">
+						<p:fieldset legend="بيانات الايجار " width="100%">
+							<div class="ui-g">
+								<div class="ui-g-2">
+									<h:outputLabel value="التاريخ" />
+								</div>
+								<div class="ui-g-3">
+									<p:calendar style="width:100%" required="true"
+										requiredMessage="ادخل التاريخ" pattern="yyyy/MM/dd"
+										value="#{revenuesBean.sssAdd.revDate}">
+									</p:calendar>
+								</div>
+								<p:spacer height="10" width="10"></p:spacer>
+								<div class="ui-g-2">
+									<h:outputLabel value="نوع الوقود" />
+								</div>
+								<div class="ui-g-3">
+									<p:selectOneMenu style="width:100%"
+										value="#{revenuesBean.sssAdd.gasId}" required="true"
+										requiredMessage="نوع الوقود مطلوب">
+										<f:selectItem itemLabel="اختر نوع الوقود"
+											noSelectionOption="true" />
+										<f:selectItems value="#{revenuesBean.gasList}" var="gs"
+											itemLabel="#{gs.name}" itemValue="#{gs.id}" />
+										<p:ajax process="@this" update="gun lprice"
+											listener="#{revenuesBean.loadGuns}" />
+									</p:selectOneMenu>
+								</div>
+							</div>
+							<div class="ui-g">
+								<div class="ui-g-2">
+									<h:outputLabel value="رقم العداد " />
+								</div>
+								<div class="ui-g-3">
+									<p:selectOneMenu style="width:100%" id="gun"
+										value="#{revenuesBean.sssAdd.gunId}" required="true"
+										requiredMessage="رقم العداد  مطلوب">
+										<f:selectItem itemLabel="اختر ... " noSelectionOption="true" />
+										<f:selectItems value="#{revenuesBean.gunsList}" var="gs"
+											itemLabel="#{gs.number}" itemValue="#{gs.id}" />
+										<p:ajax process="@this" update="fRead"
+											listener="#{revenuesBean.loadFirstRead}" />
+									</p:selectOneMenu>
+								</div>
+								<p:spacer height="10" width="10"></p:spacer>
+								<div class="ui-g-2">
+									<h:outputLabel value="سعر اللتر" />
+								</div>
+								<div class="ui-g-3">
+									<h:outputLabel style="width:100%" id="lprice"
+										value="#{revenuesBean.sssAdd.literPrice}">
+									</h:outputLabel>
+								</div>
+							</div>
+							<div class="ui-g">
+								<div class="ui-g-2">
+									<h:outputLabel value="اول قراءة للعداد" />
+								</div>
+								<div class="ui-g-3">
+									<h:outputLabel style="width:100%" id="fRead"
+										value="#{revenuesBean.sssAdd.firstRead}">
+									</h:outputLabel>
+								</div>
+								<p:spacer height="10" width="10"></p:spacer>
+								<div class="ui-g-2">
+									<h:outputLabel value="ثانى قراءة للعداد" />
+								</div>
+								<div class="ui-g-3">
+									<p:inputText style="width:100%" required="true"
+										requiredMessage="ادخل قراءة العداد الثانية"
+										value="#{revenuesBean.sssAdd.lastRead}">
+									</p:inputText>
+								</div>
+							</div>
+							<div class="iamge-box-footer" align="left">
+								<p:commandButton value="حفظ" onsuccess="PF('whsdlAdd').hide();"
+									icon="ui-icon ui-icon-save" process="@all"
+									action="#{revenuesBean.addGas}" update="form panelGroupAdd">
+								</p:commandButton>
+								<p:spacer height="4"></p:spacer>
+								<p:commandButton styleClass="orange-btn" value="عودة"
+									icon="ui-icon ui-icon-arrow-back" immediate="true"
+									onclick="PF('whsdlAdd').hide();" />
+							</div>
+						</p:fieldset>
+					</h:panelGroup>
+				</p:dialog>
+			</h:form>
+		</ui:define>
+	</ui:composition>
+</h:body>
+</html>

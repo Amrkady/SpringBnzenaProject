@@ -142,7 +142,7 @@ public class HijriCalendarUtil {
 		YearClass CurrentYear = new YearClass();
 		YearClass NextYear = new YearClass();
 		List<YearClass> YList = loadYearsData();
-		SimpleDateFormat sdfinput = new SimpleDateFormat("yyyy/MM/dd");
+		SimpleDateFormat sdfinput = new SimpleDateFormat("dd/MM/yyyy");
 		Date date = sdfinput.parse(inputDate);
 		for (YearClass item : loadYearsData()) {
 			SimpleDateFormat sdf = new SimpleDateFormat("yyyy/MM/dd");
@@ -271,6 +271,7 @@ public class HijriCalendarUtil {
 		}
 		return ddc + "/" + mmc + "/" + yyyy;
 	}
+
 
 	public static String findCurrentHijriDate() {
 		String Outdate = "";

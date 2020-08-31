@@ -1,0 +1,74 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:pm="http://primefaces.org/serenity"
+	xmlns:secc="http://www.springframework.org/security/tags">
+
+	<div class="layout-sidebar layout-sidebar-dark}">
+		<div class="sidebar-logo">
+			<p:graphicImage style="width:70%" name="images/login/logo.png"
+				library="serenity-layout" />
+			<!--                 <span class="app-name">#{msg['municipality']}</span> -->
+			<a href="#" class="sidebar-anchor" title="Toggle Menu"></a>
+		</div>
+
+		<div class="nano">
+			<div class="nano-content sidebar-scroll-content">
+				<div class="layout-menu-container">
+					<h:form id="menuform">
+
+
+						<pm:menu>
+							<p:menuitem value="الرئيسية" outcome="home"
+								icon="ui-icon ui-icon-home" />
+							<p:submenu label="الحسابات العمومية"
+								icon="ui-icon ui-icon-account-balance">
+								<p:menuitem value="ايرادات عمومية"
+									icon="ui-icon ui-icon-attach-money" outcome="generalrevns" />
+								<p:menuitem value="مصروفات عمومية"
+									icon="ui-icon ui-icon-exposure" outcome="generalexposis" />
+							</p:submenu>
+							<p:submenu label="المحطات"
+								icon="ui-icon ui-icon-local-gas-station">
+								<p:menuitem value="الشبرمى"
+									icon="ui-icon ui-icon-local-gas-station" action="#{homeBean.stationOne}" immediate="true"  />
+								<p:menuitem value="ذرا البكرية 2"
+									icon="ui-icon ui-icon-local-gas-station" action="#{homeBean.stationTwo}" immediate="true"  />
+								<p:menuitem value="ذرا الرس"
+									icon="ui-icon ui-icon-local-gas-station" action="#{homeBean.stationThree}" immediate="true"  />
+								<p:menuitem value="ماسكو"
+									icon="ui-icon ui-icon-local-gas-station" action="#{homeBean.stationFour}" immediate="true"  />
+								<p:menuitem value="الدرع"
+									icon="ui-icon ui-icon-local-gas-station" action="#{homeBean.stationFive}" immediate="true"   />
+
+								<p:menuitem value="السالمية"
+									icon="ui-icon ui-icon-local-gas-station" immediate="true" action="#{homeBean.stationSix}" />
+
+								<p:menuitem value="الفيروز" icon="ui-icon ui-icon-local-gas-station"
+									 action="#{homeBean.stationSeven}" immediate="true"  />
+
+								<p:menuitem value="بريدة الجديدة"
+									icon="ui-icon ui-icon-local-gas-station" immediate="true" action="#{homeBean.stationEight}" />
+
+								<p:menuitem value="ذرا بريدة" icon="ui-icon ui-icon-local-gas-station"
+									action="#{homeBean.stationNine}" immediate="true" />
+							</p:submenu>
+
+						</pm:menu>
+
+
+
+
+					</h:form>
+				</div>
+			</div>
+		</div>
+	</div>
+</ui:composition>
+
+
+
+
+

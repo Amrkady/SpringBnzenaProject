@@ -9,6 +9,7 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
+import javax.servlet.http.HttpSession;
 
 import org.primefaces.event.RowEditEvent;
 
@@ -25,20 +26,27 @@ public class GasBean {
 	private DepartmentService departmentServiceImpl;
 	private List<Gas> gasList = new ArrayList<Gas>();
 	private Gas gasAdd = new Gas();
+	private Integer stId;
 
 	@PostConstruct
 	public void init() {
-		gasList = departmentServiceImpl.loadGass();
+		FacesContext facesContext = FacesContext.getCurrentInstance();
+		HttpSession session = (HttpSession) facesContext.getExternalContext().getSession(true);
+		stId = (Integer) session.getAttribute("stationId");
+		if (stId != null) {
+			gasList = departmentServiceImpl.loadGass(stId);
+		}
 
 	}
 
 	public String addGas() {
 		try {
 			if (gasAdd != null) {
-				gasAdd.setStationId(1);
+				gasAdd.setStationId(stId);
 				departmentServiceImpl.addGas(gasAdd);
 				MsgEntry.addInfoMessage(Utils.loadMessagesFromFile("success.operation"));
-				gasList = departmentServiceImpl.loadGass();
+				gasList = departmentServiceImpl.loadGass(stId);
+				gasAdd = new Gas();
 			}
 		} catch (Exception e) {
 			MsgEntry.addErrorMessage(Utils.loadMessagesFromFile("error.operation"));
@@ -53,7 +61,7 @@ public class GasBean {
 			try {
 				departmentServiceImpl.deleteGas(gs);
 				MsgEntry.addInfoMessage(Utils.loadMessagesFromFile("success.delete"));
-				gasList = departmentServiceImpl.loadGass();
+				gasList = departmentServiceImpl.loadGass(stId);
 			} catch (Exception e) {
 				MsgEntry.addErrorMessage(Utils.loadMessagesFromFile("error.delete"));
 				e.printStackTrace();
@@ -68,7 +76,7 @@ public class GasBean {
 			Gas gs = (Gas) event.getObject();
 			departmentServiceImpl.updateGas(gs);
 			MsgEntry.addInfoMessage(Utils.loadMessagesFromFile("success.update"));
-			gasList = departmentServiceImpl.loadGass();
+			gasList = departmentServiceImpl.loadGass(stId);
 		} catch (Exception e) {
 			MsgEntry.addErrorMessage(Utils.loadMessagesFromFile("error.update"));
 			e.printStackTrace();
@@ -106,6 +114,14 @@ public class GasBean {
 
 	public void setGasAdd(Gas gasAdd) {
 		this.gasAdd = gasAdd;
+	}
+
+	public Integer getStId() {
+		return stId;
+	}
+
+	public void setStId(Integer stId) {
+		this.stId = stId;
 	}
 
 }

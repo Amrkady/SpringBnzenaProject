@@ -25,12 +25,16 @@
 	<bean id="userServiceImpl" class="com.services.UserServiceImpl">
 		<property name="commonDao" ref="commonDaoImpl" />
 	</bean>
+	<bean id="accountsServiceImpl"
+		class="com.services.AccountsServiceImpl">
+		<property name="commonDao" ref="commonDaoImpl" />
+	</bean>
 	<bean id="departmentServiceImpl"
 		class="com.services.DepartmentServiceImpl">
 		<property name="commonDao" ref="commonDaoImpl" />
 	</bean>
 
-	
+
 
 
 	<!-- Data Source Declaration -->
@@ -74,6 +78,18 @@
 				<value>com.entities.Users</value>
 				<value>com.entities.Roles</value>
 				<value>com.entities.Gas</value>
+				<value>com.entities.GasGuns</value>
+				<value>com.entities.Stations</value>
+				<value>com.entities.Expensis</value>
+				<value>com.entities.ExtraExpensis</value>
+				<value>com.entities.GasStationSuppliers</value>
+				<value>com.entities.GunsRevenus</value>
+				<value>com.entities.Rents</value>
+				<value>com.entities.Shops</value>
+				<value>com.entities.Suppliers</value>
+				<value>com.entities.ExpensisTypes</value>
+				<value>com.entities.Attachment</value>
+				<value>com.entities.Taxs</value>
 
 			</list>
 		</property>

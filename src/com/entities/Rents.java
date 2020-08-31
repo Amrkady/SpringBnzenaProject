@@ -8,6 +8,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
+import org.hibernate.annotations.Formula;
 import org.hibernate.annotations.GenericGenerator;
 
 @Entity
@@ -23,8 +24,14 @@ public class Rents {
 	@Column(name = "shop_id")
 	private Integer shopId;
 
+	@Column(name = "station_id")
+	private Integer stationId;
+
 	@Column(name = "ren_date")
 	private Date rentDate;
+
+	@Formula("(select s.shop_name from shops s where s.id = shop_id)")
+	private String shopName;
 
 	public Integer getId() {
 		return id;
@@ -48,6 +55,22 @@ public class Rents {
 
 	public void setRentDate(Date rentDate) {
 		this.rentDate = rentDate;
+	}
+
+	public String getShopName() {
+		return shopName;
+	}
+
+	public void setShopName(String shopName) {
+		this.shopName = shopName;
+	}
+
+	public Integer getStationId() {
+		return stationId;
+	}
+
+	public void setStationId(Integer stationId) {
+		this.stationId = stationId;
 	}
 
 }

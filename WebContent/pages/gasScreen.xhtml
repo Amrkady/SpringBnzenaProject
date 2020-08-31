@@ -17,9 +17,9 @@
 		<ui:define name="content">
 			<h:form dir="rtl" id="form">
 				<p:messages id="msg" autoUpdate="true" closable="true"></p:messages>
-				<h1 style="color: #1565C0; text-align: center;">انواع الجاز</h1>
+				<h1 style="color: #1565C0; text-align: center;">انواع المحروقات</h1>
 				<div class="image-box-footer" align="left">
-					<p:commandButton id="cBadd" value="اضافة نوع جاز" immediate="true"
+					<p:commandButton id="cBadd" value="اضافة نوع محروقات" immediate="true"
 						icon="ui-icon ui-icon-plus" onclick="PF('whsdlAdd').show();">
 					</p:commandButton>
 				</div>
@@ -62,8 +62,8 @@
 						</p:cellEditor>
 					</p:column>
 					<p:column headerText="اسم المحطة" style="width: 20%"
-						filterBy="#{gas.name}" filterMatchMode="contains">
-						<h:outputText value="#{gas.name}" />
+						filterBy="#{gas.stationName}" filterMatchMode="contains">
+						<h:outputText value="#{gas.stationName}" />
 					</p:column>
 					<p:column headerText="تعديل" style="width:5%">
 						<p:rowEditor />
@@ -78,18 +78,18 @@
 				</p:dataTable>
 			</h:form>
 			<h:form>
-				<p:dialog position="center" widgetVar="whsdlAdd" responsive="true"
+				<p:dialog position="center" widgetVar="whsdlAdd" responsive="true" dynamic="true"
 					hideEffect="explode" showEffect="fade" width="60%" closable="true"
 					 resizable="true" modal="true" dir="rtl">
 					<h:panelGroup id="panelGroupAdd" width="60%">
-						<p:fieldset legend="بيانات نوع الجاز" width="100%">
+						<p:fieldset legend="بيانات نوع المحروقات" width="100%">
 							<div class="ui-g">
 								<div class="ui-g-2">
 									<h:outputLabel value=" الاسم" />
 								</div>
 								<div class="ui-g-3">
 									<p:inputText value="#{gasBean.gasAdd.name}" required="true"
-										requiredMessage="اسم الجاز مطلوب" />
+										requiredMessage="اسم نوع المحروقات مطلوب" />
 								</div>
 								<p:spacer height="10" width="10"></p:spacer>
 								<div class="ui-g-2">
@@ -104,11 +104,11 @@
 							<div class="iamge-box-footer" align="left">
 								<p:commandButton value="حفظ" onsuccess="PF('whsdlAdd').hide();"
 									icon="ui-icon ui-icon-save" process="@all"
-									action="#{gasBean.addGas}" update="form">
+									action="#{gasBean.addGas}" update="form panelGroupAdd">
 								</p:commandButton>
 								<p:spacer height="4"></p:spacer>
 								<p:commandButton styleClass="orange-btn" value="عودة"
-									icon="ui-icon ui-icon-arrow" immediate="true"
+									icon="ui-icon ui-icon-arrow-back" immediate="true"
 									onclick="PF('whsdlAdd').hide();" />
 							</div>
 						</p:fieldset>

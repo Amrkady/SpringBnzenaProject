@@ -1,5 +1,7 @@
 package com.entities;
 
+import java.util.Date;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -35,6 +37,24 @@ public class Stations {
 
 	@Column(name = "num_shops")
 	private Integer numShops;
+
+	@Column(name = "license_num")
+	private Integer licenseNum;
+
+	@Column(name = "license_owner")
+	private String licenseOwner;
+
+	@Column(name = "commercial_num")
+	private Integer commercialNum;
+
+	@Column(name = "license_expired_date")
+	private Date licenseExpiredDate;
+
+	@Column(name = "rent_start_date")
+	private Date rentStartDate;
+
+	@Column(name = "rent_end_date")
+	private Date rentEndDate;
 
 	public Integer getId() {
 		return id;
@@ -90,6 +110,54 @@ public class Stations {
 
 	public void setNumShops(Integer numShops) {
 		this.numShops = numShops;
+	}
+
+	public Integer getLicenseNum() {
+		return licenseNum;
+	}
+
+	public void setLicenseNum(Integer licenseNum) {
+		this.licenseNum = licenseNum;
+	}
+
+	public String getLicenseOwner() {
+		return licenseOwner;
+	}
+
+	public void setLicenseOwner(String licenseOwner) {
+		this.licenseOwner = licenseOwner;
+	}
+
+	public Integer getCommercialNum() {
+		return commercialNum;
+	}
+
+	public void setCommercialNum(Integer commercialNum) {
+		this.commercialNum = commercialNum;
+	}
+
+	public Date getLicenseExpiredDate() {
+		return licenseExpiredDate;
+	}
+
+	public void setLicenseExpiredDate(Date licenseExpiredDate) {
+		this.licenseExpiredDate = licenseExpiredDate;
+	}
+
+	public Date getRentStartDate() {
+		return rentStartDate;
+	}
+
+	public void setRentStartDate(Date rentStartDate) {
+		this.rentStartDate = rentStartDate;
+	}
+
+	public Date getRentEndDate() {
+		return rentEndDate;
+	}
+
+	public void setRentEndDate(Date rentEndDate) {
+		this.rentEndDate = rentEndDate;
 	}
 
 }

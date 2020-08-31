@@ -8,6 +8,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
+import org.hibernate.annotations.Formula;
 import org.hibernate.annotations.GenericGenerator;
 
 @Entity
@@ -40,6 +41,21 @@ public class GunsRevenus {
 
 	@Column(name = "rev_date")
 	private Date revDate;
+
+	@Column(name = "gas_id")
+	private Integer gasId;
+
+	@Formula("(select g.name from gas g where g.id = gas_id)")
+	private String gasName;
+
+	@Formula("(select g.number from gas_guns g where g.id = gun_id)")
+	private Integer gunNum;
+
+	@Column(name = "liters_num")
+	private double litersNum;
+
+	@Formula("(select s.station_name from stations s where s.id = station_id)")
+	private String stationName;
 
 	public Integer getId() {
 		return id;
@@ -103,6 +119,46 @@ public class GunsRevenus {
 
 	public void setRevDate(Date revDate) {
 		this.revDate = revDate;
+	}
+
+	public Integer getGasId() {
+		return gasId;
+	}
+
+	public void setGasId(Integer gasId) {
+		this.gasId = gasId;
+	}
+
+	public String getGasName() {
+		return gasName;
+	}
+
+	public void setGasName(String gasName) {
+		this.gasName = gasName;
+	}
+
+	public Integer getGunNum() {
+		return gunNum;
+	}
+
+	public void setGunNum(Integer gunNum) {
+		this.gunNum = gunNum;
+	}
+
+	public double getLitersNum() {
+		return litersNum;
+	}
+
+	public void setLitersNum(double litersNum) {
+		this.litersNum = litersNum;
+	}
+
+	public String getStationName() {
+		return stationName;
+	}
+
+	public void setStationName(String stationName) {
+		this.stationName = stationName;
 	}
 
 }

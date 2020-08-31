@@ -1,0 +1,148 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui" template="/template2.xhtml">
+
+	<ui:define name="content">
+		<style>
+body {
+	background-color: white;
+}
+</style>
+
+		<h:head>
+			<link rel="stylesheet" type="text/css" href="resources/css/login.css"></link>
+
+
+		</h:head>
+
+		<div class="ui-g dashboard" dir="rtl">
+			<p:spacer height="10" width="200"></p:spacer>
+
+			<div class="ui-g-12 ui-md-2">
+				<div class="overview-box overview-box-4">
+					<div class="overview-box-header"></div>
+					<div class="overview-box-content"></div>
+					<div class="overview-box-content">
+						<p:commandButton immediate="true" value="الشبرمى"
+							action="#{homeBean.stationOne}"></p:commandButton>
+					</div>
+				</div>
+			</div>
+			<p:spacer height="10" width="80"></p:spacer>
+			<div class="ui-g-12 ui-md-2">
+				<div class="overview-box overview-box-4">
+					<div class="overview-box-header"></div>
+					<div class="overview-box-content"></div>
+					<div class="overview-box-content">
+						<p:commandButton immediate="true" value="ذرا البكرية 2"
+							action="#{homeBean.stationTwo}"></p:commandButton>
+
+					</div>
+				</div>
+			</div>
+			<p:spacer height="10" width="80"></p:spacer>
+			<div class="ui-g-12 ui-md-2">
+				<div class="overview-box overview-box-4">
+					<div class="overview-box-header"></div>
+					<div class="overview-box-content"></div>
+					<div class="overview-box-content">
+						<p:commandButton immediate="true" value="ذرا الرس"
+							action="#{homeBean.stationThree}">
+						</p:commandButton>
+
+					</div>
+				</div>
+			</div>
+
+		</div>
+		<br />
+		
+		
+		<div class="ui-g dashboard" dir="rtl">
+			<p:spacer height="10" width="200"></p:spacer>
+			<div class="ui-g-12 ui-md-2">
+				<div class="overview-box overview-box-4">
+					<div class="overview-box-header"></div>
+					<div class="overview-box-content"></div>
+					<div class="overview-box-content">
+						<p:commandButton immediate="true" value="ماسكو"
+							action="#{homeBean.stationFour}">
+						</p:commandButton>
+					</div>
+				</div>
+			</div>
+			<p:spacer height="10" width="80"></p:spacer>
+			<div class="ui-g-12 ui-md-2">
+				<div class="overview-box overview-box-4">
+					<div class="overview-box-header"></div>
+					<div class="overview-box-content"></div>
+					<div class="overview-box-content">
+						<p:commandButton immediate="true" value="الدرع"
+							action="#{homeBean.stationFive}">
+						</p:commandButton>
+					</div>
+				</div>
+			</div>
+			<p:spacer height="10" width="80"></p:spacer>
+			<div class="ui-g-12 ui-md-2">
+				<div class="overview-box overview-box-4">
+					<div class="overview-box-header"></div>
+					<div class="overview-box-content"></div>
+					<div class="overview-box-content">
+						<p:commandButton immediate="true" value="السالمية"
+							action="#{homeBean.stationSix}">
+						</p:commandButton>
+					</div>
+				</div>
+			</div>
+			
+
+		</div>
+		
+		<br />
+		
+		<div class="ui-g dashboard" dir="rtl">
+			<p:spacer height="10" width="200"></p:spacer>
+			<div class="ui-g-12 ui-md-2">
+				<div class="overview-box overview-box-4">
+					<div class="overview-box-header"></div>
+					<div class="overview-box-content"></div>
+					<div class="overview-box-content">
+						<p:commandButton immediate="true" value="الفيروز"
+							action="#{homeBean.stationSeven}">
+						</p:commandButton>
+					</div>
+				</div>
+			</div>
+			<p:spacer height="10" width="80"></p:spacer>
+			<div class="ui-g-12 ui-md-2">
+				<div class="overview-box overview-box-4">
+					<div class="overview-box-header"></div>
+					<div class="overview-box-content"></div>
+					<div class="overview-box-content">
+						<p:commandButton immediate="true" value="بريدة الجديدة"
+							action="#{homeBean.stationEight}">
+						</p:commandButton>
+					</div>
+				</div>
+			</div>
+			<p:spacer height="10" width="80"></p:spacer>
+			<div class="ui-g-12 ui-md-2">
+				<div class="overview-box overview-box-4">
+					<div class="overview-box-header"></div>
+					<div class="overview-box-content"></div>
+					<div class="overview-box-content">
+						<p:commandButton immediate="true" value="ذرا بريدة"
+							action="#{homeBean.stationNine}">
+						</p:commandButton>
+					</div>
+				</div>
+			</div>
+		</div>
+	</ui:define>
+</ui:composition>
+
+
+

@@ -16,6 +16,8 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import com.entities.Users;
 import com.services.UserService;
 
+import common.util.Utils;
+
 
 
 @ManagedBean
@@ -48,7 +50,8 @@ public class LoginBean {
 		try {
 			Authentication result = null;
 			if (this.userName.length() == 0 || this.password.length() == 0) {
-				FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_ERROR, "خطأ", "");
+				FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_ERROR,
+						Utils.loadMessagesFromFile("error.login"), "");
 				FacesContext.getCurrentInstance().addMessage(null, msg);
 
 				return "";
@@ -66,12 +69,13 @@ public class LoginBean {
 					Users uss=(Users)context.getExternalContext().getSessionMap().get("user");
 					System.out.println(uss.getRole().getRoleName());
 					flag=false;
-					outcome = "success";
+				outcome = "home";
 				
 				
 			}
 		} catch (BadCredentialsException e) {
-			FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_ERROR, "خطأ", "");
+			FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_ERROR, Utils.loadMessagesFromFile("error.login"),
+					"");
 			FacesContext.getCurrentInstance().addMessage(null, msg);
 		}
 		return outcome;

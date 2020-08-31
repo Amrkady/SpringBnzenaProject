@@ -21,6 +21,9 @@ public class Suppliers {
 	@Column(name = "name")
 	private String name;
 
+	@Column(name = "station_id")
+	private Integer stationId;
+
 	@Column(name = "address")
 	private String address;
 
@@ -57,5 +60,13 @@ public class Suppliers {
 
 	public void setPhone(String phone) {
 		this.phone = phone;
+	}
+
+	public Integer getStationId() {
+		return stationId;
+	}
+
+	public void setStationId(Integer stationId) {
+		this.stationId = stationId;
 	}
 }

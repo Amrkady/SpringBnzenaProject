@@ -159,12 +159,12 @@
 						</div>
 
 						<div class="iamge-box-footer" align="left">
-							<p:commandButton  update="@form,form" value="حفظ" icon="ui-icon ui-icon-save"
+							<p:commandButton  update="form panelGroupAdd" value="حفظ" icon="ui-icon ui-icon-save"
 								process="@all" action="#{userBean.addUser}">
 							</p:commandButton>
 							<p:spacer height="4"></p:spacer>
 							<p:commandButton   styleClass="orange-btn" value="عودة"
-								icon="ui-icon ui-icon-back" immediate="true"
+								icon="ui-icon ui-icon-arrow-back" immediate="true"
 								onclick="PF('whsdlAdd').hide();" />
 						</div>
 					</p:fieldset>

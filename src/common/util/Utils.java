@@ -19,6 +19,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.DayOfWeek;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
@@ -46,6 +47,7 @@ import org.joda.time.Days;
 import org.primefaces.context.RequestContext;
 import org.springframework.security.core.userdetails.User;
 
+import com.entities.Attachment;
 import com.entities.Users;
 import com.models.AttachmentModel;
 
@@ -947,26 +949,26 @@ public class Utils {
 
 	}
 
-//	public static List<Attachment> SaveAttachementsToFtpServer(List<AttachmentModel> attachments) {
-//		List<Attachment> myAttachs = new ArrayList<Attachment>();
-//		try {
-//			boolean resultUpload = uploadAttachedFiles(attachments);
-//			if (resultUpload) {
-//				for (AttachmentModel attachment : attachments) {
-//					Attachment attach = new Attachment();
-//					attach.setAttName(attachment.getRealName());
-//					attach.setAttSize(attachment.getAttachSize());
-//					attach.setRealName(attachment.getAttachRealName());
-//					myAttachs.add(attach);
-//				}
-//
-//			}
-//		} catch (Exception e) {
-//			e.printStackTrace();
-//
-//		}
-//		return myAttachs;
-//	}
+	public static List<Attachment> SaveAttachementsToFtpServer(List<AttachmentModel> attachments) {
+		List<Attachment> myAttachs = new ArrayList<Attachment>();
+		try {
+			boolean resultUpload = uploadAttachedFiles(attachments);
+			if (resultUpload) {
+				for (AttachmentModel attachment : attachments) {
+					Attachment attach = new Attachment();
+					attach.setAttName(attachment.getRealName());
+					attach.setAttSize(attachment.getAttachSize());
+					attach.setRealName(attachment.getAttachRealName());
+					myAttachs.add(attach);
+				}
+
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+
+		}
+		return myAttachs;
+	}
 
 	public static boolean uploadAttachedFiles(List<AttachmentModel> attachments) {
 		try {

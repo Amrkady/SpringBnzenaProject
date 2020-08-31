@@ -1,11 +1,14 @@
 package com.entities;
 
+import java.util.Date;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
+import org.hibernate.annotations.Formula;
 import org.hibernate.annotations.GenericGenerator;
 
 @Entity
@@ -18,14 +21,23 @@ public class Expensis {
 	@Column(name = "id")
 	private Integer id;
 
-	@Column(name = "salaries")
-	private Integer salaries;
+	@Column(name = "expensis_type")
+	private Integer expensisType;
 
-	@Column(name = "gas_id")
-	private Integer gasId;
+	@Column(name = "station_id")
+	private Integer stationId;
 
 	@Column(name = "expensis_quantity")
-	private Integer expensisQuantity;
+	private double expensisQuantity;
+
+	@Column(name = "month_date")
+	private Date monthDate;
+
+	@Formula("(select et.name from expensis_types et where et.id = expensis_type)")
+	private String expensisTypeName;
+
+	@Formula("(select s.station_name from stations s where s.id = station_id)")
+	private String stationName;
 
 	public Integer getId() {
 		return id;
@@ -35,29 +47,52 @@ public class Expensis {
 		this.id = id;
 	}
 
-	public Integer getSalaries() {
-		return salaries;
-	}
-
-	public void setSalaries(Integer salaries) {
-		this.salaries = salaries;
-	}
-
-	public Integer getGasId() {
-		return gasId;
-	}
-
-	public void setGasId(Integer gasId) {
-		this.gasId = gasId;
-	}
-
-	public Integer getExpensisQuantity() {
+	public double getExpensisQuantity() {
 		return expensisQuantity;
 	}
 
-	public void setExpensisQuantity(Integer expensisQuantity) {
+	public void setExpensisQuantity(double expensisQuantity) {
 		this.expensisQuantity = expensisQuantity;
 	}
 
+	public Integer getExpensisType() {
+		return expensisType;
+	}
+
+	public void setExpensisType(Integer expensisType) {
+		this.expensisType = expensisType;
+	}
+
+	public Date getMonthDate() {
+		return monthDate;
+	}
+
+	public void setMonthDate(Date monthDate) {
+		this.monthDate = monthDate;
+	}
+
+	public Integer getStationId() {
+		return stationId;
+	}
+
+	public void setStationId(Integer stationId) {
+		this.stationId = stationId;
+	}
+
+	public String getExpensisTypeName() {
+		return expensisTypeName;
+	}
+
+	public void setExpensisTypeName(String expensisTypeName) {
+		this.expensisTypeName = expensisTypeName;
+	}
+
+	public String getStationName() {
+		return stationName;
+	}
+
+	public void setStationName(String stationName) {
+		this.stationName = stationName;
+	}
 
 }

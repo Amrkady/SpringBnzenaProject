@@ -6,10 +6,10 @@
 	xmlns:pm="http://primefaces.org/serenity"
 	xmlns:secc="http://www.springframework.org/security/tags">
 
-	<div class="layout-sidebar 'layout-sidebar-dark'}">
+	<div class="layout-sidebar layout-sidebar-dark}">
 		<div class="sidebar-logo">
-			<p:graphicImage style="width:70%" name="images/login/logo.png"
-				library="serenity-layout" />
+						<p:graphicImage style="width:70%" name="images/login/logo.png"
+							library="serenity-layout" />
 			<!--                 <span class="app-name">#{msg['municipality']}</span> -->
 			<a href="#" class="sidebar-anchor" title="Toggle Menu"></a>
 		</div>
@@ -23,15 +23,33 @@
 						<pm:menu>
 							<p:menuitem value="الرئيسية" outcome="success"
 								icon="ui-icon ui-icon-home" />
-
-
-
-							<p:submenu label="الحسابات" icon="ui-icon ui-icon-calculator">
-
+							<p:menuitem value="المحطات" outcome="home"
+								icon="ui-icon ui-icon-local-gas-station" />
+							<p:submenu label="الحسابات"
+								icon="ui-icon ui-icon-account-balance">
+								<p:menuitem value="ايرادات المحطة"
+									icon="ui-icon ui-icon-attach-money" outcome="revns" />
+								<p:menuitem value="مصروفات المحطة"
+									icon="ui-icon ui-icon-exposure" outcome="exposis" />
+								<p:menuitem value="واردات المحطة"
+									icon="ui-icon ui-icon-assignment-return" outcome="imports" />
 							</p:submenu>
-							<p:submenu label="الاعدادات" icon="ui-icon ui-icon-setting">
-								<p:menuitem value="انواع الجاز" icon="ui-icon ui-icon-reorder"
-									outcome="gasScreen" />
+							<p:submenu label="الاعدادات"
+								icon="ui-icon ui-icon-settings-applications">
+								<p:menuitem value="بيانات المحطة"
+									icon="ui-icon ui-icon-local-gas-station" outcome="station" />
+								<p:menuitem value="انواع المحروقات"
+									icon="ui-icon ui-icon-local-gas-station" outcome="gasScreen" />
+								<p:menuitem value="العدادات"
+									icon="ui-icon ui-icon-local-gas-station" outcome="gunScreen" />
+								<p:menuitem value="المحلات"
+									icon="ui-icon ui-icon-chrome-reader-mode" outcome="shops" />
+								<p:menuitem value="ايجارات المحلات"
+									icon="ui-icon ui-icon-monetization-on" outcome="rents" />
+
+								<p:menuitem value="الموردين"
+									icon="ui-icon ui-icon-people-outline" outcome="supplier" />
+
 								<p:menuitem value="المستخدمين" icon="ui-icon ui-icon-people"
 									outcome="users" />
 							</p:submenu>

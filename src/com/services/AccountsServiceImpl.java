@@ -9,6 +9,7 @@ import com.entities.ExpensisTypes;
 import com.entities.GasGuns;
 import com.entities.GasStationSuppliers;
 import com.entities.GunsRevenus;
+import com.entities.SndSrfQbd;
 
 public class AccountsServiceImpl implements AccountsService {
 
@@ -87,6 +88,12 @@ public class AccountsServiceImpl implements AccountsService {
 	@Override
 	public List<GunsRevenus> loadAllGunsRevenusList() {
 		List ls = commonDao.findAll(GunsRevenus.class);
+		return ls;
+	}
+
+	@Override
+	public List<SndSrfQbd> loadSndByType(Integer type, Integer stationId) {
+		List ls = commonDao.findSndByType(type, stationId);
 		return ls;
 	}
 

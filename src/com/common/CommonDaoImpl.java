@@ -22,6 +22,7 @@ import com.entities.GasStationSuppliers;
 import com.entities.GunsRevenus;
 import com.entities.Rents;
 import com.entities.Shops;
+import com.entities.SndSrfQbd;
 import com.entities.Suppliers;
 import com.entities.Users;
 
@@ -326,4 +327,16 @@ public class CommonDaoImpl extends HibernateTemplate implements CommonDao {
 		return expensisList;
 	}
 
+	@SuppressWarnings("unchecked")
+	@Override
+	@Transactional
+	public List<SndSrfQbd> findSndByType(Integer type, Integer stationId) {
+		Criteria criteria = sessionFactory.getCurrentSession().createCriteria(SndSrfQbd.class);
+		if (stationId != -1) {
+			criteria.add(Restrictions.eq("stationId", stationId));
+		}
+		criteria.add(Restrictions.eq("sndType", type));
+		List<SndSrfQbd> list = criteria.list();
+		return list;
+	}
 }

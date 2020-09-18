@@ -1,5 +1,7 @@
 package com.entities;
 
+import java.util.Date;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -10,8 +12,8 @@ import org.hibernate.annotations.Formula;
 import org.hibernate.annotations.GenericGenerator;
 
 @Entity
-@Table(name = "gas")
-public class Gas {
+@Table(name = "first_day_amount")
+public class FirstDayAmount {
 
 	@Id
 	@GenericGenerator(name = "generator", strategy = "increment")
@@ -19,17 +21,17 @@ public class Gas {
 	@Column(name = "id")
 	private Integer id;
 
-	@Column(name = "name")
-	private String name;
+	@Column(name = "gas_id")
+	private Integer gasId;
 
 	@Column(name = "station_id")
 	private Integer stationId;
 
-	@Column(name = "price")
-	private double price;
+	@Column(name = "amount")
+	private double amount;
 
-	@Column(name = "first_read")
-	private double firstRead;
+	@Column(name = "read_Date")
+	private Date readDate;
 
 	@Formula("(select s.station_name from stations s where s.id = station_id)")
 	private String stationName;
@@ -42,12 +44,12 @@ public class Gas {
 		this.id = id;
 	}
 
-	public String getName() {
-		return name;
+	public Integer getGasId() {
+		return gasId;
 	}
 
-	public void setName(String name) {
-		this.name = name;
+	public void setGasId(Integer gasId) {
+		this.gasId = gasId;
 	}
 
 	public Integer getStationId() {
@@ -58,12 +60,20 @@ public class Gas {
 		this.stationId = stationId;
 	}
 
-	public double getPrice() {
-		return price;
+	public double getAmount() {
+		return amount;
 	}
 
-	public void setPrice(double price) {
-		this.price = price;
+	public void setAmount(double amount) {
+		this.amount = amount;
+	}
+
+	public Date getReadDate() {
+		return readDate;
+	}
+
+	public void setReadDate(Date readDate) {
+		this.readDate = readDate;
 	}
 
 	public String getStationName() {
@@ -74,12 +84,5 @@ public class Gas {
 		this.stationName = stationName;
 	}
 
-	public double getFirstRead() {
-		return firstRead;
-	}
-
-	public void setFirstRead(double firstRead) {
-		this.firstRead = firstRead;
-	}
 
 }

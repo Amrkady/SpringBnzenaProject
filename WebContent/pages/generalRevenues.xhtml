@@ -18,18 +18,23 @@
 			<h:form dir="rtl" id="form">
 				<p:messages id="msg" autoUpdate="true" closable="true"></p:messages>
 				<h1 style="color: #1565C0; text-align: center;">الايرادات
-					العمومية</h1>
+					العمومية </h1>
 				<div class="image-box-footer" align="left">
-					<p:commandButton id="cBadd" value="عمل سند قبض" immediate="true"
+					<p:commandButton id="dd" value=" سند قبض" immediate="true"
 						icon="ui-icon ui-icon-plus" onclick="PF('whsdlAdd').show();">
 					</p:commandButton>
-					<p:spacer width="10" height="10"></p:spacer>
+					<p:spacer width="5" height="10"></p:spacer>
+					<p:commandButton id="cBadd" value="سندات القبض" immediate="true"
+						onclick="PF('showsnd').show();" styleClass="orange-btn">
+					</p:commandButton>
+					<p:spacer width="5" height="10"></p:spacer>
 					<p:commandButton value="طباعة الايرادات" process="@all"
 						icon="ui-icon ui-icon-print " immediate="true"
 						action="#{generalRevenuesBean.printAll}"
 						onclick="this.form.target='_blank'" ajax="false">
 					</p:commandButton>
 				</div>
+				<br />
 				<h:panelGroup id="png">
 					<div class="ui-g">
 						<div class="ui-g-1">
@@ -93,6 +98,7 @@
 				<br />
 				<p:dataTable id="myTable" var="gunR"
 					value="#{generalRevenuesBean.gunsRevenuList}"
+					sortBy="#{gunR.revDate}" sortOrder="descending"
 					emptyMessage="لايوجد بيانات" rowIndexVar="rowIndex"
 					widgetVar="cellemp" paginatorPosition="bottom"
 					paginatorTemplate="{FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink}"
@@ -137,18 +143,18 @@
 					<p:columnGroup type="footer">
 						<p:row>
 							<p:column colspan="2" footerText="اجمالى الايرادات"
-								style="FONT-WEIGHT:bold ;color : RED " />
+								style="FONT-WEIGHT:bold ;color : ORANGE " />
 							<p:column colspan="1" footerText="" />
 							<p:column colspan="1" footerText="عدد اللترات"
-								style="FONT-WEIGHT:bold ;color : RED " />
+								style="FONT-WEIGHT:bold ;color : ORANGE " />
 							<p:column colspan="2"
 								footerText="#{generalRevenuesBean.gunsRevenuList.stream().map(fdet->fdet.litersNum).sum()}"
-								style="FONT-WEIGHT:bold ;color : RED " />
+								style="FONT-WEIGHT:bold ;color : ORANGE " />
 							<p:column colspan="1" footerText="القيمة الكلية"
-								style="FONT-WEIGHT:bold ;color : RED " />
+								style="FONT-WEIGHT:bold ;color : ORANGE " />
 							<p:column colspan="2"
 								footerText="#{generalRevenuesBean.gunsRevenuList.stream().map(fdet->fdet.totalPrice).sum()}"
-								style="FONT-WEIGHT:bold ;color : RED " />
+								style="FONT-WEIGHT:bold ;color : ORANGE " />
 							<p:column colspan="1" footerText="" />
 
 						</p:row>
@@ -161,21 +167,26 @@
 					<h:panelGroup id="png1">
 						<div class="ui-g">
 							<div class="ui-g-3">
-								<p:outputLabel style="FONT-WEIGHT:bold ;color : RED "
+								<p:outputLabel style="FONT-WEIGHT:bold ;color : ORANGE "
 									value="اجمالى الايرادات قبل الضريبة"></p:outputLabel>
 							</div>
 							<div class="ui-g-3">
-								<p:outputLabel style="FONT-WEIGHT:bold ;color : RED "
+								<p:outputLabel style="FONT-WEIGHT:bold ;color : ORANGE "
 									value="#{(generalRevenuesBean.gunsRevenuList.stream().map(fdet->fdet.totalPrice).sum())}">
+									<f:convertNumber type="number" groupingUsed="true"
+										minFractionDigits="2" pattern="#0.00" />
 								</p:outputLabel>
 							</div>
 							<div class="ui-g-1">
-								<p:outputLabel style="FONT-WEIGHT:bold ;color : RED "
+								<p:outputLabel style="FONT-WEIGHT:bold ;color : ORANGE "
 									value="قيمة الضريبة "></p:outputLabel>
 							</div>
 							<div class="ui-g-3">
-								<p:outputLabel style="FONT-WEIGHT:bold ;color : RED "
-									value="#{(generalRevenuesBean.gunsRevenuList.stream().map(fdet->fdet.totalPrice).sum()) * (generalRevenuesBean.taxsList.get(0).taxValue / 100)}"></p:outputLabel>
+								<p:outputLabel style="FONT-WEIGHT:bold ;color : ORANGE "
+									value="#{((generalRevenuesBean.gunsRevenuList.stream().map(fdet->fdet.totalPrice).sum()) / (1+ (generalRevenuesBean.taxsList.get(0).taxValue / 100) ))* (generalRevenuesBean.taxsList.get(0).taxValue / 100)}">
+									<f:convertNumber type="number" groupingUsed="true"
+										minFractionDigits="2" pattern="#0.00" />
+								</p:outputLabel>
 							</div>
 							<div class="ui-g-2">
 								<p:commandButton immediate="true"
@@ -187,13 +198,15 @@
 						</div>
 						<div class="ui-g">
 							<div class="ui-g-3">
-								<p:outputLabel style="FONT-WEIGHT:bold ;color : RED "
+								<p:outputLabel style="FONT-WEIGHT:bold ;color : ORANGE "
 									value="اجمالى الايرادات بعد الضريبة"></p:outputLabel>
 
 							</div>
 							<div class="ui-g-2">
-								<p:outputLabel style="FONT-WEIGHT:bold ;color : RED "
-									value="#{(generalRevenuesBean.gunsRevenuList.stream().map(fdet->fdet.totalPrice).sum())-((generalRevenuesBean.gunsRevenuList.stream().map(fdet->fdet.totalPrice).sum()) * (generalRevenuesBean.taxsList.get(0).taxValue / 100))}">
+								<p:outputLabel style="FONT-WEIGHT:bold ;color : ORANGE "
+									value="#{(generalRevenuesBean.gunsRevenuList.stream().map(fdet->fdet.totalPrice).sum())-((generalRevenuesBean.gunsRevenuList.stream().map(fdet->fdet.totalPrice).sum()) / (1+ (generalRevenuesBean.taxsList.get(0).taxValue / 100) ))* (generalRevenuesBean.taxsList.get(0).taxValue / 100)}">
+									<f:convertNumber type="number" groupingUsed="true"
+										minFractionDigits="2" pattern="#0.00" />
 								</p:outputLabel>
 							</div>
 
@@ -206,6 +219,8 @@
 							<div class="ui-g-3">
 								<p:outputLabel style="FONT-WEIGHT:bold ;color : green "
 									value="#{(generalRevenuesBean.expensisList.stream().map(fdet->fdet.expensisQuantity).sum())}">
+									<f:convertNumber type="number" groupingUsed="true"
+										minFractionDigits="2" pattern="#0.00" />
 								</p:outputLabel>
 							</div>
 							<div class="ui-g-1">
@@ -214,7 +229,10 @@
 							</div>
 							<div class="ui-g-3">
 								<p:outputLabel style="FONT-WEIGHT:bold ;color : green "
-									value="#{(generalRevenuesBean.expensisList.stream().map(fdet->fdet.expensisQuantity).sum()) * (generalRevenuesBean.taxsList.get(0).taxValue / 100)}"></p:outputLabel>
+									value="#{((generalRevenuesBean.expensisList.stream().map(fdet->fdet.expensisQuantity).sum()) / (1+ (generalRevenuesBean.taxsList.get(0).taxValue / 100) ))* (generalRevenuesBean.taxsList.get(0).taxValue / 100)}">
+									<f:convertNumber type="number" groupingUsed="true"
+										minFractionDigits="2" pattern="#0.00" />
+								</p:outputLabel>
 							</div>
 						</div>
 						<div class="ui-g">
@@ -225,7 +243,9 @@
 							</div>
 							<div class="ui-g-2">
 								<p:outputLabel style="FONT-WEIGHT:bold ;color : green "
-									value="#{(generalRevenuesBean.expensisList.stream().map(fdet->fdet.expensisQuantity).sum())-((generalRevenuesBean.expensisList.stream().map(fdet->fdet.expensisQuantity).sum()) * (generalRevenuesBean.taxsList.get(0).taxValue / 100))}">
+									value="#{(generalRevenuesBean.expensisList.stream().map(fdet->fdet.expensisQuantity).sum())-((generalRevenuesBean.expensisList.stream().map(fdet->fdet.expensisQuantity).sum()) / (1+ (generalRevenuesBean.taxsList.get(0).taxValue / 100) )) * (generalRevenuesBean.taxsList.get(0).taxValue / 100)}">
+									<f:convertNumber type="number" groupingUsed="true"
+										minFractionDigits="2" pattern="#0.00" />
 								</p:outputLabel>
 							</div>
 
@@ -238,6 +258,8 @@
 							<div class="ui-g-3">
 								<p:outputLabel style="FONT-WEIGHT:bold ;color : blue "
 									value="#{(generalRevenuesBean.sssList.stream().map(fdet->fdet.price).sum())}">
+									<f:convertNumber type="number" groupingUsed="true"
+										minFractionDigits="2" pattern="#0.00" />
 								</p:outputLabel>
 							</div>
 							<div class="ui-g-1">
@@ -246,7 +268,10 @@
 							</div>
 							<div class="ui-g-3">
 								<p:outputLabel style="FONT-WEIGHT:bold ;color : blue "
-									value="#{generalRevenuesBean.supTaxVal}"></p:outputLabel>
+									value="#{generalRevenuesBean.supTaxVal}">
+									<f:convertNumber type="number" groupingUsed="true"
+										minFractionDigits="2" pattern="#0.00" />
+								</p:outputLabel>
 							</div>
 						</div>
 						<div class="ui-g">
@@ -258,6 +283,8 @@
 							<div class="ui-g-2">
 								<p:outputLabel style="FONT-WEIGHT:bold ;color : blue "
 									value="#{generalRevenuesBean.supTotalQuantity}">
+									<f:convertNumber type="number" groupingUsed="true"
+										minFractionDigits="2" pattern="#0.00" />
 								</p:outputLabel>
 							</div>
 						</div>
@@ -292,6 +319,57 @@
 				</p:dialog>
 			</h:form>
 			<h:form>
+				<p:dialog position="center" widgetVar="showsnd" responsive="true"
+					dynamic="true" hideEffect="explode" showEffect="fade" width="80%"
+					closable="true" resizable="true" modal="true" dir="rtl">
+					<h:panelGroup id="paneldd" width="80%">
+						<p:fieldset legend="سندات القبض" width="100%">
+							<p:dataTable id="ble" var="snd" sortBy="#{snd.sndDate}"
+								sortOrder="descending" value="#{generalRevenuesBean.sndList}"
+								emptyMessage="لايوجد بيانات" rowIndexVar="rowIndex"
+								widgetVar="cellemp" paginatorPosition="bottom"
+								paginatorTemplate="{FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink}"
+								paginator="true" rows="10">
+								<p:column headerText="رقم" style="width: 5%">
+									<h:outputText value="#{rowIndex+1}" />
+								</p:column>
+								<p:column headerText="التاريخ " style="width: 20%"
+									filterBy="#{snd.sndDate}" filterMatchMode="contains">
+									<h:outputText value="#{snd.sndDate}">
+										<f:convertDateTime pattern="yyyy/MM/dd" />
+									</h:outputText>
+								</p:column>
+								<p:column headerText="استلم من" style="width: 15%"
+									filterBy="#{snd.name}" filterMatchMode="contains">
+									<h:outputText value="#{snd.name}" />
+								</p:column>
+								<p:column headerText="القيمة" style="width: 10%"
+									filterBy="#{snd.amount}" filterMatchMode="contains">
+									<h:outputText value="#{snd.amount}" />
+								</p:column>
+								<p:column headerText="طريقة الدفع" style="width: 20%"
+									filterBy="#{snd.payType}" filterMatchMode="contains">
+									<h:outputText value="#{snd.payType}" />
+								</p:column>
+								<p:column headerText="ذلك مقابل" style="width: 15%"
+									filterBy="#{snd.forReason}" filterMatchMode="contains">
+									<h:outputLabel value="#{snd.forReason}" />
+								</p:column>
+								<p:column headerText="طباعة" style="width: 8%">
+									<p:commandButton value="طباعة" immediate="true"
+										action="#{generalRevenuesBean.print(snd)}"
+										onclick="this.form.target='_blank'" ajax="false">
+									</p:commandButton>
+								</p:column>
+							</p:dataTable>
+							<div class="iamge-box-footer" align="left">
+								<p:commandButton styleClass="orange-btn" value="عودة"
+									icon="ui-icon ui-icon-arrow-back" immediate="true"
+									onclick="PF('showsnd').hide();" />
+							</div>
+						</p:fieldset>
+					</h:panelGroup>
+				</p:dialog>
 				<p:dialog position="center" widgetVar="whsdlAdd" responsive="true"
 					dynamic="true" hideEffect="explode" showEffect="fade" width="60%"
 					closable="true" resizable="true" modal="true" dir="rtl">
@@ -305,7 +383,7 @@
 									<p:calendar style="width:100%" id="dt" required="true"
 										requiredMessage="ادخل التاريخ" pattern="yyyy/MM/dd"
 										value="#{generalRevenuesBean.sm.entryDate}">
-										<f:ajax execute="@this"></f:ajax>
+<!-- 										<f:ajax execute="@this"></f:ajax> -->
 									</p:calendar>
 								</div>
 								<p:spacer height="10" width="10"></p:spacer>
@@ -328,22 +406,21 @@
 									<p:inputNumber style="width:100%" required="true"
 										requiredMessage="ادخل المبلغ"
 										value="#{generalRevenuesBean.sm.amount}">
-										<p:ajax process="@this"></p:ajax>
+<!-- 										<p:ajax process="@this"></p:ajax> -->
 									</p:inputNumber>
 								</div>
 								<div class="ui-g-2">
 									<h:outputLabel value="طريقة الدفع" />
 								</div>
 								<div class="ui-g-3">
-									<p:selectOneMenu style="width:100%;" required="true"
-										requiredMessage="ادخل طريقة الدفع "
+									<p:selectOneMenu style="width:100%;"
 										value="#{generalRevenuesBean.sm.payType}">
 										<f:selectItem itemLabel="اختر طريقة الدفع"
 											noSelectionOption="true"></f:selectItem>
 										<f:selectItem itemLabel="نقدا" itemValue="نقدا"></f:selectItem>
 										<f:selectItem itemLabel="شبكة" itemValue="شبكة"></f:selectItem>
 										<f:selectItem itemLabel="أجل" itemValue="أجل"></f:selectItem>
-										<p:ajax process="@this"></p:ajax>
+<!-- 										<p:ajax process="@this"></p:ajax> -->
 									</p:selectOneMenu>
 
 								</div>
@@ -353,19 +430,23 @@
 									<h:outputLabel value="ذلك مقابل" />
 								</div>
 								<div class="ui-g-6">
-									<p:inputText style="width:100%" required="true"
-										requiredMessage="ادخل السبب (ذلك مقابل)"
+									<p:inputText style="width:100%"
 										value="#{generalRevenuesBean.sm.forWhat}">
-										<p:ajax process="@this"></p:ajax>
+<!-- 										<p:ajax process="@this"></p:ajax> -->
 									</p:inputText>
 								</div>
 							</div>
 							<div class="iamge-box-footer" align="left">
-								<p:commandButton value="طباعة" style="width:10%; align:left"
-									process="@all" icon="ui-icon ui-icon-print " immediate="true"
-									onsuccess="PF('whsdlAdd').hide();"
-									action="#{generalRevenuesBean.print}"
-									onclick="this.form.target='_blank'" ajax="false">
+<!-- 								<p:commandButton value="طباعة" style="width:10%; align:left" -->
+<!-- 									process="@all" icon="ui-icon ui-icon-print " immediate="true" -->
+<!-- 									action="#{generalRevenuesBean.print}" -->
+<!-- 									onclick="this.form.target='_blank'" ajax="false"> -->
+<!-- 								</p:commandButton> -->
+<!-- 								<p:spacer height="4"></p:spacer> -->
+								<p:commandButton value="حفظ" onsuccess="PF('whsdlAdd').hide();"
+									icon="ui-icon ui-icon-save" process="@all"
+									action="#{generalRevenuesBean.addSnad}"
+									update="form panelGroupAdd paneldd">
 								</p:commandButton>
 								<p:spacer height="4"></p:spacer>
 								<p:commandButton styleClass="orange-btn" value="عودة"

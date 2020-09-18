@@ -30,11 +30,10 @@
 						</div>
 						<p:spacer height="10" width="10"></p:spacer>
 						<div class="ui-g-2">
-							<h:outputLabel value=" الاسم" />
+							<h:outputLabel value=" اسم المحطة" />
 						</div>
 						<div class="ui-g-3">
-							<p:inputText value="#{stationBean.st.name}" required="true"
-								requiredMessage="اسم المحطة مطلوب" />
+							<h:outputLabel value="#{stationBean.st.name}" />
 						</div>
 					</div>
 					<div class="ui-g">
@@ -147,6 +146,7 @@
 											<th>الرقم</th>
 											<th>اسم المرفق</th>
 											<th>تحميل المرفق</th>
+											<th>حذف المرفق</th>
 										</tr>
 									</thead>
 									<tbody>
@@ -159,6 +159,11 @@
 														value="تحميل المرفق" ajax="false" immediate="true"
 														class="panel-footer" icon="ui-icon-arrowthick-1-s">
 														<p:fileDownload value="#{stationBean.getFile(att)}" />
+													</p:commandButton></td>
+												<td align="center"><p:commandButton title="حذف المرفق"
+														update="form:table" style="background-color:red"
+														icon="ui-icon ui-icon-remove"
+															action="#{stationBean.deleteAttachment(att)}" >
 													</p:commandButton></td>
 											</tr>
 										</ui:repeat>
@@ -173,7 +178,7 @@
 					<div class="iamge-box-footer" align="left">
 						<p:commandButton value="حفظ" icon="ui-icon ui-icon-save"
 							process="@all" action="#{stationBean.updateStation}"
-							update="form table" >
+							update="form table">
 						</p:commandButton>
 						<p:spacer height="4"></p:spacer>
 						<p:commandButton styleClass="orange-btn" value="الغاء"

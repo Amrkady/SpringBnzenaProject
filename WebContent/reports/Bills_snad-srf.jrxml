@@ -12,8 +12,11 @@
 	<parameter name="halaa" class="java.lang.Integer"/>
 	<parameter name="header" class="java.lang.String"/>
 	<queryString language="SQL">
-		<![CDATA[SELECT max(us.id) FROM banzenadb.roles us;]]>
+		<![CDATA[SELECT  s.station_name stationName 
+ FROM thorapet_bnzena.stations  s
+where s.id =2;]]>
 	</queryString>
+	<field name="stationName" class="java.lang.String"/>
 	<background>
 		<band splitType="Stretch"/>
 	</background>
@@ -26,6 +29,13 @@
 				<reportElement x="275" y="2" width="86" height="77" uuid="b5abcd5a-c848-44a6-8c14-4506dcadaad8"/>
 				<imageExpression><![CDATA[$P{header}]]></imageExpression>
 			</image>
+			<staticText>
+				<reportElement x="350" y="20" width="209" height="40" forecolor="#0000FF" uuid="f1b5c6fe-e588-4393-835d-92ba00da7e49"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial" size="34" isBold="true" isUnderline="false"/>
+				</textElement>
+				<text><![CDATA[مجموعة ذرا]]></text>
+			</staticText>
 		</band>
 	</pageHeader>
 	<detail>
@@ -288,13 +298,6 @@
 					<font fontName="Arial" size="8" isBold="false"/>
 				</textElement>
 				<text><![CDATA[...............................................................................................................................................................................]]></text>
-			</staticText>
-			<staticText>
-				<reportElement x="340" y="-85" width="209" height="40" forecolor="#0000FF" uuid="e1f83c71-3cf0-4547-9eb8-b987b0d5b3ee"/>
-				<textElement textAlignment="Center" verticalAlignment="Middle">
-					<font fontName="Arial" size="34" isBold="true" isUnderline="false"/>
-				</textElement>
-				<text><![CDATA[مجموعة ذرا]]></text>
 			</staticText>
 			<staticText>
 				<reportElement x="224" y="281" width="60" height="18" forecolor="#0000FF" uuid="4d98d5ef-ed8a-4707-85df-7e272a358d12"/>

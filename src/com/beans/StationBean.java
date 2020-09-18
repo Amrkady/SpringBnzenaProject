@@ -94,6 +94,20 @@ public class StationBean {
 		}
 	}
 
+	public String deleteAttachment(Attachment attachment) {
+		if (attachment != null) {
+			try {
+				departmentServiceImpl.delete(attachment);
+				MsgEntry.addInfoMessage(Utils.loadMessagesFromFile("success.delete"));
+				attachsList = departmentServiceImpl.loadAttachments(stId);
+			} catch (Exception e) {
+				MsgEntry.addErrorMessage(Utils.loadMessagesFromFile("error.delete"));
+				e.printStackTrace();
+			}
+		}
+		return "";
+	}
+
 	public DepartmentService getDepartmentServiceImpl() {
 		return departmentServiceImpl;
 	}

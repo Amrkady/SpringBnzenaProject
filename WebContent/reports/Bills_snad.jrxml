@@ -3,17 +3,13 @@
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="Bills_snad" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="b3d43872-09ef-4080-8e66-7a23b6142bd2">
 	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="One Empty Record"/>
 	<parameter name="custName" class="java.lang.String"/>
-	<parameter name="reyal" class="java.lang.Integer"/>
-	<parameter name="for" class="java.lang.String"/>
-	<parameter name="payType" class="java.lang.String"/>
-	<parameter name="date" class="java.lang.String"/>
-	<parameter name="dateH" class="java.lang.String"/>
-	<parameter name="costByLet" class="java.lang.Double"/>
-	<parameter name="halaa" class="java.lang.Integer"/>
 	<parameter name="header" class="java.lang.String"/>
 	<queryString language="SQL">
-		<![CDATA[SELECT max(us.id) FROM banzenadb.roles us;]]>
+		<![CDATA[SELECT  s.station_name stationName 
+ FROM thorapet_bnzena.stations  s
+where s.id =2;]]>
 	</queryString>
+	<field name="stationName" class="java.lang.String"/>
 	<background>
 		<band splitType="Stretch"/>
 	</background>
@@ -108,47 +104,6 @@
 				</textElement>
 				<textFieldExpression><![CDATA[$P{custName}]]></textFieldExpression>
 			</textField>
-			<textField>
-				<reportElement x="369" y="140" width="90" height="18" forecolor="#000000" uuid="6d611539-cfda-49a6-bb2e-3649f6fa2b63"/>
-				<textElement textAlignment="Right">
-					<font fontName="Arial" size="12"/>
-				</textElement>
-				<textFieldExpression><![CDATA[($P{costByLet}== null)?"۰۰":(""+$P{costByLet}).replaceAll("0", "\\\u0660").replaceAll("1", "\\\u0661")
-                .replaceAll("2", "\\\u0662").replaceAll("3", "\\\u0663").replaceAll("4", "\\\u0664").replaceAll("5", "\\\u0665")
-                .replaceAll("6", "\\\u0666").replaceAll("7", "\\\u0667").replaceAll("8", "\\\u0668").replaceAll("9", "\\\u0669")]]></textFieldExpression>
-			</textField>
-			<textField>
-				<reportElement x="99" y="208" width="360" height="18" forecolor="#000000" uuid="ebe1ca0e-71af-4d3b-b583-b47fba6c3524"/>
-				<textElement textAlignment="Right">
-					<font fontName="Arial" size="12"/>
-				</textElement>
-				<textFieldExpression><![CDATA[$P{for}]]></textFieldExpression>
-			</textField>
-			<textField>
-				<reportElement x="360" y="177" width="100" height="18" forecolor="#000000" uuid="61c80fd0-3bb3-4bb8-8812-2b878a36262b"/>
-				<textElement textAlignment="Right">
-					<font fontName="Arial" size="12"/>
-				</textElement>
-				<textFieldExpression><![CDATA[$P{payType}]]></textFieldExpression>
-			</textField>
-			<textField>
-				<reportElement x="360" y="280" width="100" height="18" forecolor="#000000" uuid="bd296834-c7e1-4fa3-a9f8-30b81d7fb937"/>
-				<textElement textAlignment="Right">
-					<font fontName="Arial" size="12"/>
-				</textElement>
-				<textFieldExpression><![CDATA[$P{dateH}.replaceAll("0", "\\\u0660").replaceAll("1", "\\\u0661")
-                .replaceAll("2", "\\\u0662").replaceAll("3", "\\\u0663").replaceAll("4", "\\\u0664").replaceAll("5", "\\\u0665")
-                .replaceAll("6", "\\\u0666").replaceAll("7", "\\\u0667").replaceAll("8", "\\\u0668").replaceAll("9", "\\\u0669")]]></textFieldExpression>
-			</textField>
-			<textField>
-				<reportElement x="105" y="280" width="115" height="18" forecolor="#000000" uuid="f6b411cc-ba59-4959-8fa0-96d73dc3a2d2"/>
-				<textElement textAlignment="Right">
-					<font fontName="Arial" size="12"/>
-				</textElement>
-				<textFieldExpression><![CDATA[$P{date}.replaceAll("0", "\\\u0660").replaceAll("1", "\\\u0661")
-                .replaceAll("2", "\\\u0662").replaceAll("3", "\\\u0663").replaceAll("4", "\\\u0664").replaceAll("5", "\\\u0665")
-                .replaceAll("6", "\\\u0666").replaceAll("7", "\\\u0667").replaceAll("8", "\\\u0668").replaceAll("9", "\\\u0669")]]></textFieldExpression>
-			</textField>
 			<staticText>
 				<reportElement x="257" y="341" width="60" height="18" forecolor="#0000FF" uuid="d0b78f56-79d3-4a2b-86eb-162b49de41a1"/>
 				<textElement textAlignment="Center">
@@ -184,24 +139,6 @@
 				</textElement>
 				<text><![CDATA[..............................................................]]></text>
 			</staticText>
-			<textField>
-				<reportElement x="85" y="70" width="75" height="18" forecolor="#000000" uuid="86d20273-78a8-4ac7-bcfd-5334914c5a3e"/>
-				<textElement textAlignment="Center" verticalAlignment="Middle">
-					<font fontName="Arial" size="11" isBold="true"/>
-				</textElement>
-				<textFieldExpression><![CDATA[($P{halaa}== 00)?"۰۰":(""+$P{halaa}).replaceAll("0", "\\\u0660").replaceAll("1", "\\\u0661")
-                .replaceAll("2", "\\\u0662").replaceAll("3", "\\\u0663").replaceAll("4", "\\\u0664").replaceAll("5", "\\\u0665")
-                .replaceAll("6", "\\\u0666").replaceAll("7", "\\\u0667").replaceAll("8", "\\\u0668").replaceAll("9", "\\\u0669")]]></textFieldExpression>
-			</textField>
-			<textField>
-				<reportElement x="10" y="70" width="75" height="18" forecolor="#000000" uuid="19cff8b0-091d-49e4-b3ed-3e2752590f91"/>
-				<textElement textAlignment="Center" verticalAlignment="Middle">
-					<font fontName="Arial" size="11" isBold="true"/>
-				</textElement>
-				<textFieldExpression><![CDATA[($P{reyal}== null)?"۰۰":(""+$P{reyal}).replaceAll("0", "\\\u0660").replaceAll("1", "\\\u0661")
-                .replaceAll("2", "\\\u0662").replaceAll("3", "\\\u0663").replaceAll("4", "\\\u0664").replaceAll("5", "\\\u0665")
-                .replaceAll("6", "\\\u0666").replaceAll("7", "\\\u0667").replaceAll("8", "\\\u0668").replaceAll("9", "\\\u0669")]]></textFieldExpression>
-			</textField>
 			<staticText>
 				<reportElement x="74" y="222" width="384" height="10" uuid="762adc9b-2c91-497e-909c-67dc221768b7"/>
 				<textElement textAlignment="Center">
@@ -317,6 +254,13 @@
 				</textElement>
 				<text><![CDATA[ه]]></text>
 			</staticText>
+			<textField>
+				<reportElement x="284" y="208" width="176" height="14" uuid="857d47cb-46c7-4386-baea-485dad2eab35"/>
+				<textElement textAlignment="Right">
+					<font fontName="Arial" size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{stationName}]]></textFieldExpression>
+			</textField>
 		</band>
 	</detail>
 	<pageFooter>

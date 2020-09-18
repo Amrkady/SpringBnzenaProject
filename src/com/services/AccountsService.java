@@ -8,6 +8,7 @@ import com.entities.ExpensisTypes;
 import com.entities.GasGuns;
 import com.entities.GasStationSuppliers;
 import com.entities.GunsRevenus;
+import com.entities.SndSrfQbd;
 
 public interface AccountsService {
 
@@ -35,5 +36,7 @@ public interface AccountsService {
 	public List<ExpensisTypes> loadAllExpensisTypesList();
 
 	public List<GunsRevenus> loadAllGunsRevenusList();
+
+	public List<SndSrfQbd> loadSndByType(Integer type, Integer stationId);
 	
 }

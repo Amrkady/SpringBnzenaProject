@@ -1,5 +1,6 @@
 package com.beans;
 
+import java.math.BigDecimal;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -19,6 +20,7 @@ import org.primefaces.event.RowEditEvent;
 
 import com.entities.Expensis;
 import com.entities.ExpensisTypes;
+import com.entities.SndSrfQbd;
 import com.entities.Stations;
 import com.models.SandModel;
 import com.services.AccountsService;
@@ -44,6 +46,8 @@ public class GeneralExpensisBean {
 	private Date dateTo;
 	private Integer supType;
 	private SandModel sm = new SandModel();
+	private SndSrfQbd snd = new SndSrfQbd();
+	private List<SndSrfQbd> sndList = new ArrayList<SndSrfQbd>();
 	@PostConstruct
 	public void init() {
 //		FacesContext facesContext = FacesContext.getCurrentInstance();
@@ -54,6 +58,7 @@ public class GeneralExpensisBean {
 		expensisTypesList = accountsServiceImpl.loadAllExpensisTypes(1);
 		expensisTypesSearch = accountsServiceImpl.loadAllExpensisTypesList();
 		stationsList = departmentServiceImpl.loadStations();
+		sndList = accountsServiceImpl.loadSndByType(3, -1);
 		// }
 	}
 
@@ -142,7 +147,7 @@ public class GeneralExpensisBean {
 				String grigDate = sdf.format(sm.getEntryDate());
 				parameters.put("date", grigDate);
 				parameters.put("dateH", hDate);
-				parameters.put("costByLet", sm.getAmount());
+				parameters.put("costByLet", new BigDecimal(sm.getAmount()));
 				String headerPath = FacesContext.getCurrentInstance().getExternalContext()
 						.getRealPath("/reports/logoreport.png");
 				parameters.put("header", headerPath);
@@ -160,6 +165,73 @@ public class GeneralExpensisBean {
 		FacesMessage msg = new FacesMessage("·„ Ì „ «· ⁄œÌ·", "");
 		FacesContext.getCurrentInstance().addMessage(null, msg);
 
+	}
+
+	public String addSnad() {
+		try {
+			if (snd != null) {
+				snd.setAmount(sm.getAmount());
+				snd.setSndDate(sm.getEntryDate());
+				snd.setName(sm.getName());
+				snd.setForReason(sm.getForWhat());
+				snd.setPayType(sm.getPayType());
+				snd.setSndType(3); // 1 snd qabd
+				departmentServiceImpl.save(snd);
+				// canPrint = false;
+				MsgEntry.addInfoMessage(Utils.loadMessagesFromFile("success.operation"));
+				sndList = accountsServiceImpl.loadSndByType(3, -1);
+				snd = new SndSrfQbd();
+				sm = new SandModel();
+			}
+		} catch (Exception e) {
+			MsgEntry.addErrorMessage(Utils.loadMessagesFromFile("error.operation"));
+			e.printStackTrace();
+		}
+		return "";
+	}
+
+	public String print(SndSrfQbd sm) {
+
+		if (sm != null) {
+			String hDate = null;
+			try {
+				hDate = Utils.grigDatesConvert(sm.getSndDate());
+			} catch (ParseException e1) {
+				e1.printStackTrace();
+			}
+			try {
+				String reportName = "/reports/Bills_snad-srf.jasper";
+				Map<String, Object> parameters = new HashMap<String, Object>();
+				parameters.put("custName", sm.getName());
+				String reyal = String.valueOf(sm.getAmount());
+				if (reyal.contains(".")) {
+					reyal = reyal.substring(0, reyal.indexOf("."));
+					parameters.put("reyal", Integer.parseInt(reyal));
+					String hall = String.valueOf(sm.getAmount());
+					hall = hall.substring(hall.indexOf(".") + 1);
+					parameters.put("halaa", Integer.parseInt(hall));
+				} else {
+					parameters.put("reyal", (int) sm.getAmount());
+					parameters.put("halaa", 00);
+				}
+				parameters.put("for", sm.getForReason() == null ? " " : sm.getForReason());
+				parameters.put("payType", sm.getPayType() == null ? "" : sm.getPayType());
+				SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+				String grigDate = sdf.format(sm.getSndDate());
+				parameters.put("date", grigDate);
+				parameters.put("dateH", hDate);
+				parameters.put("costByLet", new BigDecimal(sm.getAmount()));
+				String headerPath = FacesContext.getCurrentInstance().getExternalContext()
+						.getRealPath("/reports/logoreport.png");
+				parameters.put("header", headerPath);
+//		//parameters.put("userId", employerId);
+				Utils.printPdfReport(reportName, parameters);
+
+			} catch (Exception e) {
+				// TODO: handle exception
+			}
+		}
+		return "";
 	}
 
 	public DepartmentService getDepartmentServiceImpl() {
@@ -256,6 +328,22 @@ public class GeneralExpensisBean {
 
 	public void setSm(SandModel sm) {
 		this.sm = sm;
+	}
+
+	public SndSrfQbd getSnd() {
+		return snd;
+	}
+
+	public void setSnd(SndSrfQbd snd) {
+		this.snd = snd;
+	}
+
+	public List<SndSrfQbd> getSndList() {
+		return sndList;
+	}
+
+	public void setSndList(List<SndSrfQbd> sndList) {
+		this.sndList = sndList;
 	}
 
 }

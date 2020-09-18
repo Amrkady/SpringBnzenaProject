@@ -13,57 +13,59 @@
 
 </head>
 <h:body>
-	<ui:composition template="/template1.xhtml">
+	<ui:composition template="/template2.xhtml">
 		<ui:define name="content">
 			<h:form dir="rtl" id="form">
 				<p:messages id="msg" autoUpdate="true" closable="true"></p:messages>
-				<h1 style="color: #1565C0; text-align: center;">انواع المحروقات</h1>
+				<h1 style="color: #1565C0; text-align: center;">انواع المصروفات
+				</h1>
 				<div class="image-box-footer" align="left">
-					<p:commandButton id="cBadd" value="اضافة نوع محروقات" immediate="true"
-						icon="ui-icon ui-icon-plus" onclick="PF('whsdlAdd').show();">
+					<p:commandButton id="cBadd" value="اضافة نوع مصروفات"
+						immediate="true" icon="ui-icon ui-icon-plus"
+						onclick="PF('whsdlAdd').show();">
 					</p:commandButton>
 				</div>
 				<br />
 				<br />
-				<p:dataTable id="myTable" var="gas" value="#{gasBean.gasList}"
+				<p:dataTable id="myTable" var="rent"
+					value="#{expTypeBean.expensisTypesList}"
 					emptyMessage="لايوجد بيانات" rowIndexVar="rowIndex" editable="true"
 					widgetVar="cellemp" paginatorPosition="bottom"
 					paginatorTemplate="{FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink}"
 					paginator="true" rows="10">
-					<p:ajax event="rowEdit" listener="#{gasBean.onRowEdit}"
+					<p:ajax event="rowEdit" listener="#{expTypeBean.onRowEdit}"
 						update=":form:msg  :form:myTable" />
-					<p:ajax event="rowEditCancel" listener="#{gasBean.onRowCancel}"
+					<p:ajax event="rowEditCancel" listener="#{expTypeBean.onRowCancel}"
 						update=":form:msg" />
 					<p:column headerText="رقم" style="width: 5%">
 						<h:outputText value="#{rowIndex+1}" />
 					</p:column>
-					<p:column headerText="الأسم" style="width: 20%"
-						filterBy="#{gas.name}" filterMatchMode="contains">
+					<p:column headerText="اسم المصروفات " style="width: 20%"
+						filterBy="#{rent.name}" filterMatchMode="contains">
 						<p:cellEditor>
 							<f:facet name="output">
-								<h:outputText value="#{gas.name}" />
+								<h:outputText value="#{rent.name}">
+
+								</h:outputText>
 							</f:facet>
 							<f:facet name="input">
-								<p:inputText id="nameInput" value="#{gas.name}" required="true"
-									requiredMessage="الاسم مطلوب" style="width:100%" />
+								<p:inputText style="width:100%" required="true"
+									requiredMessage="ادخل الاسم" value="#{rent.name}">
+								</p:inputText>
 							</f:facet>
 						</p:cellEditor>
 					</p:column>
-					<p:column headerText="السعر" style="width: 20%"
-						filterBy="#{gas.price}" filterMatchMode="contains">
+					<p:column headerText="نوع المصروفات" style="width: 20%"
+						filterBy="#{rent.general}" filterMatchMode="contains">
 						<p:cellEditor>
 							<f:facet name="output">
-								<h:outputText value="#{gas.price}" />
+								<h:outputText value="#{rent.general == 0  ? 'مصروفات لكل محطة':'مصروفات لكل المحطات'}" />
 							</f:facet>
 							<f:facet name="input">
-								<p:inputText value="#{gas.price}" required="true"
-									requiredMessage="السعر مطلوب" style="width:100%" />
+								<p:selectBooleanCheckbox
+									value="#{rent.generalType}" />
 							</f:facet>
 						</p:cellEditor>
-					</p:column>
-					<p:column headerText="اسم المحطة" style="width: 20%"
-						filterBy="#{gas.stationName}" filterMatchMode="contains">
-						<h:outputText value="#{gas.stationName}" />
 					</p:column>
 					<p:column headerText="تعديل" style="width:5%">
 						<p:rowEditor />
@@ -71,48 +73,40 @@
 					<p:column headerText="حذف" style="width:5%">
 						<p:commandButton update=":form:myTable"
 							style="background-color:red" icon="ui-icon ui-icon-remove"
-							title="حذف" action="#{gasBean.deleteGas(gas)}">
-
+							title="حذف" action="#{expTypeBean.deleteGas(rent)}">
 						</p:commandButton>
 					</p:column>
 				</p:dataTable>
 			</h:form>
 			<h:form>
-				<p:dialog position="center" widgetVar="whsdlAdd" responsive="true" dynamic="true"
-					hideEffect="explode" showEffect="fade" width="60%" closable="true"
-					 resizable="true" modal="true" dir="rtl">
+				<p:dialog position="center" widgetVar="whsdlAdd" responsive="true"
+					dynamic="true" hideEffect="explode" showEffect="fade" width="60%"
+					closable="true" resizable="true" modal="true" dir="rtl">
 					<h:panelGroup id="panelGroupAdd" width="60%">
-						<p:fieldset legend="بيانات نوع المحروقات" width="100%">
+						<p:fieldset legend="بيانات المصروفات " width="100%">
 							<div class="ui-g">
 								<div class="ui-g-2">
-									<h:outputLabel value=" الاسم" />
+									<h:outputLabel value="اسم المصروفات" />
 								</div>
 								<div class="ui-g-3">
-									<p:inputText value="#{gasBean.gasAdd.name}" required="true"
-										requiredMessage="اسم نوع المحروقات مطلوب" />
+									<p:inputText style="width:100%" required="true"
+										requiredMessage="ادخل الاسم" value="#{expTypeBean.exAdd.name}">
+									</p:inputText>
 								</div>
 								<p:spacer height="10" width="10"></p:spacer>
-								<div class="ui-g-2">
-									<h:outputLabel value="السعر" />
+								<div class="ui-g-3">
+									<h:outputLabel value="نوع المصروف(عمومي ؟)" />
 								</div>
-								<div class="ui-g-2">
-									<p:inputNumber value="#{gasBean.gasAdd.price}" required="true"
-										requiredMessage="السعر مطلوب" />
+								<div class="ui-g-3">
+									<p:selectBooleanCheckbox
+										value="#{expTypeBean.exAdd.generalType}" />
+
 								</div>
 							</div>
-<!-- 							<div class="ui-g"> -->
-<!-- 								<div class="ui-g-2"> -->
-<!-- 									<h:outputLabel value="رصيد اول" /> -->
-<!-- 								</div> -->
-<!-- 								<div class="ui-g-3"> -->
-<!-- 									<p:inputNumber value="#{gasBean.gasAdd.firstRead}" /> -->
-<!-- 								</div> -->
-<!-- 							</div> -->
-							<br />
 							<div class="iamge-box-footer" align="left">
 								<p:commandButton value="حفظ" onsuccess="PF('whsdlAdd').hide();"
 									icon="ui-icon ui-icon-save" process="@all"
-									action="#{gasBean.addGas}" update="form panelGroupAdd">
+									action="#{expTypeBean.addGas}" update="form panelGroupAdd">
 								</p:commandButton>
 								<p:spacer height="4"></p:spacer>
 								<p:commandButton styleClass="orange-btn" value="عودة"

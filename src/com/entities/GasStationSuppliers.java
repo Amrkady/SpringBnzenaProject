@@ -46,11 +46,11 @@ public class GasStationSuppliers {
 	@Column(name = "total_six_price")
 	private double totalSixPrice;
 
-	@Column(name = "trela_price")
-	private double trelaPrice;
+	@Column(name = "liter_price")
+	private double literPrice;
 
-	@Column(name = "total_trela_price")
-	private double totalTrelaPrice;
+	@Column(name = "transport_price")
+	private double transportPrice;
 
 	@Column(name = "supplier_type")
 	private Integer supplierType;
@@ -154,22 +154,6 @@ public class GasStationSuppliers {
 		this.totalSixPrice = totalSixPrice;
 	}
 
-	public double getTrelaPrice() {
-		return trelaPrice;
-	}
-
-	public void setTrelaPrice(double trelaPrice) {
-		this.trelaPrice = trelaPrice;
-	}
-
-	public double getTotalTrelaPrice() {
-		return totalTrelaPrice;
-	}
-
-	public void setTotalTrelaPrice(double totalTrelaPrice) {
-		this.totalTrelaPrice = totalTrelaPrice;
-	}
-
 	public Integer getSupplierType() {
 		return supplierType;
 	}
@@ -248,6 +232,22 @@ public class GasStationSuppliers {
 
 	public void setSadType(String sadType) {
 		this.sadType = sadType;
+	}
+
+	public double getLiterPrice() {
+		return literPrice;
+	}
+
+	public void setLiterPrice(double literPrice) {
+		this.literPrice = literPrice;
+	}
+
+	public double getTransportPrice() {
+		return transportPrice;
+	}
+
+	public void setTransportPrice(double transportPrice) {
+		this.transportPrice = transportPrice;
 	}
 
 }

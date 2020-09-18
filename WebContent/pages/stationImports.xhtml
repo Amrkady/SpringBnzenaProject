@@ -134,10 +134,19 @@
 						filterBy="#{sss.quantity}" filterMatchMode="contains">
 						<h:outputText value="#{sss.quantity}" />
 					</p:column>
+					<p:column headerText="سعر الليتر" style="width: 10%"
+						filterBy="#{sss.literPrice}" filterMatchMode="contains">
+						<h:outputText value="#{sss.literPrice}" />
+					</p:column>
+					<p:column headerText="سعر النقل" style="width: 10%"
+						filterBy="#{sss.transportPrice}" filterMatchMode="contains">
+						<h:outputText value="#{sss.transportPrice}" />
+					</p:column>
 					<p:column headerText="القيمة" style="width: 10%"
 						filterBy="#{sss.price}" filterMatchMode="contains">
 						<h:outputText value="#{sss.price}" />
 					</p:column>
+					
 					<p:column headerText="نوع السداد" style="width: 10%"
 						filterBy="#{(sss.sadad == 1)? 'تم السداد':'غير مسددة'}"
 						filterMatchMode="contains">
@@ -152,8 +161,8 @@
 					<p:columnGroup type="footer">
 						<p:row>
 							<p:column colspan="6" footerText="اجمالى الواردات"
-								style="FONT-WEIGHT:bold ;color : RED " />
-							<p:column colspan="3" style="FONT-WEIGHT:bold ;color : RED "
+								style="FONT-WEIGHT:bold ;color : ORANGE " />
+							<p:column colspan="3" style="FONT-WEIGHT:bold ;color : ORANGE "
 								footerText="#{importsBean.sssList.stream().map(fdet->fdet.price).sum()}" />
 
 						</p:row>
@@ -259,6 +268,23 @@
 							</div>
 							<div class="ui-g">
 								<div class="ui-g-2">
+									<h:outputLabel value="سعر الليتر" />
+								</div>
+								<div class="ui-g-3">
+									<p:inputNumber value="#{importsBean.sssAdd.literPrice}" />
+								</div>
+								<p:spacer height="10" width="10"></p:spacer>
+								<div class="ui-g-2">
+									<h:outputLabel value="سعر النقل" />
+								</div>
+								
+									<div class="ui-g-3">
+										<p:inputNumber value="#{importsBean.sssAdd.transportPrice}" />
+									</div>
+								
+							</div>
+							<div class="ui-g">
+								<div class="ui-g-2">
 									<h:outputLabel value="القيمة" />
 								</div>
 								<div class="ui-g-3">
@@ -278,6 +304,7 @@
 									</p:selectOneMenu>
 								</div>
 							</div>
+
 							<div class="iamge-box-footer" align="left">
 								<p:commandButton value="حفظ" onsuccess="PF('whsdlAdd').hide();"
 									icon="ui-icon ui-icon-save" process="@all"

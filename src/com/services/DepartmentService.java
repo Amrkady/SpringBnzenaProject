@@ -3,6 +3,7 @@ package com.services;
 import java.util.List;
 
 import com.entities.Attachment;
+import com.entities.ExpensisTypes;
 import com.entities.Gas;
 import com.entities.GasGuns;
 import com.entities.Rents;
@@ -43,5 +44,7 @@ public interface DepartmentService {
 
 	public List<Attachment> loadAttachments(Integer stId);
 
-	List<Taxs> loadTaxs();
+	public List<Taxs> loadTaxs();
+
+	public List<ExpensisTypes> loadExpTypes();
 }

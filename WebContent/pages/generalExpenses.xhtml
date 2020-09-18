@@ -18,13 +18,13 @@
 			<h:form dir="rtl" id="form">
 				<p:messages id="msg" autoUpdate="true" closable="true"></p:messages>
 				<h1 style="color: #1565C0; text-align: center;">المصروفات
-					العمومية</h1>
+					 العمومية والادارية</h1>
 				<div class="image-box-footer" align="left">
 					<p:commandButton id="cBadd" value="اضافة مصروفات " immediate="true"
 						icon="ui-icon ui-icon-plus" onclick="PF('whsdlAdd').show();">
 					</p:commandButton>
 					<p:spacer width="20" height="10"></p:spacer>
-					<p:commandButton id="dd" value="عمل سند صرف" immediate="true" styleClass="cyan-btn"
+					<p:commandButton id="dd" value="سند صرف" immediate="true" styleClass="cyan-btn"
 						icon="ui-icon ui-icon-plus" onclick="PF('whsdlgAdd').show();">
 					</p:commandButton>
 				</div>
@@ -93,6 +93,7 @@
 					value="#{generalExpensisBean.expensisList}"
 					emptyMessage="لايوجد بيانات" rowIndexVar="rowIndex"
 					widgetVar="cellemp" paginatorPosition="bottom"
+					sortBy="#{exp.monthDate}" sortOrder="descending"
 					paginatorTemplate="{FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink}"
 					paginator="true" rows="10">
 					<p:ajax event="rowEdit" listener="#{generalExpensisBean.onRowEdit}"
@@ -136,8 +137,8 @@
 					<p:columnGroup type="footer">
 						<p:row>
 							<p:column colspan="3" footerText="اجمالى المصروفات"
-								style="FONT-WEIGHT:bold ;color : RED " />
-							<p:column colspan="2" style="FONT-WEIGHT:bold ;color : RED "
+								style="FONT-WEIGHT:bold ;color : ORANGE " />
+							<p:column colspan="2" style="FONT-WEIGHT:bold ;color : ORANGE "
 								footerText="#{generalExpensisBean.expensisList.stream().map(fdet->fdet.expensisQuantity).sum()}" />
 
 						</p:row>
@@ -207,9 +208,9 @@
 			</h:form>
 			<h:form>
 				<p:dialog position="center" widgetVar="whsdlgAdd" responsive="true"
-					dynamic="true" hideEffect="explode" showEffect="fade" width="60%"
+					dynamic="true" hideEffect="explode" showEffect="fade" width="80%"
 					closable="true" resizable="true" modal="true" dir="rtl">
-					<h:panelGroup id="panelGroupAdd" width="60%">
+					<h:panelGroup id="panelGroupAdd" width="80%">
 						<p:fieldset legend="بيانات سند الصرف " width="100%">
 							<div class="ui-g">
 								<div class="ui-g-2">
@@ -249,8 +250,7 @@
 									<h:outputLabel value="طريقة الدفع" />
 								</div>
 								<div class="ui-g-3">
-									<p:selectOneMenu style="width:100%;" required="true"
-										requiredMessage="ادخل طريقة الدفع "
+									<p:selectOneMenu style="width:100%;"
 										value="#{generalExpensisBean.sm.payType}">
 										<f:selectItem itemLabel="اختر طريقة الدفع"
 											noSelectionOption="true"></f:selectItem>
@@ -267,20 +267,65 @@
 									<h:outputLabel value="ذلك مقابل" />
 								</div>
 								<div class="ui-g-6">
-									<p:inputText style="width:100%" required="true"
-										requiredMessage="ادخل السبب (ذلك مقابل)"
+									<p:inputText style="width:100%" 
 										value="#{generalExpensisBean.sm.forWhat}">
 										<p:ajax process="@this"></p:ajax>
 									</p:inputText>
 								</div>
 							</div>
 							<div class="iamge-box-footer" align="left">
-								<p:commandButton value="طباعة" style="width:10%; align:left"
-									process="@all" icon="ui-icon ui-icon-print " immediate="true"
-									onsuccess="PF('whsdlgAdd').hide();"
-									action="#{generalExpensisBean.print}"
-									onclick="this.form.target='_blank'" ajax="false">
+								<p:commandButton value="حفظ" 
+									icon="ui-icon ui-icon-save" process="@all"
+									action="#{generalExpensisBean.addSnad}"
+									update="ble">
 								</p:commandButton>
+							</div>
+							<h2>سندات الصرف العمومية</h2>
+							<br />
+							
+							<p:dataTable id="ble" var="snd" sortBy="#{snd.sndDate}"
+								sortOrder="descending" value="#{generalExpensisBean.sndList}"
+								emptyMessage="لايوجد بيانات" rowIndexVar="rowIndex"
+								widgetVar="cellemp" paginatorPosition="bottom"
+								paginatorTemplate="{FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink}"
+								paginator="true" rows="10">
+								<p:column headerText="رقم" style="width: 5%">
+									<h:outputText value="#{rowIndex+1}" />
+								</p:column>
+								<p:column headerText="التاريخ " style="width: 20%"
+									filterBy="#{snd.sndDate}" filterMatchMode="contains">
+									<h:outputText value="#{snd.sndDate}">
+										<f:convertDateTime pattern="yyyy/MM/dd" />
+									</h:outputText>
+								</p:column>
+<!-- 								<p:column headerText="نوع المصروفات" style="width: 15%" -->
+<!-- 									filterBy="#{snd.expensisTypesName}" filterMatchMode="contains"> -->
+<!-- 									<h:outputText value="#{snd.expensisTypesName}" /> -->
+<!-- 								</p:column> -->
+								<p:column headerText="صرف الي " style="width: 15%"
+									filterBy="#{snd.name}" filterMatchMode="contains">
+									<h:outputText value="#{snd.name}" />
+								</p:column>
+								<p:column headerText="القيمة" style="width: 10%"
+									filterBy="#{snd.amount}" filterMatchMode="contains">
+									<h:outputText value="#{snd.amount}" />
+								</p:column>
+								<p:column headerText="طريقة الدفع" style="width: 20%"
+									filterBy="#{snd.payType}" filterMatchMode="contains">
+									<h:outputText value="#{snd.payType}" />
+								</p:column>
+								<p:column headerText="ذلك مقابل" style="width: 15%"
+									filterBy="#{snd.forReason}" filterMatchMode="contains">
+									<h:outputLabel value="#{snd.forReason}" />
+								</p:column>
+								<p:column headerText="طباعة" style="width: 8%">
+									<p:commandButton value="طباعة" immediate="true"
+										action="#{generalExpensisBean.print(snd)}"
+										onclick="this.form.target='_blank'" ajax="false">
+									</p:commandButton>
+								</p:column>
+							</p:dataTable>
+							<div class="iamge-box-footer" align="left">
 								<p:spacer height="4"></p:spacer>
 								<p:commandButton styleClass="orange-btn" value="عودة"
 									icon="ui-icon ui-icon-arrow-back" immediate="true"

@@ -28,6 +28,12 @@
 						action="#{revenuesBean.printAll}"
 						onclick="this.form.target='_blank'" ajax="false">
 					</p:commandButton>
+					<p:spacer width="10" height="10"></p:spacer>
+					<p:commandButton id="first" value="اضافة رصيد اول يوم"
+						immediate="true" icon="ui-icon ui-icon-plus"
+						onclick="PF('whsdlftAdd').show();">
+					</p:commandButton>
+
 				</div>
 				<h:panelGroup id="png">
 					<div class="ui-g">
@@ -72,14 +78,14 @@
 				<br />
 				<p:dataTable id="myTable" var="gunR"
 					value="#{revenuesBean.gunsRevenuList}" emptyMessage="لايوجد بيانات"
-					rowIndexVar="rowIndex" widgetVar="cellemp"
-					paginatorPosition="bottom"
+					rowIndexVar="rowIndex" widgetVar="cellemp" sortBy="#{gunR.revDate}"
+					sortOrder="descending" paginatorPosition="bottom"
 					paginatorTemplate="{FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink}"
 					paginator="true" rows="10">
 					<p:column headerText="رقم" style="width: 5%">
 						<h:outputText value="#{rowIndex+1}" />
 					</p:column>
-					<p:column headerText="التاريخ " style="width: 20%"
+					<p:column headerText="التاريخ " style="width: 10%"
 						filterBy="#{gunR.revDate}" filterMatchMode="contains">
 						<h:outputText value="#{gunR.revDate}">
 							<f:convertDateTime pattern="yyyy/MM/dd" />
@@ -105,32 +111,36 @@
 						filterBy="#{gunR.litersNum}" filterMatchMode="contains">
 						<h:outputText value="#{gunR.litersNum}" />
 					</p:column>
+					<p:column headerText=" سعر اللتر " style="width: 10%"
+						filterBy="#{gunR.literPrice}" filterMatchMode="contains">
+						<h:outputText value="#{gunR.literPrice}" />
+					</p:column>
 					<p:column headerText="القيمة" style="width: 20%"
 						filterBy="#{gunR.totalPrice}" filterMatchMode="contains">
 						<h:outputText value="#{gunR.totalPrice}" />
 					</p:column>
 
 					<p:column headerText="حذف" style="width:5%">
-						<p:commandButton update=":form:myTable"
-							style="background-color:red" icon="ui-icon ui-icon-remove"
-							title="حذف" action="#{revenuesBean.deleteGas(gunR)}">
+						<p:commandButton update="form" style="background-color:red"
+							icon="ui-icon ui-icon-remove" title="حذف"
+							action="#{revenuesBean.deleteGas(gunR)}">
 						</p:commandButton>
 					</p:column>
 					<p:columnGroup type="footer">
 						<p:row>
 							<p:column colspan="2" footerText="اجمالى الايرادات"
-								style="FONT-WEIGHT:bold ;color : RED " />
+								style="FONT-WEIGHT:bold ;color : ORANGE " />
 							<p:column colspan="1" footerText="" />
 							<p:column colspan="1" footerText="عدد اللترات"
-								style="FONT-WEIGHT:bold ;color : RED " />
+								style="FONT-WEIGHT:bold ;color : ORANGE " />
 							<p:column colspan="2"
 								footerText="#{revenuesBean.gunsRevenuList.stream().map(fdet->fdet.litersNum).sum()}"
-								style="FONT-WEIGHT:bold ;color : RED " />
+								style="FONT-WEIGHT:bold ;color : ORANGE " />
 							<p:column colspan="1" footerText="القيمة الكلية"
-								style="FONT-WEIGHT:bold ;color : RED " />
+								style="FONT-WEIGHT:bold ;color : ORANGE " />
 							<p:column colspan="2"
 								footerText="#{revenuesBean.gunsRevenuList.stream().map(fdet->fdet.totalPrice).sum()}"
-								style="FONT-WEIGHT:bold ;color : RED " />
+								style="FONT-WEIGHT:bold ;color : ORANGE " />
 							<p:column colspan="1" footerText="" />
 
 						</p:row>
@@ -143,33 +153,40 @@
 					<h:panelGroup id="png1">
 						<div class="ui-g">
 							<div class="ui-g-3">
-								<p:outputLabel style="FONT-WEIGHT:bold ;color : RED "
+								<p:outputLabel style="FONT-WEIGHT:bold ;color : ORANGE "
 									value="اجمالى الايرادات قبل الضريبة"></p:outputLabel>
 							</div>
 							<div class="ui-g-3">
-								<p:outputLabel style="FONT-WEIGHT:bold ;color : RED "
+								<p:outputLabel style="FONT-WEIGHT:bold ;color : ORANGE "
 									value="#{revenuesBean.gunsRevenuList.stream().map(fdet->fdet.totalPrice).sum()}">
+									<f:convertNumber type="number" groupingUsed="true"
+										minFractionDigits="2" pattern="#0.00" />
 								</p:outputLabel>
 							</div>
 							<div class="ui-g-2">
-								<p:outputLabel style="FONT-WEIGHT:bold ;color : RED "
+								<p:outputLabel style="FONT-WEIGHT:bold ;color : ORANGE "
 									value="قيمة الضريبة "></p:outputLabel>
 							</div>
 							<div class="ui-g-1">
-								<p:outputLabel style="FONT-WEIGHT:bold ;color : RED "
-									value="#{(revenuesBean.gunsRevenuList.stream().map(fdet->fdet.totalPrice).sum()) * (revenuesBean.taxsList.get(0).taxValue / 100)}"></p:outputLabel>
+								<p:outputLabel style="FONT-WEIGHT:bold ;color : ORANGE "
+									value="#{((revenuesBean.gunsRevenuList.stream().map(fdet->fdet.totalPrice).sum()) / (1+ (revenuesBean.taxsList.get(0).taxValue / 100) ))* (revenuesBean.taxsList.get(0).taxValue / 100)}">
+									<f:convertNumber type="number" groupingUsed="true"
+										minFractionDigits="2" pattern="#0.00" />
+								</p:outputLabel>
 							</div>
-							
+
 						</div>
 						<div class="ui-g">
 							<div class="ui-g-3">
-								<p:outputLabel style="FONT-WEIGHT:bold ;color : RED "
+								<p:outputLabel style="FONT-WEIGHT:bold ;color : ORANGE "
 									value="اجمالى الايرادات بعد الضريبة"></p:outputLabel>
 
 							</div>
 							<div class="ui-g-2">
-								<p:outputLabel style="FONT-WEIGHT:bold ;color : RED "
-									value="#{(revenuesBean.gunsRevenuList.stream().map(fdet->fdet.totalPrice).sum())-((revenuesBean.gunsRevenuList.stream().map(fdet->fdet.totalPrice).sum()) * (revenuesBean.taxsList.get(0).taxValue / 100))}">
+								<p:outputLabel style="FONT-WEIGHT:bold ;color : ORANGE "
+									value="#{(revenuesBean.gunsRevenuList.stream().map(fdet->fdet.totalPrice).sum())-((revenuesBean.gunsRevenuList.stream().map(fdet->fdet.totalPrice).sum()) / (1+ (revenuesBean.taxsList.get(0).taxValue / 100) ))* (revenuesBean.taxsList.get(0).taxValue / 100)}">
+									<f:convertNumber type="number" groupingUsed="true"
+										minFractionDigits="2" pattern="#0.00" />
 								</p:outputLabel>
 							</div>
 						</div>
@@ -177,11 +194,66 @@
 				</p:fieldset>
 			</h:form>
 			<h:form>
+				<p:dialog position="center" widgetVar="whsdlftAdd" responsive="true"
+					id="dlg" dynamic="true" hideEffect="explode" showEffect="fade"
+					width="70%" closable="true" resizable="true" modal="true" dir="rtl">
+					<h:panelGroup id="panelGroup" width="70%">
+						<p:fieldset legend="بيانات الايرادات " width="100%">
+							<div class="ui-g">
+								<div class="ui-g-2">
+									<h:outputLabel value="التاريخ" />
+								</div>
+								<div class="ui-g-3">
+									<p:calendar style="width:100%" pattern="yyyy/MM/dd"
+										value="#{revenuesBean.addObj.readDate}">
+									</p:calendar>
+								</div>
+								<p:spacer height="10" width="10"></p:spacer>
+								<div class="ui-g-2">
+									<h:outputLabel value="نوع الوقود" />
+								</div>
+								<div class="ui-g-3">
+									<p:selectOneMenu style="width:100%"
+										value="#{revenuesBean.addObj.gasId}" required="true"
+										requiredMessage="نوع الوقود مطلوب">
+										<f:selectItem itemLabel="اختر نوع الوقود"
+											noSelectionOption="true" />
+										<f:selectItems value="#{revenuesBean.gasList}" var="gs"
+											itemLabel="#{gs.name}" itemValue="#{gs.id}" />
+									</p:selectOneMenu>
+								</div>
+							</div>
+							<div class="ui-g">
+								<div class="ui-g-2">
+									<h:outputLabel value="قراءة الرصيد الاول" />
+								</div>
+								<div class="ui-g-3">
+									<p:inputText style="width:100%" required="true"
+										requiredMessage="ادخل القراءة  "
+										value="#{revenuesBean.addObj.amount}">
+									</p:inputText>
+								</div>
+							</div>
+							<div class="iamge-box-footer" align="left">
+								<p:commandButton value="حفظ" onsuccess="PF('whsdlftAdd').hide();"
+									icon="ui-icon ui-icon-save" process="@all"
+									action="#{revenuesBean.addFirst}" update="panelGroup">
+								</p:commandButton>
+								<p:spacer height="4"></p:spacer>
+								<p:commandButton styleClass="orange-btn" value="عودة"
+									icon="ui-icon ui-icon-arrow-back" immediate="true"
+									onclick="PF('whsdlftAdd').hide();" />
+							</div>
+						</p:fieldset>
+					</h:panelGroup>
+				</p:dialog>
+			</h:form>
+			<h:form>
 				<p:dialog position="center" widgetVar="whsdlAdd" responsive="true"
 					id="dlg" dynamic="true" hideEffect="explode" showEffect="fade"
 					width="70%" closable="true" resizable="true" modal="true" dir="rtl">
 					<h:panelGroup id="panelGroupAdd" width="70%">
-						<p:fieldset legend="بيانات الايجار " width="100%">
+						<p:fieldset legend="بيانات الايرادات " width="100%">
 							<div class="ui-g">
 								<div class="ui-g-2">
 									<h:outputLabel value="التاريخ" />

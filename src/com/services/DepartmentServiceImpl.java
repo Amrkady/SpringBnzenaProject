@@ -4,6 +4,7 @@ import java.util.List;
 
 import com.common.CommonDao;
 import com.entities.Attachment;
+import com.entities.ExpensisTypes;
 import com.entities.Gas;
 import com.entities.GasGuns;
 import com.entities.Rents;
@@ -117,4 +118,11 @@ public class DepartmentServiceImpl implements DepartmentService {
 		List stations = commonDao.findAll(Taxs.class);
 		return stations;
 	}
+
+	@Override
+	public List<ExpensisTypes> loadExpTypes() {
+		List stations = commonDao.findAll(ExpensisTypes.class);
+		return stations;
+	}
+
 }

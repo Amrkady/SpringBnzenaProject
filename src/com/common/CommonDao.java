@@ -13,6 +13,7 @@ import com.entities.GasStationSuppliers;
 import com.entities.GunsRevenus;
 import com.entities.Rents;
 import com.entities.Shops;
+import com.entities.SndSrfQbd;
 import com.entities.Suppliers;
 import com.entities.Users;
 
@@ -61,5 +62,7 @@ public interface CommonDao {
 	public List<Expensis> findExpensisByDates(Date dateFrom, Date dateTo, Integer supType, Integer stId);
 
 	public List<ExpensisTypes> findExpensisTypes(Integer general);
+
+	public List<SndSrfQbd> findSndByType(Integer type, Integer stationId);
 
 }

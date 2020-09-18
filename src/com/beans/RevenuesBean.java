@@ -18,6 +18,7 @@ import javax.servlet.http.HttpSession;
 
 import org.primefaces.event.RowEditEvent;
 
+import com.entities.FirstDayAmount;
 import com.entities.Gas;
 import com.entities.GasGuns;
 import com.entities.GunsRevenus;
@@ -44,7 +45,7 @@ public class RevenuesBean {
 	private Date dateTo;
 	private Integer gasId;
 	private List<Taxs> taxsList = new ArrayList<Taxs>();
-
+	FirstDayAmount addObj = new FirstDayAmount();
 	@PostConstruct
 	public void init() {
 		FacesContext facesContext = FacesContext.getCurrentInstance();
@@ -76,6 +77,22 @@ public class RevenuesBean {
 				MsgEntry.addInfoMessage(Utils.loadMessagesFromFile("success.operation"));
 				gunsRevenuList = accountsServiceImpl.loadGunsRevenusList(stId);
 				sssAdd = new GunsRevenus();
+			}
+		} catch (Exception e) {
+			MsgEntry.addErrorMessage(Utils.loadMessagesFromFile("error.operation"));
+			e.printStackTrace();
+		}
+		return "";
+	}
+
+	public String addFirst() {
+		try {
+			if (addObj != null) {
+				addObj.setStationId(stId);
+				departmentServiceImpl.save(addObj);
+				MsgEntry.addInfoMessage(Utils.loadMessagesFromFile("success.operation"));
+				// gunsRevenuList = accountsServiceImpl.loadGunsRevenusList(stId);
+				addObj = new FirstDayAmount();
 			}
 		} catch (Exception e) {
 			MsgEntry.addErrorMessage(Utils.loadMessagesFromFile("error.operation"));
@@ -270,6 +287,14 @@ public class RevenuesBean {
 
 	public void setTaxsList(List<Taxs> taxsList) {
 		this.taxsList = taxsList;
+	}
+
+	public FirstDayAmount getAddObj() {
+		return addObj;
+	}
+
+	public void setAddObj(FirstDayAmount addObj) {
+		this.addObj = addObj;
 	}
 
 }

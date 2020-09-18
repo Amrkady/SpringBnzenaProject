@@ -20,6 +20,7 @@ import com.entities.Gas;
 import com.entities.GasGuns;
 import com.entities.GasStationSuppliers;
 import com.entities.GunsRevenus;
+import com.entities.SndSrfQbd;
 import com.entities.Stations;
 import com.entities.Taxs;
 import com.models.SandModel;
@@ -51,8 +52,10 @@ public class GeneralRevenuesBean {
 	private List<GasStationSuppliers> sssList = new ArrayList<GasStationSuppliers>();
 	private double supTaxVal;
 	private double supTotalQuantity;
-
+	private SndSrfQbd snd = new SndSrfQbd();
 	private SandModel sm = new SandModel();
+	private List<SndSrfQbd> sndList = new ArrayList<SndSrfQbd>();
+	private boolean canPrint = false;
 
 	@PostConstruct
 	public void init() {
@@ -61,6 +64,7 @@ public class GeneralRevenuesBean {
 		taxsList = departmentServiceImpl.loadTaxs();
 		expensisList = accountsServiceImpl.loadAllExpensisList();
 		sssList = accountsServiceImpl.loadsssList(-1);
+		sndList = accountsServiceImpl.loadSndByType(1, -1);
 		calTaxForOutSuppliers();
 	}
 
@@ -73,6 +77,29 @@ public class GeneralRevenuesBean {
 		gunsRevenuList = accountsServiceImpl.loadRevsByDates(dateFrom, dateTo, null, stId);
 		sssList = accountsServiceImpl.loadsssByDates(dateFrom, dateTo, null, null, stId);
 		calTaxForOutSuppliers();
+		return "";
+	}
+
+	public String addSnad() {
+		try {
+			if (snd != null) {
+				snd.setAmount(sm.getAmount());
+				snd.setSndDate(sm.getEntryDate());
+				snd.setName(sm.getName());
+				snd.setForReason(sm.getForWhat());
+				snd.setPayType(sm.getPayType());
+				snd.setSndType(1); // 1 snd qabd
+				departmentServiceImpl.save(snd);
+				// canPrint = false;
+				MsgEntry.addInfoMessage(Utils.loadMessagesFromFile("success.operation"));
+				sndList = accountsServiceImpl.loadSndByType(1, -1);
+				snd = new SndSrfQbd();
+				sm = new SandModel();
+			}
+		} catch (Exception e) {
+			MsgEntry.addErrorMessage(Utils.loadMessagesFromFile("error.operation"));
+			e.printStackTrace();
+		}
 		return "";
 	}
 
@@ -94,7 +121,8 @@ public class GeneralRevenuesBean {
 
 			}
 			supTotalQuantity = Math.round(supTotalQuantity * 100) / 100.00d;
-			supTaxVal = supTotalQuantity * (taxsList.get(0).getTaxValue() / 100);
+			supTaxVal = (supTotalQuantity / (1 + (taxsList.get(0).getTaxValue() / 100)))
+					* (taxsList.get(0).getTaxValue() / 100);
 			supTaxVal = Math.round(supTaxVal * 100) / 100.00d;
 			for (GasStationSuppliers sup : sssList) {
 				if (sup.getSupplierType() == 2) {
@@ -140,7 +168,7 @@ public class GeneralRevenuesBean {
 			}
 			try {
 
-				String reportName = "/reports/Bills_snad.jasper";
+				String reportName = "/reports/sand_qabd.jasper";
 				Map<String, Object> parameters = new HashMap<String, Object>();
 				parameters.put("custName", sm.getName());
 				String reyal = String.valueOf(sm.getAmount());
@@ -154,12 +182,59 @@ public class GeneralRevenuesBean {
 					parameters.put("reyal", (int) sm.getAmount());
 					parameters.put("halaa", 00);
 				}
-				parameters.put("for", sm.getForWhat());
-				parameters.put("payType", sm.getPayType());
+
+				parameters.put("for", sm.getForWhat() == null ? " " : sm.getForWhat());
+				parameters.put("payType", sm.getPayType() == null ? "" : sm.getPayType());
 				SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
 				String grigDate = sdf.format(sm.getEntryDate());
 				parameters.put("date", grigDate);
 				parameters.put("dateH", hDate);
+				parameters.put("costByLet", sm.getAmount());
+				String headerPath = FacesContext.getCurrentInstance().getExternalContext()
+						.getRealPath("/reports/logoreport.png");
+				parameters.put("header", headerPath);
+//		//parameters.put("userId", employerId);
+				Utils.printPdfReport(reportName, parameters);
+
+			} catch (Exception e) {
+				// TODO: handle exception
+			}
+		}
+		return "";
+	}
+
+	public String print(SndSrfQbd sm) {
+
+		if (sm != null) {
+			String hDate = null;
+			try {
+				hDate = Utils.grigDatesConvert(sm.getSndDate());
+			} catch (ParseException e1) {
+				e1.printStackTrace();
+			}
+			try {
+
+				String reportName = "/reports/sand_qabd.jasper";
+				Map<String, Object> parameters = new HashMap<String, Object>();
+				parameters.put("custName", sm.getName());
+				String reyal = String.valueOf(sm.getAmount());
+				if (reyal.contains(".")) {
+					reyal = reyal.substring(0, reyal.indexOf("."));
+					parameters.put("reyal", Integer.parseInt(reyal));
+					String hall = String.valueOf(sm.getAmount());
+					hall = hall.substring(hall.indexOf(".") + 1);
+					parameters.put("halaa", Integer.parseInt(hall));
+				} else {
+					parameters.put("reyal", (int) sm.getAmount());
+					parameters.put("halaa", 00);
+				}
+				parameters.put("for", sm.getForReason() == null ? " " : sm.getForReason());
+				parameters.put("payType", sm.getPayType() == null ? "" : sm.getPayType());
+				SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+				String grigDate = sdf.format(sm.getSndDate());
+				parameters.put("date", grigDate);
+				parameters.put("dateH", hDate);
+
 				parameters.put("costByLet", sm.getAmount());
 				String headerPath = FacesContext.getCurrentInstance().getExternalContext()
 						.getRealPath("/reports/logoreport.png");
@@ -179,7 +254,7 @@ public class GeneralRevenuesBean {
 			stId = -1;
 		}
 		try {
-			String reportName = "/reports/revenues.jasper";
+			String reportName = "/reports/revenues_general.jasper";
 			Map<String, Object> parameters = new HashMap<String, Object>();
 			parameters.put("stationId", stId);
 			String fromDate = "1";
@@ -201,6 +276,7 @@ public class GeneralRevenuesBean {
 			parameters.put("dateTo", toDate);
 			parameters.put("dateF", fromD);
 			parameters.put("dateT", toD);
+			parameters.put("tax", (float) (taxsList.get(0).getTaxValue() / 100));
 			String headerPath = FacesContext.getCurrentInstance().getExternalContext()
 					.getRealPath("/reports/logoreport.png");
 			parameters.put("header", headerPath);
@@ -355,6 +431,30 @@ public class GeneralRevenuesBean {
 
 	public void setSm(SandModel sm) {
 		this.sm = sm;
+	}
+
+	public SndSrfQbd getSnd() {
+		return snd;
+	}
+
+	public void setSnd(SndSrfQbd snd) {
+		this.snd = snd;
+	}
+
+	public boolean isCanPrint() {
+		return canPrint;
+	}
+
+	public void setCanPrint(boolean canPrint) {
+		this.canPrint = canPrint;
+	}
+
+	public List<SndSrfQbd> getSndList() {
+		return sndList;
+	}
+
+	public void setSndList(List<SndSrfQbd> sndList) {
+		this.sndList = sndList;
 	}
 
 }

@@ -28,6 +28,11 @@
 						action="#{importsBean.printAll}"
 						onclick="this.form.target='_blank'" ajax="false">
 					</p:commandButton>
+					<p:commandButton value="كشف حساب" process="@all"
+						icon="ui-icon ui-icon-print" immediate="true"
+						action="#{importsBean.printAccount}"
+						onclick="this.form.target='_blank'" ajax="false">
+					</p:commandButton>
 				</div>
 				<h:panelGroup id="png">
 					<div class="ui-g">
@@ -115,43 +120,50 @@
 					<p:column headerText="تاريخ الوارد" style="width: 10%"
 						filterBy="#{sss.supDate}" filterMatchMode="contains">
 						<h:outputText value="#{sss.supDate}">
-							<f:convertDateTime pattern="yyyy/MM/dd" />
+							<f:convertDateTime pattern="dd/MM/yyyy" />
 						</h:outputText>
 					</p:column>
-					<p:column headerText="نوع الوقود" style="width: 8%"
-						filterBy="#{sss.gasName}" filterMatchMode="contains">
+					<p:column headerText="نوع الوقود"
+						style="width: 8% ; text-align:center" filterBy="#{sss.gasName}"
+						filterMatchMode="contains">
 						<h:outputText value="#{sss.gasName}" />
 					</p:column>
-					<p:column headerText="رقم الفاتورة" style="width: 10%"
-						filterBy="#{sss.billNo}" filterMatchMode="contains">
+					<p:column headerText="رقم الفاتورة"
+						style="width: 10% ; text-align:center" filterBy="#{sss.billNo}"
+						filterMatchMode="contains">
 						<h:outputText value="#{sss.billNo}" />
 					</p:column>
 					<p:column headerText="المورد" style="width: 20%"
 						filterBy="#{sss.gasName}" filterMatchMode="contains">
 							#{(sss.supplierType == 1)? sss.supplierName : sss.stationName }
 					</p:column>
-					<p:column headerText="الكمية" style="width: 10%"
-						filterBy="#{sss.quantity}" filterMatchMode="contains">
+					<p:column headerText="الكمية"
+						style="width: 10% ; text-align:center" filterBy="#{sss.quantity}"
+						filterMatchMode="contains">
 						<h:outputText value="#{sss.quantity}" />
 					</p:column>
-					<p:column headerText="سعر الليتر" style="width: 10%"
+					<p:column headerText="سعر الليتر"
+						style="width: 10% ; text-align:center"
 						filterBy="#{sss.literPrice}" filterMatchMode="contains">
 						<h:outputText value="#{sss.literPrice}" />
 					</p:column>
-					<p:column headerText="سعر النقل" style="width: 10%"
+					<p:column headerText="سعر النقل"
+						style="width: 10% ; text-align:center"
 						filterBy="#{sss.transportPrice}" filterMatchMode="contains">
 						<h:outputText value="#{sss.transportPrice}" />
 					</p:column>
 					<p:column headerText="القيمة" style="width: 10%"
 						filterBy="#{sss.price}" filterMatchMode="contains">
-						<h:outputText value="#{sss.price}" />
+						<h:outputText value="#{sss.price}">
+							<f:convertNumber pattern="################.##"></f:convertNumber>
+						</h:outputText>
 					</p:column>
-					
-					<p:column headerText="نوع السداد" style="width: 10%"
-						filterBy="#{(sss.sadad == 1)? 'تم السداد':'غير مسددة'}"
-						filterMatchMode="contains">
-						#{(sss.sadad == 1)? 'تم السداد':'غير مسددة'}
-					</p:column>
+
+					<!-- 					<p:column headerText="نوع السداد" style="width: 10%" -->
+					<!-- 						filterBy="#{(sss.sadad == 1)? 'تم السداد':'غير مسددة'}" -->
+					<!-- 						filterMatchMode="contains"> -->
+					<!-- 						#{(sss.sadad == 1)? 'تم السداد':'غير مسددة'} -->
+					<!-- 					</p:column> -->
 					<p:column headerText="حذف" style="width:5%">
 						<p:commandButton update=":form:myTable"
 							style="background-color:red" icon="ui-icon ui-icon-remove"
@@ -161,9 +173,9 @@
 					<p:columnGroup type="footer">
 						<p:row>
 							<p:column colspan="6" footerText="اجمالى الواردات"
-								style="FONT-WEIGHT:bold ;color : ORANGE " />
-							<p:column colspan="3" style="FONT-WEIGHT:bold ;color : ORANGE "
-								footerText="#{importsBean.sssList.stream().map(fdet->fdet.price).sum()}" />
+								style="FONT-WEIGHT:bold ;color : #F85F3E " />
+							<p:column colspan="3" style="FONT-WEIGHT:bold ;color : #F85F3E "
+								footerText="#{importsBean.listTotalSumDecimal}" />
 
 						</p:row>
 
@@ -188,7 +200,7 @@
 											noSelectionOption="true" />
 										<f:selectItem itemLabel="خارجي" itemValue="1" />
 										<f:selectItem itemLabel="داخلي" itemValue="2" />
-										<f:ajax execute="@this" render="list1 list2"
+										<f:ajax execute="@this" render="pngList"
 											listener="#{importsBean.loadSuppliers}" />
 									</p:selectOneMenu>
 								</div>
@@ -196,33 +208,38 @@
 								<div class="ui-g-2">
 									<h:outputLabel id="txt" value="المورد" />
 								</div>
-								<div class="ui-g-2">
+								<h:panelGroup id="pngList">
+									<!-- 									<h:panelGroup> -->
+									<div class="ui-g-2">
+										<p:selectOneMenu style="width:100%"
+											rendered="#{!(importsBean.show)}"
+											value="#{importsBean.sssAdd.supplierId}" required="true"
+											requiredMessage="المورد  مطلوب" id="list1">
+											<f:selectItem itemLabel="اختر   المورد"
+												noSelectionOption="true" />
+											<f:selectItems value="#{importsBean.supsList}" var="sup"
+												itemLabel="#{sup.name}" itemValue="#{sup.id}" />
+											<p:ajax process="@this" />
+										</p:selectOneMenu>
 
-									<p:selectOneMenu style="width:100%"
-										disabled="#{importsBean.show}"
-										value="#{importsBean.sssAdd.supplierId}" required="true"
-										requiredMessage="المورد  مطلوب" id="list1">
-										<f:selectItem itemLabel="اختر   المورد"
-											noSelectionOption="true" />
-										<f:selectItems value="#{importsBean.supsList}" var="sup"
-											itemLabel="#{sup.name}" itemValue="#{sup.id}" />
-										<p:ajax process="@this" />
-									</p:selectOneMenu>
 
-								</div>
-								<div class="ui-g-2">
-									<p:selectOneMenu style="width:100%" id="list2"
-										disabled="#{!(importsBean.show)}"
-										value="#{importsBean.sssAdd.fromStationId}" required="true"
-										requiredMessage="اسم المورد مطلوب">
-										<f:selectItem itemLabel=" اختر  المورد "
-											noSelectionOption="true" />
-										<f:selectItems value="#{importsBean.stationsList}" var="st"
-											itemLabel="#{st.name}" itemValue="#{st.id}" />
-										<p:ajax process="@this" />
-									</p:selectOneMenu>
+										<!-- 									</h:panelGroup> -->
+										<!-- 									<h:panelGroup > -->
 
-								</div>
+										<p:selectOneMenu rendered="#{importsBean.show}"
+											style="width:100%" id="list2"
+											value="#{importsBean.sssAdd.fromStationId}" required="true"
+											requiredMessage="اسم المورد مطلوب">
+											<f:selectItem itemLabel=" اختر  المورد "
+												noSelectionOption="true" />
+											<f:selectItems value="#{importsBean.stationsList}" var="st"
+												itemLabel="#{st.name}" itemValue="#{st.id}" />
+											<p:ajax process="@this" />
+										</p:selectOneMenu>
+
+									</div>
+									<!-- 									</h:panelGroup> -->
+								</h:panelGroup>
 							</div>
 
 							<div class="ui-g">
@@ -277,11 +294,11 @@
 								<div class="ui-g-2">
 									<h:outputLabel value="سعر النقل" />
 								</div>
-								
-									<div class="ui-g-3">
-										<p:inputNumber value="#{importsBean.sssAdd.transportPrice}" />
-									</div>
-								
+
+								<div class="ui-g-3">
+									<p:inputNumber value="#{importsBean.sssAdd.transportPrice}" />
+								</div>
+
 							</div>
 							<div class="ui-g">
 								<div class="ui-g-2">
@@ -298,8 +315,8 @@
 									<p:selectOneMenu style="width:100%"
 										value="#{importsBean.sssAdd.sadType}">
 										<f:selectItem itemLabel="اختر " noSelectionOption="true" />
-										<f:selectItem itemLabel="مسددة" itemValue="1" />
-										<f:selectItem itemLabel="غير مسددة" itemValue="2" />
+										<f:selectItem itemLabel="فاتورة" itemValue="0" />
+										<f:selectItem itemLabel="سداد" itemValue="1" />
 										<p:ajax process="@this" />
 									</p:selectOneMenu>
 								</div>

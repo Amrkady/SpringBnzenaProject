@@ -1,5 +1,8 @@
 package com.common;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -14,17 +17,22 @@ import org.springframework.security.core.AuthenticationException;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.entities.Attachment;
+import com.entities.Constantsasoul;
 import com.entities.Expensis;
 import com.entities.ExpensisTypes;
+import com.entities.FirstDayAmount;
 import com.entities.Gas;
 import com.entities.GasGuns;
 import com.entities.GasStationSuppliers;
+import com.entities.GeneralPay;
 import com.entities.GunsRevenus;
 import com.entities.Rents;
 import com.entities.Shops;
 import com.entities.SndSrfQbd;
+import com.entities.Stations;
 import com.entities.Suppliers;
 import com.entities.Users;
+import com.models.GasModel;
 
 public class CommonDaoImpl extends HibernateTemplate implements CommonDao {
 	private SessionFactory sessionFactory;
@@ -178,6 +186,7 @@ public class CommonDaoImpl extends HibernateTemplate implements CommonDao {
 		if (stationId != -1) {
 			criteria.add(Restrictions.eq("stationId", stationId));
 		}
+		criteria.add(Restrictions.eq("sadad", 0));
 		List<GasStationSuppliers> sss = criteria.list();
 		return sss;
 
@@ -264,6 +273,7 @@ public class CommonDaoImpl extends HibernateTemplate implements CommonDao {
 				criteria.add(Restrictions.eq("fromStationId", supplierId));
 			}
 		}
+		criteria.add(Restrictions.eq("sadad", 0));
 		List<GasStationSuppliers> ssslist = criteria.list();
 		return ssslist;
 
@@ -339,4 +349,192 @@ public class CommonDaoImpl extends HibernateTemplate implements CommonDao {
 		List<SndSrfQbd> list = criteria.list();
 		return list;
 	}
+
+	@SuppressWarnings("unchecked")
+	@Transactional
+	@Override
+	public List<GasModel> getAllLitersBetweenDates(Integer stationId, Date beginDate, Date endDate) {
+		BigDecimal litrsSum = new BigDecimal(0);
+		Double litSum = 0d;
+		BigDecimal importsSum = new BigDecimal(0);
+		BigDecimal firstAmountSum = new BigDecimal(0);
+		BigDecimal lastAmountSum = new BigDecimal(0);
+		Double impsSum = 0d;
+		Double firstAmount = 0d;
+		Double totalAmount = 0d;
+		List<GasModel> values = new ArrayList<GasModel>();
+
+		List<Gas> gass = new ArrayList<Gas>();
+		gass = findGassByStationId(stationId);
+		if (gass != null && gass.size() > 0) {
+
+			for (Gas gas : gass) {
+				GasModel gm = new GasModel();
+				List<GasStationSuppliers> ssslist = findsssDates(beginDate, endDate, stationId, gas.getId());
+				if (ssslist != null && ssslist.size() > 0) {
+					impsSum = ssslist.stream().filter(fdet -> fdet.getQuantity() != 0.0d)
+							.mapToDouble(fdet -> fdet.getQuantity()).sum();
+					importsSum = new BigDecimal(impsSum).setScale(2, RoundingMode.HALF_UP);
+				}
+
+				List<GunsRevenus> litrsPay = findRevsByDates(beginDate, endDate, gas.getId(), stationId);
+				if (litrsPay != null && litrsPay.size() > 0) {
+					litSum = litrsPay.stream().filter(fdet -> fdet.getLitersNum() != 0.0d)
+							.mapToDouble(fdet -> fdet.getLitersNum()).sum();
+					litrsSum = new BigDecimal(litSum).setScale(2, RoundingMode.HALF_UP);
+				}
+				List<FirstDayAmount> fDAmount = findFirstAmountByDates(beginDate, endDate, stationId, gas.getId());
+				if (fDAmount != null && fDAmount.size() > 0) {
+					firstAmountSum = new BigDecimal(fDAmount.get(0).getAmount()).setScale(3, RoundingMode.HALF_UP);
+					gm.setFirstAmount(firstAmountSum);
+					firstAmount = fDAmount.get(0).getAmount();
+				}
+
+//				lastAmountSum = (firstAmountSum.add(importsSum)).subtract(litrsSum);
+				totalAmount = (firstAmount + impsSum) - litSum;
+				lastAmountSum = new BigDecimal(totalAmount).setScale(2, RoundingMode.HALF_UP);
+				gm.setLastAmount(lastAmountSum);
+				gm.setGasId(gas.getId());
+				gm.setImportsAmount(importsSum);
+				gm.setLitrsAmount(litrsSum);
+				gm.setGasName(gas.getName());
+				gm.setStationId(gas.getStationId());
+				values.add(gm);
+				litrsSum = new BigDecimal(0);
+				litSum = 0d;
+				importsSum = new BigDecimal(0);
+				firstAmountSum = new BigDecimal(0);
+				lastAmountSum = new BigDecimal(0);
+				impsSum = 0d;
+				// litrsSum = ssslist.stream().map(fdet -> fdet.quantity).sum();
+			}
+			// gass.stream().map(fdet->fdet.totalPrice).sum();
+		}
+		return values;
+
+	}
+
+	/**
+	 * @param dateFrom
+	 * @param dateTo
+	 * @param stationId
+	 * @param gasId     if sadad = 0 it is mean bill sadad = 1 it is mean sadad
+	 * @return
+	 */
+	@SuppressWarnings("unchecked")
+	@Transactional
+	public List<GasStationSuppliers> findsssDates(Date dateFrom, Date dateTo, Integer stationId, Integer gasId) {
+		Criteria criteria = sessionFactory.getCurrentSession().createCriteria(GasStationSuppliers.class);
+		criteria.add(Restrictions.eq("stationId", stationId));
+		criteria.add(Restrictions.eq("gasId", gasId));
+		criteria.add(Restrictions.ge("supDate", dateFrom));
+		criteria.add(Restrictions.le("supDate", dateTo));
+		criteria.add(Restrictions.eq("sadad", 0));
+		List<GasStationSuppliers> ssslist = criteria.list();
+		return ssslist;
+	}
+
+	@SuppressWarnings("unchecked")
+	@Transactional
+	public List<FirstDayAmount> findFirstAmountByDates(Date dateFrom, Date dateTo, Integer stationId, Integer gasId) {
+		Criteria criteria = sessionFactory.getCurrentSession().createCriteria(FirstDayAmount.class);
+		criteria.add(Restrictions.eq("stationId", stationId));
+		criteria.add(Restrictions.eq("gasId", gasId));
+		criteria.add(Restrictions.ge("readDate", dateFrom));
+		criteria.add(Restrictions.le("readDate", dateTo));
+		List<FirstDayAmount> ssslist = criteria.list();
+		return ssslist;
+	}
+
+	@SuppressWarnings("unchecked")
+	@Transactional
+	@Override
+	public List<GeneralPay> getAllGeneralPayBetweenDates(Integer stationId, Date beginDate, Date endDate) {
+		BigDecimal litrsSum = new BigDecimal(0);
+		Double litSum = 0d;
+		BigDecimal importsSum = new BigDecimal(0);
+		BigDecimal firstAmountSum = new BigDecimal(0);
+		BigDecimal lastAmountSum = new BigDecimal(0);
+		Double impsSum = 0d;
+		Double firstAmount = 0d;
+		Double totalAmount = 0d;
+		List<GeneralPay> values = new ArrayList<GeneralPay>();
+
+		List<Gas> gass = new ArrayList<Gas>();
+		gass = findGassByStationId(stationId);
+		if (gass != null && gass.size() > 0) {
+
+			for (Gas gas : gass) {
+				GeneralPay gm = new GeneralPay();
+				List<GasStationSuppliers> ssslist = findsssDates(beginDate, endDate, stationId, gas.getId());
+				if (ssslist != null && ssslist.size() > 0) {
+					impsSum = ssslist.stream().filter(fdet -> fdet.getQuantity() != 0.0d)
+							.mapToDouble(fdet -> fdet.getQuantity()).sum();
+					importsSum = new BigDecimal(impsSum).setScale(2, RoundingMode.HALF_UP);
+				}
+
+				List<GunsRevenus> litrsPay = findRevsByDates(beginDate, endDate, gas.getId(), stationId);
+				if (litrsPay != null && litrsPay.size() > 0) {
+					litSum = litrsPay.stream().filter(fdet -> fdet.getLitersNum() != 0.0d)
+							.mapToDouble(fdet -> fdet.getLitersNum()).sum();
+					litrsSum = new BigDecimal(litSum).setScale(2, RoundingMode.HALF_UP);
+				}
+				List<FirstDayAmount> fDAmount = findFirstAmountByDates(beginDate, endDate, stationId, gas.getId());
+				if (fDAmount != null && fDAmount.size() > 0) {
+					firstAmountSum = new BigDecimal(fDAmount.get(0).getAmount()).setScale(3, RoundingMode.HALF_UP);
+					gm.setFirstAmount(firstAmountSum);
+					firstAmount = fDAmount.get(0).getAmount();
+				}
+
+//				lastAmountSum = (firstAmountSum.add(importsSum)).subtract(litrsSum);
+				totalAmount = (firstAmount + impsSum) - litSum;
+				lastAmountSum = new BigDecimal(totalAmount).setScale(2, RoundingMode.HALF_UP);
+				gm.setDeffiernceAmount(lastAmountSum);
+				gm.setFirstAmount(firstAmountSum);
+				gm.setGasId(gas.getId());
+				gm.setImportsAmount(importsSum);
+				gm.setLitrPayAmount(litrsSum);
+				gm.setStationId(gas.getStationId());
+				gm.setDateInsert(beginDate);
+				Stations st = (Stations) findEntityById(Stations.class, stationId);
+				Gas gss = (Gas) findEntityById(Gas.class, gas.getId());
+				gm.setStationName(st.getName());
+				gm.setGasName(gss.getName());
+				values.add(gm);
+				litrsSum = new BigDecimal(0);
+				litSum = 0d;
+				importsSum = new BigDecimal(0);
+				firstAmountSum = new BigDecimal(0);
+				lastAmountSum = new BigDecimal(0);
+				impsSum = 0d;
+				// litrsSum = ssslist.stream().map(fdet -> fdet.quantity).sum();
+			}
+			// gass.stream().map(fdet->fdet.totalPrice).sum();
+		}
+		return values;
+
+	}
+
+	@SuppressWarnings("unchecked")
+	@Transactional
+	@Override
+	public List<GeneralPay> findAllGeneralPayByDates(Date dateFrom, Date dateTo) {
+		Criteria criteria = sessionFactory.getCurrentSession().createCriteria(GeneralPay.class);
+		criteria.add(Restrictions.ge("dateInsert", dateFrom));
+		criteria.add(Restrictions.le("dateInsert", dateTo));
+		List<GeneralPay> ssslist = criteria.list();
+		return ssslist;
+	}
+
+	@SuppressWarnings("unchecked")
+	@Override
+	@Transactional
+	public List<Constantsasoul> findAsoulByTypeId(Integer expensisType) {
+		Criteria criteria = sessionFactory.getCurrentSession().createCriteria(Constantsasoul.class);
+
+		criteria.add(Restrictions.eq("expensisId", expensisType));
+		List<Constantsasoul> list = criteria.list();
+		return list;
+	}
+
 }

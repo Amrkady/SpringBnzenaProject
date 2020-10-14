@@ -5,17 +5,20 @@ import java.util.Date;
 import java.util.List;
 
 import com.entities.Attachment;
+import com.entities.Constantsasoul;
 import com.entities.Expensis;
 import com.entities.ExpensisTypes;
 import com.entities.Gas;
 import com.entities.GasGuns;
 import com.entities.GasStationSuppliers;
+import com.entities.GeneralPay;
 import com.entities.GunsRevenus;
 import com.entities.Rents;
 import com.entities.Shops;
 import com.entities.SndSrfQbd;
 import com.entities.Suppliers;
 import com.entities.Users;
+import com.models.GasModel;
 
 public interface CommonDao {
 
@@ -64,5 +67,13 @@ public interface CommonDao {
 	public List<ExpensisTypes> findExpensisTypes(Integer general);
 
 	public List<SndSrfQbd> findSndByType(Integer type, Integer stationId);
+
+	public List<GasModel> getAllLitersBetweenDates(Integer stationId, Date beginDate, Date endDate);
+
+	public List<GeneralPay> getAllGeneralPayBetweenDates(Integer stationId, Date beginDate, Date endDate);
+
+	public List<GeneralPay> findAllGeneralPayByDates(Date dateFrom, Date dateTo);
+
+	public List<Constantsasoul> findAsoulByTypeId(Integer expensisType);
 
 }

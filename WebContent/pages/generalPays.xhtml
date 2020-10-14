@@ -1,0 +1,171 @@
+<?xml version="1.0" encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Frameset//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-frameset.dtd">
+
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:f="http://xmlns.jcp.org/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
+
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title></title>
+
+</head>
+<h:body>
+	<ui:composition template="/template2.xhtml">
+		<ui:define name="content">
+			<h:form dir="rtl" id="form">
+				<p:messages id="msg" autoUpdate="true" closable="true"></p:messages>
+				<h1 style="color: #1565C0; text-align: center;">مشتريات ومبيعات
+					المحطات</h1>
+				<!-- 					<p:commandButton value="طباعة الايرادات" process="@all" -->
+				<!-- 						icon="ui-icon ui-icon-print " immediate="true" -->
+				<!-- 						action="#{generalRevenuesBean.printAll}" -->
+				<!-- 						onclick="this.form.target='_blank'" ajax="false"> -->
+				<!-- 					</p:commandButton> -->
+
+				<br />
+				<h:panelGroup id="png">
+					<div class="ui-g">
+						<div class="ui-g-1">
+							<p:outputLabel value="من تاريخ"></p:outputLabel>
+						</div>
+						<div class="ui-g-2">
+							<p:calendar style="width:100%" id="dtfrom" pattern="yyyy-MM-dd"
+								value="#{payImportsBean.dateFrom}">
+								<p:ajax process="@this"></p:ajax>
+							</p:calendar>
+						</div>
+						<!-- 						<p:spacer height="10" width="50"></p:spacer> -->
+						<div class="ui-g-1">
+							<p:outputLabel value="الي تاريخ"></p:outputLabel>
+						</div>
+						<div class="ui-g-2">
+							<p:calendar style="width:100%" id="dtto" pattern="yyyy-MM-dd"
+								value="#{payImportsBean.dateTo}">
+								<p:ajax process="@this"></p:ajax>
+							</p:calendar>
+
+						</div>
+						<!-- 						<div class="ui-g-1"></div> -->
+						<div class="ui-g-2">
+							<p:commandButton styleClass="green-btn" process="png"
+								action="#{payImportsBean.loadListByDates}" value="استعلام"
+								update=":form:myTable">
+							</p:commandButton>
+						</div>
+					</div>
+					<!--  -->
+
+				</h:panelGroup>
+				<br />
+				<p:dataTable id="myTable" var="gunR"
+					value="#{payImportsBean.gmList}" emptyMessage="لايوجد بيانات"
+					sortBy="#{gunR.stationId}" paginatorPosition="bottom"
+					paginatorTemplate="{FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink}"
+					paginator="true" rows="10">
+					<p:column headerText="المحطة" groupRow="true"
+						style="width: 10% ; text-align:center">
+						<h:outputText value="#{gunR.stationName}" />
+					</p:column>
+					<p:column headerText="نوع الوقود"
+						style="width: 10% ; text-align:center" filterBy="#{gunR.gasName}"
+						filterMatchMode="contains">
+						<h:outputText value="#{gunR.gasName}" />
+					</p:column>
+					<p:column headerText="اللترات المباعة"
+						style="width: 20% ; text-align:center">
+						<h:outputText value="#{gunR.litrPayAmount}">
+							<f:convertNumber pattern="##################.##"></f:convertNumber>
+						</h:outputText>
+					</p:column>
+					<p:column headerText="رصيد بداية الفتره"
+						style="width: 15% ; text-align:center">
+						<h:outputText value="#{gunR.firstAmount}">
+							<f:convertNumber pattern="##################.##"></f:convertNumber>
+						</h:outputText>
+					</p:column>
+					<p:column headerText="ردود المحطات"
+						style="width: 15% ; text-align:center">
+						<h:outputText value="#{gunR.importsAmount}" />
+					</p:column>
+					<p:column headerText="طبقا للحسابات"
+						style="width: 20% ; text-align:center">
+						<h:outputText value="#{gunR.deffiernceAmount}">
+							<f:convertNumber pattern="##################.##"></f:convertNumber>
+						</h:outputText>
+					</p:column>
+					<p:column headerText="طبقا للمشرفين"
+						style="width: 20% ; text-align:center">
+						<p:inputText value="#{gunR.monitorsAmount}">
+							<f:convertNumber pattern="##################.##">
+							</f:convertNumber>
+							<p:ajax event="blur" process="@this"
+								listener="#{payImportsBean.calcFineValSum(gunR)}"
+								update="total" />
+						</p:inputText>
+					</p:column>
+					<p:column headerText="العجز / الزيادة"
+						style="width: 20% ; text-align:center">
+						<h:outputLabel id="total" value="#{gunR.deficitExcess}">
+							<f:convertNumber pattern="##################.##"></f:convertNumber>
+						</h:outputLabel>
+					</p:column>
+
+					<!-- 						<p:column headerText="سعة التانك" -->
+					<!-- 							style="width: 20% ; text-align:center"> -->
+					<!-- 							<h:outputText value="4000"> -->
+					<!-- 							</h:outputText> -->
+					<!-- 						</p:column> -->
+					<!-- 						<p:summaryRow> -->
+					<!-- 							<p:column colspan="2" footerText="الاجمالى" -->
+					<!-- 								style="FONT-WEIGHT:bold ;color : #F85F3E " > -->
+					<!-- 								<h:outputText -->
+					<!-- 									value="الاجمالى"> -->
+
+					<!-- 								</h:outputText> -->
+					<!-- 								</p:column> -->
+					<!-- 							<p:column colspan="1" -->
+					<!-- 								style="FONT-WEIGHT:bold ;color : white  ;text-align:center"> -->
+					<!-- 								<h:outputText -->
+					<!-- 									value="#{revenuesBean.gmList.stream().map(fdet->fdet.firstAmount).sum()}"> -->
+					<!-- 									<f:convertNumber pattern="##################.##"></f:convertNumber> -->
+					<!-- 								</h:outputText> -->
+					<!-- 							</p:column> -->
+					<!-- 							<p:column colspan="1" -->
+					<!-- 								style="FONT-WEIGHT:bold ;color : white ;text-align:center "> -->
+					<!-- 								<h:outputText -->
+					<!-- 									value="#{revenuesBean.gmList.stream().map(fdet->fdet.importsAmount).sum()}"> -->
+					<!-- 									<f:convertNumber pattern="##################.##"></f:convertNumber> -->
+					<!-- 								</h:outputText> -->
+					<!-- 							</p:column> -->
+					<!-- 							<p:column colspan="1" -->
+					<!-- 								style="FONT-WEIGHT:bold ;color : white ;text-align:center "> -->
+					<!-- 								<h:outputText -->
+					<!-- 									value="#{revenuesBean.gmList.stream().map(fdet->fdet.litrsAmount).sum()}"> -->
+					<!-- 									<f:convertNumber pattern="##################.##"></f:convertNumber> -->
+					<!-- 								</h:outputText> -->
+					<!-- 							</p:column> -->
+					<!-- 							<p:column colspan="1" -->
+					<!-- 								style="FONT-WEIGHT:bold ;color : white ;text-align:center"> -->
+					<!-- 								<h:outputText -->
+					<!-- 									value="#{revenuesBean.gmList.stream().map(fdet->fdet.lastAmount).sum()}"> -->
+					<!-- 									<f:convertNumber pattern="##################.##"></f:convertNumber> -->
+					<!-- 								</h:outputText> -->
+					<!-- 							</p:column> -->
+					<!-- 							<p:column colspan="1" -->
+					<!-- 								style="FONT-WEIGHT:bold ;color :white ;text-align:center"> -->
+					<!-- 								<h:outputText value="12000"> -->
+					<!-- 									<f:convertNumber pattern="##################.##"></f:convertNumber> -->
+					<!-- 								</h:outputText> -->
+					<!-- 							</p:column> -->
+
+					<!-- 						</p:summaryRow> -->
+				</p:dataTable>
+
+			</h:form>
+		</ui:define>
+	</ui:composition>
+</h:body>
+</html>

@@ -18,7 +18,7 @@
 			<h:form dir="rtl" id="form">
 				<p:messages id="msg" autoUpdate="true" closable="true"></p:messages>
 				<h1 style="color: #1565C0; text-align: center;">الايرادات
-					العمومية </h1>
+					العمومية</h1>
 				<div class="image-box-footer" align="left">
 					<p:commandButton id="dd" value=" سند قبض" immediate="true"
 						icon="ui-icon ui-icon-plus" onclick="PF('whsdlAdd').show();">
@@ -103,38 +103,49 @@
 					widgetVar="cellemp" paginatorPosition="bottom"
 					paginatorTemplate="{FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink}"
 					paginator="true" rows="10">
-					<p:column headerText="رقم" style="width: 5%">
+					<p:column headerText="رقم" style="width: 10%">
 						<h:outputText value="#{rowIndex+1}" />
 					</p:column>
-					<p:column headerText="التاريخ " style="width: 20%"
-						filterBy="#{gunR.revDate}" filterMatchMode="contains">
+					<p:column headerText="التاريخ "
+						style="width: 20%; text-align:center" filterBy="#{gunR.revDate}"
+						filterMatchMode="contains">
 						<h:outputText value="#{gunR.revDate}">
-							<f:convertDateTime pattern="yyyy/MM/dd" />
+							<f:convertDateTime pattern="dd/MM/yyyy" />
 						</h:outputText>
 					</p:column>
-					<p:column headerText="نوع الوقود" style="width: 10%"
-						filterBy="#{gunR.gasName}" filterMatchMode="contains">
+					<p:column headerText="نوع الوقود"
+						style="width: 10% ; text-align:center" filterBy="#{gunR.gasName}"
+						filterMatchMode="contains">
 						<h:outputText value="#{gunR.gasName}" />
 					</p:column>
-					<p:column headerText="رقم العداد" style="width: 10%"
-						filterBy="#{gunR.gunNum}" filterMatchMode="contains">
+					<p:column headerText="رقم العداد"
+						style="width: 10% ; text-align:center" filterBy="#{gunR.gunNum}"
+						filterMatchMode="contains">
 						<h:outputText value="#{gunR.gunNum}" />
 					</p:column>
-					<p:column headerText="اول قراءة" style="width: 15%"
-						filterBy="#{gunR.firstRead}" filterMatchMode="contains">
-						<h:outputText value="#{gunR.firstRead}" />
-					</p:column>
-					<p:column headerText="ثاني قراءة " style="width: 15%"
-						filterBy="#{gunR.lastRead}" filterMatchMode="contains">
-						<h:outputText value="#{gunR.lastRead}" />
-					</p:column>
-					<p:column headerText="عدد اللترات " style="width: 10%"
+					<!-- 					<p:column headerText="اول قراءة" style="width: 15%" -->
+					<!-- 						filterBy="#{gunR.firstRead}" filterMatchMode="contains"> -->
+					<!-- 						<h:outputText value="#{gunR.firstRead}" > -->
+					<!-- 							<f:convertNumber pattern="##################.##"></f:convertNumber> -->
+					<!-- 						</h:outputText> -->
+					<!-- 					</p:column> -->
+					<!-- 					<p:column headerText="ثاني قراءة " style="width: 15%" -->
+					<!-- 						filterBy="#{gunR.lastRead}" filterMatchMode="contains"> -->
+					<!-- 						<h:outputText value="#{gunR.lastRead}" > -->
+					<!-- 							<f:convertNumber pattern="##################.##"></f:convertNumber> -->
+					<!-- 						</h:outputText> -->
+					<!-- 					</p:column> -->
+					<p:column headerText="عدد اللترات " style="width: 15%"
 						filterBy="#{gunR.litersNum}" filterMatchMode="contains">
-						<h:outputText value="#{gunR.litersNum}" />
+						<h:outputText value="#{gunR.litersNum}">
+							<f:convertNumber pattern="##################.##"></f:convertNumber>
+						</h:outputText>
 					</p:column>
 					<p:column headerText="القيمة" style="width: 20%"
 						filterBy="#{gunR.totalPrice}" filterMatchMode="contains">
-						<h:outputText value="#{gunR.totalPrice}" />
+						<h:outputText value="#{gunR.totalPrice}">
+							<f:convertNumber pattern="##################.##"></f:convertNumber>
+						</h:outputText>
 					</p:column>
 					<p:column headerText="المحطة" style="width: 15%"
 						filterBy="#{gunR.stationName}" filterMatchMode="contains">
@@ -142,20 +153,18 @@
 					</p:column>
 					<p:columnGroup type="footer">
 						<p:row>
-							<p:column colspan="2" footerText="اجمالى الايرادات"
-								style="FONT-WEIGHT:bold ;color : ORANGE " />
 							<p:column colspan="1" footerText="" />
 							<p:column colspan="1" footerText="عدد اللترات"
-								style="FONT-WEIGHT:bold ;color : ORANGE " />
+								style="FONT-WEIGHT:bold ;color : #F85F3E " />
 							<p:column colspan="2"
-								footerText="#{generalRevenuesBean.gunsRevenuList.stream().map(fdet->fdet.litersNum).sum()}"
-								style="FONT-WEIGHT:bold ;color : ORANGE " />
+								footerText="#{generalRevenuesBean.litersTotalSumDecimal}"
+								style="FONT-WEIGHT:bold ;color : #F85F3E " />
 							<p:column colspan="1" footerText="القيمة الكلية"
-								style="FONT-WEIGHT:bold ;color : ORANGE " />
+								style="FONT-WEIGHT:bold ;color : #F85F3E " />
 							<p:column colspan="2"
-								footerText="#{generalRevenuesBean.gunsRevenuList.stream().map(fdet->fdet.totalPrice).sum()}"
-								style="FONT-WEIGHT:bold ;color : ORANGE " />
-							<p:column colspan="1" footerText="" />
+								footerText="#{generalRevenuesBean.listTotalSumDecimal}"
+								style="FONT-WEIGHT:bold ;color : #F85F3E " />
+
 
 						</p:row>
 
@@ -167,22 +176,22 @@
 					<h:panelGroup id="png1">
 						<div class="ui-g">
 							<div class="ui-g-3">
-								<p:outputLabel style="FONT-WEIGHT:bold ;color : ORANGE "
+								<p:outputLabel style="FONT-WEIGHT:bold ;color : #F85F3E "
 									value="اجمالى الايرادات قبل الضريبة"></p:outputLabel>
 							</div>
 							<div class="ui-g-3">
-								<p:outputLabel style="FONT-WEIGHT:bold ;color : ORANGE "
+								<p:outputLabel style="FONT-WEIGHT:bold ;color : #F85F3E "
 									value="#{(generalRevenuesBean.gunsRevenuList.stream().map(fdet->fdet.totalPrice).sum())}">
 									<f:convertNumber type="number" groupingUsed="true"
 										minFractionDigits="2" pattern="#0.00" />
 								</p:outputLabel>
 							</div>
 							<div class="ui-g-1">
-								<p:outputLabel style="FONT-WEIGHT:bold ;color : ORANGE "
+								<p:outputLabel style="FONT-WEIGHT:bold ;color : #F85F3E "
 									value="قيمة الضريبة "></p:outputLabel>
 							</div>
 							<div class="ui-g-3">
-								<p:outputLabel style="FONT-WEIGHT:bold ;color : ORANGE "
+								<p:outputLabel style="FONT-WEIGHT:bold ;color : #F85F3E "
 									value="#{((generalRevenuesBean.gunsRevenuList.stream().map(fdet->fdet.totalPrice).sum()) / (1+ (generalRevenuesBean.taxsList.get(0).taxValue / 100) ))* (generalRevenuesBean.taxsList.get(0).taxValue / 100)}">
 									<f:convertNumber type="number" groupingUsed="true"
 										minFractionDigits="2" pattern="#0.00" />
@@ -198,13 +207,13 @@
 						</div>
 						<div class="ui-g">
 							<div class="ui-g-3">
-								<p:outputLabel style="FONT-WEIGHT:bold ;color : ORANGE "
+								<p:outputLabel style="FONT-WEIGHT:bold ;color : #F85F3E "
 									value="اجمالى الايرادات بعد الضريبة"></p:outputLabel>
 
 							</div>
 							<div class="ui-g-2">
-								<p:outputLabel style="FONT-WEIGHT:bold ;color : ORANGE "
-									value="#{(generalRevenuesBean.gunsRevenuList.stream().map(fdet->fdet.totalPrice).sum())-((generalRevenuesBean.gunsRevenuList.stream().map(fdet->fdet.totalPrice).sum()) / (1+ (generalRevenuesBean.taxsList.get(0).taxValue / 100) ))* (generalRevenuesBean.taxsList.get(0).taxValue / 100)}">
+								<p:outputLabel style="FONT-WEIGHT:bold ;color : #F85F3E "
+									value="#{(generalRevenuesBean.gunsRevenuList.stream().map(fdet->fdet.totalPrice).sum())-( ( (generalRevenuesBean.gunsRevenuList.stream().map(fdet->fdet.totalPrice).sum()) / (1+ (generalRevenuesBean.taxsList.get(0).taxValue / 100) )) * (generalRevenuesBean.taxsList.get(0).taxValue / 100))}">
 									<f:convertNumber type="number" groupingUsed="true"
 										minFractionDigits="2" pattern="#0.00" />
 								</p:outputLabel>
@@ -349,9 +358,13 @@
 								</p:column>
 								<p:column headerText="طريقة الدفع" style="width: 20%"
 									filterBy="#{snd.payType}" filterMatchMode="contains">
-									<h:outputText value="#{snd.payType}" />
+									<h:outputText value="#{snd.payType == '1' ? 'بنك':'صندوق'}" />
 								</p:column>
-								<p:column headerText="ذلك مقابل" style="width: 15%"
+								<p:column headerText="طريقة الدفع" style="width: 20%"
+									filterBy="#{snd.payType}" filterMatchMode="contains">
+									<h:outputText value="#{snd.payType == '1' ? 'من حساب بنك الى حساب مبيعات':'من حساب صندوق الى حساب مبيعات'}" />
+								</p:column>
+								<p:column headerText="ذلك مقابل" style="width: 15%" 
 									filterBy="#{snd.forReason}" filterMatchMode="contains">
 									<h:outputLabel value="#{snd.forReason}" />
 								</p:column>
@@ -383,7 +396,7 @@
 									<p:calendar style="width:100%" id="dt" required="true"
 										requiredMessage="ادخل التاريخ" pattern="yyyy/MM/dd"
 										value="#{generalRevenuesBean.sm.entryDate}">
-<!-- 										<f:ajax execute="@this"></f:ajax> -->
+										<!-- 										<f:ajax execute="@this"></f:ajax> -->
 									</p:calendar>
 								</div>
 								<p:spacer height="10" width="10"></p:spacer>
@@ -406,21 +419,22 @@
 									<p:inputNumber style="width:100%" required="true"
 										requiredMessage="ادخل المبلغ"
 										value="#{generalRevenuesBean.sm.amount}">
-<!-- 										<p:ajax process="@this"></p:ajax> -->
+										<!-- 										<p:ajax process="@this"></p:ajax> -->
 									</p:inputNumber>
 								</div>
 								<div class="ui-g-2">
 									<h:outputLabel value="طريقة الدفع" />
 								</div>
 								<div class="ui-g-3">
-									<p:selectOneMenu style="width:100%;"
+									<p:selectOneMenu style="width:100%;" required="true"
+										requiredMessage="اختر طريقة الدفع" 
 										value="#{generalRevenuesBean.sm.payType}">
 										<f:selectItem itemLabel="اختر طريقة الدفع"
 											noSelectionOption="true"></f:selectItem>
-										<f:selectItem itemLabel="نقدا" itemValue="نقدا"></f:selectItem>
-										<f:selectItem itemLabel="شبكة" itemValue="شبكة"></f:selectItem>
-										<f:selectItem itemLabel="أجل" itemValue="أجل"></f:selectItem>
-<!-- 										<p:ajax process="@this"></p:ajax> -->
+										<f:selectItem itemLabel="بنك" itemValue="1"></f:selectItem>
+										<f:selectItem itemLabel="صندوق" itemValue="2"></f:selectItem>
+										<!-- 										<f:selectItem itemLabel="أجل" itemValue="أجل"></f:selectItem> -->
+										<p:ajax process="@this"></p:ajax>
 									</p:selectOneMenu>
 
 								</div>
@@ -432,17 +446,17 @@
 								<div class="ui-g-6">
 									<p:inputText style="width:100%"
 										value="#{generalRevenuesBean.sm.forWhat}">
-<!-- 										<p:ajax process="@this"></p:ajax> -->
+										<!-- 										<p:ajax process="@this"></p:ajax> -->
 									</p:inputText>
 								</div>
 							</div>
 							<div class="iamge-box-footer" align="left">
-<!-- 								<p:commandButton value="طباعة" style="width:10%; align:left" -->
-<!-- 									process="@all" icon="ui-icon ui-icon-print " immediate="true" -->
-<!-- 									action="#{generalRevenuesBean.print}" -->
-<!-- 									onclick="this.form.target='_blank'" ajax="false"> -->
-<!-- 								</p:commandButton> -->
-<!-- 								<p:spacer height="4"></p:spacer> -->
+								<!-- 								<p:commandButton value="طباعة" style="width:10%; align:left" -->
+								<!-- 									process="@all" icon="ui-icon ui-icon-print " immediate="true" -->
+								<!-- 									action="#{generalRevenuesBean.print}" -->
+								<!-- 									onclick="this.form.target='_blank'" ajax="false"> -->
+								<!-- 								</p:commandButton> -->
+								<!-- 								<p:spacer height="4"></p:spacer> -->
 								<p:commandButton value="حفظ" onsuccess="PF('whsdlAdd').hide();"
 									icon="ui-icon ui-icon-save" process="@all"
 									action="#{generalRevenuesBean.addSnad}"

@@ -51,6 +51,12 @@ public class SndSrfQbd {
 	@Formula("(select s.station_name from stations s where s.id = station_id)")
 	private String stationName;
 
+	@Column(name = "asoulId")
+	private Integer asoulId;
+
+	@Formula("(select s.name from Constantsasoul s where s.id = asoulId)")
+	private String asoulName;
+
 	public Integer getId() {
 		return id;
 	}
@@ -137,6 +143,22 @@ public class SndSrfQbd {
 
 	public void setName(String name) {
 		this.name = name;
+	}
+
+	public Integer getAsoulId() {
+		return asoulId;
+	}
+
+	public void setAsoulId(Integer asoulId) {
+		this.asoulId = asoulId;
+	}
+
+	public String getAsoulName() {
+		return asoulName;
+	}
+
+	public void setAsoulName(String asoulName) {
+		this.asoulName = asoulName;
 	}
 
 }

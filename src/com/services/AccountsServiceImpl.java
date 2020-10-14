@@ -4,12 +4,15 @@ import java.util.Date;
 import java.util.List;
 
 import com.common.CommonDao;
+import com.entities.Constantsasoul;
 import com.entities.Expensis;
 import com.entities.ExpensisTypes;
 import com.entities.GasGuns;
 import com.entities.GasStationSuppliers;
+import com.entities.GeneralPay;
 import com.entities.GunsRevenus;
 import com.entities.SndSrfQbd;
+import com.models.GasModel;
 
 public class AccountsServiceImpl implements AccountsService {
 
@@ -97,4 +100,29 @@ public class AccountsServiceImpl implements AccountsService {
 		return ls;
 	}
 
+	@Override
+	public List<GasModel> getAllLitersBetweenDates(Integer stationId, Date beginDate, Date endDate) {
+		List ls = commonDao.getAllLitersBetweenDates(stationId, beginDate, endDate);
+		return ls;
+	}
+
+	@Override
+	public List<GeneralPay> loadAllGeneralPayBetweenDates(Integer stationId, Date beginDate, Date endDate) {
+		List ls = commonDao.getAllGeneralPayBetweenDates(stationId, beginDate, endDate);
+		return ls;
+	}
+
+	@Override
+	public List<GeneralPay> loadAllGeneralPayByDates(Date dateFrom, Date dateTo) {
+		List ls = commonDao.findAllGeneralPayByDates(dateFrom, dateTo);
+		return ls;
+	}
+
+	@Override
+	public List<Constantsasoul> loadAsoulByTypeId(Integer expensisType) {
+		List ls = commonDao.findAsoulByTypeId(expensisType);
+		return ls;
+	}
+
 }
+

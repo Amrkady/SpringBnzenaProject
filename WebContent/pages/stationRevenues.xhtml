@@ -29,7 +29,7 @@
 						onclick="this.form.target='_blank'" ajax="false">
 					</p:commandButton>
 					<p:spacer width="10" height="10"></p:spacer>
-					<p:commandButton id="first" value="اضافة رصيد اول يوم"
+					<p:commandButton id="first" value="اضافة رصيد اول الفتره"
 						immediate="true" icon="ui-icon ui-icon-plus"
 						onclick="PF('whsdlftAdd').show();">
 					</p:commandButton>
@@ -70,77 +70,129 @@
 						<div class="ui-g-1">
 							<p:commandButton styleClass="green-btn" process="png"
 								action="#{revenuesBean.loadListByDates}" value="استعلام"
-								update="myTable png1">
+								update="myTable png1 myTable2">
 							</p:commandButton>
 						</div>
 					</div>
 				</h:panelGroup>
 				<br />
-				<p:dataTable id="myTable" var="gunR"
+				<p:dataTable id="myTable" var="gunR" editable="true"
 					value="#{revenuesBean.gunsRevenuList}" emptyMessage="لايوجد بيانات"
 					rowIndexVar="rowIndex" widgetVar="cellemp" sortBy="#{gunR.revDate}"
 					sortOrder="descending" paginatorPosition="bottom"
 					paginatorTemplate="{FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink}"
 					paginator="true" rows="10">
-					<p:column headerText="رقم" style="width: 5%">
+					<p:ajax event="rowEdit" listener="#{revenuesBean.onRowEdit}"
+						update=":form:msg  form:myTable" />
+					<p:ajax event="rowEditCancel"
+						listener="#{revenuesBean.onRowCancel}" update=":form:msg" />
+					<p:column headerText="رقم" style="width: 5% ; text-align:center">
 						<h:outputText value="#{rowIndex+1}" />
 					</p:column>
-					<p:column headerText="التاريخ " style="width: 10%"
-						filterBy="#{gunR.revDate}" filterMatchMode="contains">
-						<h:outputText value="#{gunR.revDate}">
-							<f:convertDateTime pattern="yyyy/MM/dd" />
-						</h:outputText>
+					<p:column headerText="التاريخ "
+						style="width: 15% ; text-align:center" filterBy="#{gunR.revDate}"
+						filterMatchMode="contains">
+						<p:cellEditor>
+							<f:facet name="output">
+								<h:outputText value="#{gunR.revDate}">
+									<f:convertDateTime pattern="dd/MM/yyyy" />
+								</h:outputText>
+							</f:facet>
+							<f:facet name="input">
+								<p:calendar style="width:100%" required="true"
+									requiredMessage="ادخل التاريخ" pattern="yyyy/MM/dd"
+									value="#{gunR.revDate}">
+								</p:calendar>
+							</f:facet>
+						</p:cellEditor>
 					</p:column>
-					<p:column headerText="نوع الوقود" style="width: 10%"
-						filterBy="#{gunR.gasName}" filterMatchMode="contains">
+					<p:column headerText="نوع الوقود"
+						style="width: 10% ; text-align:center" filterBy="#{gunR.gasName}"
+						filterMatchMode="contains">
 						<h:outputText value="#{gunR.gasName}" />
 					</p:column>
-					<p:column headerText="رقم العداد" style="width: 10%"
-						filterBy="#{gunR.gunNum}" filterMatchMode="contains">
+					<p:column headerText="رقم العداد"
+						style="width: 10% ; text-align:center" filterBy="#{gunR.gunNum}"
+						filterMatchMode="contains">
 						<h:outputText value="#{gunR.gunNum}" />
 					</p:column>
-					<p:column headerText="اول قراءة" style="width: 15%"
+					<p:column headerText="اول قراءة" style="width: 20%"
 						filterBy="#{gunR.firstRead}" filterMatchMode="contains">
-						<h:outputText value="#{gunR.firstRead}" />
+
+						<p:cellEditor>
+							<f:facet name="output">
+								<h:outputText value="#{gunR.firstRead}">
+									<f:convertNumber pattern="################.##"></f:convertNumber>
+								</h:outputText>
+							</f:facet>
+							<f:facet name="input">
+								<p:inputNumber style="width:100%" required="true"
+									requiredMessage="ادخل قراءة العداد" value="#{gunR.firstRead}">
+									<f:convertNumber pattern="##################.##"></f:convertNumber>
+								</p:inputNumber>
+							</f:facet>
+						</p:cellEditor>
 					</p:column>
-					<p:column headerText="ثاني قراءة " style="width: 15%"
+					<p:column headerText="ثاني قراءة " style="width: 20%"
 						filterBy="#{gunR.lastRead}" filterMatchMode="contains">
-						<h:outputText value="#{gunR.lastRead}" />
+
+						<p:cellEditor>
+							<f:facet name="output">
+								<h:outputText value="#{gunR.lastRead}">
+									<f:convertNumber pattern="#################.##"></f:convertNumber>
+								</h:outputText>
+							</f:facet>
+							<f:facet name="input">
+								<p:inputNumber style="width:100%" required="true"
+									requiredMessage="ادخل قراءة العداد" value="#{gunR.lastRead}">
+									<f:convertNumber pattern="##################.##"></f:convertNumber>
+								</p:inputNumber>
+							</f:facet>
+						</p:cellEditor>
 					</p:column>
-					<p:column headerText="عدد اللترات " style="width: 10%"
+					<p:column headerText="عدد اللترات "
+						style="width: 15% ; text-align:center"
 						filterBy="#{gunR.litersNum}" filterMatchMode="contains">
-						<h:outputText value="#{gunR.litersNum}" />
+						<h:outputText value="#{gunR.litersNum}">
+							<f:convertNumber pattern="##################.##"></f:convertNumber>
+						</h:outputText>
 					</p:column>
-					<p:column headerText=" سعر اللتر " style="width: 10%"
+					<p:column headerText=" سعر اللتر "
+						style="width: 10% ; text-align:center"
 						filterBy="#{gunR.literPrice}" filterMatchMode="contains">
 						<h:outputText value="#{gunR.literPrice}" />
 					</p:column>
 					<p:column headerText="القيمة" style="width: 20%"
 						filterBy="#{gunR.totalPrice}" filterMatchMode="contains">
-						<h:outputText value="#{gunR.totalPrice}" />
+						<h:outputText value="#{gunR.totalPrice}">
+							<f:convertNumber pattern="##################.##"></f:convertNumber>
+						</h:outputText>
 					</p:column>
-
-					<p:column headerText="حذف" style="width:5%">
+					<p:column headerText="تعديل" style="width:7%">
+						<p:rowEditor />
+					</p:column>
+					<p:column headerText="حذف" style="width:7%">
 						<p:commandButton update="form" style="background-color:red"
 							icon="ui-icon ui-icon-remove" title="حذف"
 							action="#{revenuesBean.deleteGas(gunR)}">
 						</p:commandButton>
 					</p:column>
+
 					<p:columnGroup type="footer">
 						<p:row>
 							<p:column colspan="2" footerText="اجمالى الايرادات"
-								style="FONT-WEIGHT:bold ;color : ORANGE " />
+								style="FONT-WEIGHT:bold ;color : #F85F3E " />
 							<p:column colspan="1" footerText="" />
 							<p:column colspan="1" footerText="عدد اللترات"
-								style="FONT-WEIGHT:bold ;color : ORANGE " />
+								style="FONT-WEIGHT:bold ;color : #F85F3E " />
 							<p:column colspan="2"
-								footerText="#{revenuesBean.gunsRevenuList.stream().map(fdet->fdet.litersNum).sum()}"
-								style="FONT-WEIGHT:bold ;color : ORANGE " />
+								footerText="#{revenuesBean.litersTotalSumDecimal}"
+								style="FONT-WEIGHT:bold ;color : #F85F3E " />
 							<p:column colspan="1" footerText="القيمة الكلية"
-								style="FONT-WEIGHT:bold ;color : ORANGE " />
+								style="FONT-WEIGHT:bold ;color : #F85F3E " />
 							<p:column colspan="2"
-								footerText="#{revenuesBean.gunsRevenuList.stream().map(fdet->fdet.totalPrice).sum()}"
-								style="FONT-WEIGHT:bold ;color : ORANGE " />
+								footerText="#{revenuesBean.listTotalSumDecimal}"
+								style="FONT-WEIGHT:bold ;color : #F85F3E " />
 							<p:column colspan="1" footerText="" />
 
 						</p:row>
@@ -153,22 +205,22 @@
 					<h:panelGroup id="png1">
 						<div class="ui-g">
 							<div class="ui-g-3">
-								<p:outputLabel style="FONT-WEIGHT:bold ;color : ORANGE "
+								<p:outputLabel style="FONT-WEIGHT:bold ;color : #F85F3E "
 									value="اجمالى الايرادات قبل الضريبة"></p:outputLabel>
 							</div>
 							<div class="ui-g-3">
-								<p:outputLabel style="FONT-WEIGHT:bold ;color : ORANGE "
+								<p:outputLabel style="FONT-WEIGHT:bold ;color : #F85F3E "
 									value="#{revenuesBean.gunsRevenuList.stream().map(fdet->fdet.totalPrice).sum()}">
 									<f:convertNumber type="number" groupingUsed="true"
 										minFractionDigits="2" pattern="#0.00" />
 								</p:outputLabel>
 							</div>
 							<div class="ui-g-2">
-								<p:outputLabel style="FONT-WEIGHT:bold ;color : ORANGE "
+								<p:outputLabel style="FONT-WEIGHT:bold ;color : #F85F3E "
 									value="قيمة الضريبة "></p:outputLabel>
 							</div>
 							<div class="ui-g-1">
-								<p:outputLabel style="FONT-WEIGHT:bold ;color : ORANGE "
+								<p:outputLabel style="FONT-WEIGHT:bold ;color : #F85F3E "
 									value="#{((revenuesBean.gunsRevenuList.stream().map(fdet->fdet.totalPrice).sum()) / (1+ (revenuesBean.taxsList.get(0).taxValue / 100) ))* (revenuesBean.taxsList.get(0).taxValue / 100)}">
 									<f:convertNumber type="number" groupingUsed="true"
 										minFractionDigits="2" pattern="#0.00" />
@@ -178,12 +230,12 @@
 						</div>
 						<div class="ui-g">
 							<div class="ui-g-3">
-								<p:outputLabel style="FONT-WEIGHT:bold ;color : ORANGE "
+								<p:outputLabel style="FONT-WEIGHT:bold ;color : #F85F3E "
 									value="اجمالى الايرادات بعد الضريبة"></p:outputLabel>
 
 							</div>
 							<div class="ui-g-2">
-								<p:outputLabel style="FONT-WEIGHT:bold ;color : ORANGE "
+								<p:outputLabel style="FONT-WEIGHT:bold ;color : #F85F3E "
 									value="#{(revenuesBean.gunsRevenuList.stream().map(fdet->fdet.totalPrice).sum())-((revenuesBean.gunsRevenuList.stream().map(fdet->fdet.totalPrice).sum()) / (1+ (revenuesBean.taxsList.get(0).taxValue / 100) ))* (revenuesBean.taxsList.get(0).taxValue / 100)}">
 									<f:convertNumber type="number" groupingUsed="true"
 										minFractionDigits="2" pattern="#0.00" />
@@ -191,6 +243,95 @@
 							</div>
 						</div>
 					</h:panelGroup>
+					<br />
+					<p:dataTable id="myTable2" var="gunR"
+						value="#{revenuesBean.gmList}" emptyMessage="لايوجد بيانات"
+						rowIndexVar="rowIndex" widgetVar="cellemp"
+						sortBy="#{gunR.stationId}" sortOrder="ascending"
+						paginatorPosition="bottom"
+						paginatorTemplate="{FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink}"
+						paginator="true" rows="10">
+
+						<p:column headerText="رقم" style="width: 5% ; text-align:center">
+							<h:outputText value="#{rowIndex+1}" />
+						</p:column>
+						<p:column headerText="نوع الوقود"
+							style="width: 10% ; text-align:center" filterBy="#{gunR.gasName}"
+							filterMatchMode="contains">
+							<h:outputText value="#{gunR.gasName}" />
+						</p:column>
+						<p:column headerText="رصيد بداية الفتره"
+							style="width: 15% ; text-align:center">
+							<h:outputText value="#{gunR.firstAmount}">
+								<f:convertNumber pattern="##################.##"></f:convertNumber>
+							</h:outputText>
+						</p:column>
+						<p:column headerText="ردود المحطات"
+							style="width: 10% ; text-align:center">
+							<h:outputText value="#{gunR.importsAmount}" />
+						</p:column>
+						<p:column headerText="اللترات المباعة"
+							style="width: 20% ; text-align:center">
+							<h:outputText value="#{gunR.litrsAmount}">
+								<f:convertNumber pattern="##################.##"></f:convertNumber>
+							</h:outputText>
+						</p:column>
+						<p:column headerText="اللترات المتبقية"
+							style="width: 20% ; text-align:center">
+							<h:outputText value="#{gunR.lastAmount}">
+								<f:convertNumber pattern="##################.##"></f:convertNumber>
+							</h:outputText>
+						</p:column>
+						<p:column headerText="سعة التانك"
+							style="width: 20% ; text-align:center">
+							<h:outputText value="4000">
+							</h:outputText>
+						</p:column>
+						<p:summaryRow>
+							<p:column colspan="2" footerText="الاجمالى"
+								style="FONT-WEIGHT:bold ;color : #F85F3E ">
+								<h:outputText value="الاجمالى">
+
+								</h:outputText>
+							</p:column>
+							<p:column colspan="1"
+								style="FONT-WEIGHT:bold ;color : white  ;text-align:center">
+								<h:outputText
+									value="#{revenuesBean.gmList.stream().map(fdet->fdet.firstAmount).sum()}">
+									<f:convertNumber pattern="##################.##"></f:convertNumber>
+								</h:outputText>
+							</p:column>
+							<p:column colspan="1"
+								style="FONT-WEIGHT:bold ;color : white ;text-align:center ">
+								<h:outputText
+									value="#{revenuesBean.gmList.stream().map(fdet->fdet.importsAmount).sum()}">
+									<f:convertNumber pattern="##################.##"></f:convertNumber>
+								</h:outputText>
+							</p:column>
+							<p:column colspan="1"
+								style="FONT-WEIGHT:bold ;color : white ;text-align:center ">
+								<h:outputText
+									value="#{revenuesBean.gmList.stream().map(fdet->fdet.litrsAmount).sum()}">
+									<f:convertNumber pattern="##################.##"></f:convertNumber>
+								</h:outputText>
+							</p:column>
+							<p:column colspan="1"
+								style="FONT-WEIGHT:bold ;color : white ;text-align:center">
+								<h:outputText
+									value="#{revenuesBean.gmList.stream().map(fdet->fdet.lastAmount).sum()}">
+									<f:convertNumber pattern="##################.##"></f:convertNumber>
+								</h:outputText>
+							</p:column>
+							<p:column colspan="1"
+								style="FONT-WEIGHT:bold ;color :white ;text-align:center">
+								<h:outputText value="12000">
+									<f:convertNumber pattern="##################.##"></f:convertNumber>
+								</h:outputText>
+							</p:column>
+
+						</p:summaryRow>
+						<!-- 					#{penalitiesListBean.reqFinesMaster.reqFinesDetailsList.stream().map(fdet->fdet.fineTotalValue).sum()} -->
+					</p:dataTable>
 				</p:fieldset>
 			</h:form>
 			<h:form>
@@ -198,7 +339,7 @@
 					id="dlg" dynamic="true" hideEffect="explode" showEffect="fade"
 					width="70%" closable="true" resizable="true" modal="true" dir="rtl">
 					<h:panelGroup id="panelGroup" width="70%">
-						<p:fieldset legend="بيانات الايرادات " width="100%">
+						<p:fieldset legend="بيانات رصيد اول الفتره " width="100%">
 							<div class="ui-g">
 								<div class="ui-g-2">
 									<h:outputLabel value="التاريخ" />
@@ -235,7 +376,8 @@
 								</div>
 							</div>
 							<div class="iamge-box-footer" align="left">
-								<p:commandButton value="حفظ" onsuccess="PF('whsdlftAdd').hide();"
+								<p:commandButton value="حفظ"
+									onsuccess="PF('whsdlftAdd').hide();"
 									icon="ui-icon ui-icon-save" process="@all"
 									action="#{revenuesBean.addFirst}" update="panelGroup">
 								</p:commandButton>

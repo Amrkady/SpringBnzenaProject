@@ -3,12 +3,15 @@ package com.services;
 import java.util.Date;
 import java.util.List;
 
+import com.entities.Constantsasoul;
 import com.entities.Expensis;
 import com.entities.ExpensisTypes;
 import com.entities.GasGuns;
 import com.entities.GasStationSuppliers;
+import com.entities.GeneralPay;
 import com.entities.GunsRevenus;
 import com.entities.SndSrfQbd;
+import com.models.GasModel;
 
 public interface AccountsService {
 
@@ -38,5 +41,13 @@ public interface AccountsService {
 	public List<GunsRevenus> loadAllGunsRevenusList();
 
 	public List<SndSrfQbd> loadSndByType(Integer type, Integer stationId);
+
+	public List<GasModel> getAllLitersBetweenDates(Integer stationId, Date beginDate, Date endDate);
+
+	public List<GeneralPay> loadAllGeneralPayBetweenDates(Integer stationId, Date beginDate, Date endDate);
+
+	public List<GeneralPay> loadAllGeneralPayByDates(Date dateFrom, Date dateTo);
+
+	public List<Constantsasoul> loadAsoulByTypeId(Integer expensisType);
 	
 }

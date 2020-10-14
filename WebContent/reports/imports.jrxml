@@ -15,11 +15,11 @@
 g.bill_no billNo , st.station_name stnamefrom ,
 s.station_name stationName, gs.name gasName , g.supplier_type type,
  g.quantity litrNum , g.price total  , g.sadad sadad
-FROM thorapet_bnzena.gas_station_suppliers g 
-left join thorapet_bnzena.stations  s on g.station_id=s.id
-left join thorapet_bnzena.gas  gs on g.gas_id  =gs.id 
-left join thorapet_bnzena.suppliers  sp on g.supplier_id = sp.id 
-left join thorapet_bnzena.stations  st on g.from_station_id = st.id 
+FROM banzenadb.gas_station_suppliers g 
+left join banzenadb.stations  s on g.station_id=s.id
+left join banzenadb.gas  gs on g.gas_id  =gs.id 
+left join banzenadb.suppliers  sp on g.supplier_id = sp.id 
+left join banzenadb.stations  st on g.from_station_id = st.id 
 where  g.station_id = $P{stationId}
 and (g.supplier_id = $P{supId} or $P{supId}=-1)
 and (g.from_station_id = $P{stfromId} or $P{stfromId} =-1)
@@ -259,7 +259,7 @@ order  by  g.sup_date desc;]]>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font fontName="Arial" size="12"/>
 				</textElement>
-				<textFieldExpression><![CDATA[(""+$F{total}).replaceAll("0", "\\\u0660").replaceAll("1", "\\\u0661") .replaceAll("2", "\\\u0662").replaceAll("3", "\\\u0663").replaceAll("4", "\\\u0664").replaceAll("5", "\\\u0665").replaceAll("6", "\\\u0666").replaceAll("7", "\\\u0667").replaceAll("8", "\\\u0668").replaceAll("9", "\\\u0669")]]></textFieldExpression>
+				<textFieldExpression><![CDATA[(""+$F{total}.setScale( 3, RoundingMode.HALF_UP )).replaceAll("0", "\\\u0660").replaceAll("1", "\\\u0661") .replaceAll("2", "\\\u0662").replaceAll("3", "\\\u0663").replaceAll("4", "\\\u0664").replaceAll("5", "\\\u0665").replaceAll("6", "\\\u0666").replaceAll("7", "\\\u0667").replaceAll("8", "\\\u0668").replaceAll("9", "\\\u0669")]]></textFieldExpression>
 			</textField>
 			<textField>
 				<reportElement x="330" y="0" width="68" height="20" uuid="8440747c-ef31-46d5-9dd1-c7bc39b39a17"/>

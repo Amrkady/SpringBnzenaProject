@@ -1,5 +1,7 @@
 package com.beans;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -56,16 +58,34 @@ public class GeneralRevenuesBean {
 	private SandModel sm = new SandModel();
 	private List<SndSrfQbd> sndList = new ArrayList<SndSrfQbd>();
 	private boolean canPrint = false;
+	private double listTotalSum;
+	private double litersTotalSum;
+	private BigDecimal listTotalSumDecimal;
+	private BigDecimal litersTotalSumDecimal;
 
 	@PostConstruct
 	public void init() {
-		gunsRevenuList = accountsServiceImpl.loadAllGunsRevenusList();
+		// gunsRevenuList = accountsServiceImpl.loadAllGunsRevenusList();
 		stationsList = departmentServiceImpl.loadStations();
 		taxsList = departmentServiceImpl.loadTaxs();
-		expensisList = accountsServiceImpl.loadAllExpensisList();
-		sssList = accountsServiceImpl.loadsssList(-1);
+		// expensisList = accountsServiceImpl.loadAllExpensisList();
+		// sssList = accountsServiceImpl.loadsssList(-1);
 		sndList = accountsServiceImpl.loadSndByType(1, -1);
-		calTaxForOutSuppliers();
+//		if (gunsRevenuList != null && gunsRevenuList.size() > 0) {
+//			listTotalSum = gunsRevenuList.stream().filter(fdet -> fdet.getTotalPrice() != 0.0d)
+//					.mapToDouble(fdet -> fdet.getTotalPrice()).sum();
+//
+//			litersTotalSum = gunsRevenuList.stream().filter(fdet -> fdet.getLitersNum() != 0.0d)
+//					.mapToDouble(fdet -> fdet.getLitersNum()).sum();
+//
+//			BigDecimal sum = new BigDecimal(listTotalSum).setScale(3, RoundingMode.HALF_UP);
+//			listTotalSumDecimal = sum;
+//			sum = new BigDecimal(litersTotalSum).setScale(3, RoundingMode.HALF_UP);
+//			litersTotalSumDecimal = sum;
+//			System.out.println("" + listTotalSumDecimal + ">>>>" + litersTotalSumDecimal);
+//
+//		}
+		// calTaxForOutSuppliers();
 	}
 
 	public String loadListByDates() {
@@ -76,6 +96,19 @@ public class GeneralRevenuesBean {
 		expensisList = accountsServiceImpl.loadExpensisByDates(dateFrom, dateTo, null, stId);
 		gunsRevenuList = accountsServiceImpl.loadRevsByDates(dateFrom, dateTo, null, stId);
 		sssList = accountsServiceImpl.loadsssByDates(dateFrom, dateTo, null, null, stId);
+		if (gunsRevenuList != null && gunsRevenuList.size() > 0) {
+			listTotalSum = gunsRevenuList.stream().filter(fdet -> fdet.getTotalPrice() != 0.0d)
+					.mapToDouble(fdet -> fdet.getTotalPrice()).sum();
+
+			litersTotalSum = gunsRevenuList.stream().filter(fdet -> fdet.getLitersNum() != 0.0d)
+					.mapToDouble(fdet -> fdet.getLitersNum()).sum();
+			listTotalSumDecimal = new BigDecimal(listTotalSum).setScale(3, RoundingMode.HALF_UP);
+
+			litersTotalSumDecimal = new BigDecimal(litersTotalSum).setScale(3, RoundingMode.HALF_UP);
+
+			System.out.println("" + listTotalSumDecimal + ">>>>" + litersTotalSumDecimal);
+
+		}
 		calTaxForOutSuppliers();
 		return "";
 	}
@@ -455,6 +488,38 @@ public class GeneralRevenuesBean {
 
 	public void setSndList(List<SndSrfQbd> sndList) {
 		this.sndList = sndList;
+	}
+
+	public double getListTotalSum() {
+		return listTotalSum;
+	}
+
+	public void setListTotalSum(double listTotalSum) {
+		this.listTotalSum = listTotalSum;
+	}
+
+	public double getLitersTotalSum() {
+		return litersTotalSum;
+	}
+
+	public void setLitersTotalSum(double litersTotalSum) {
+		this.litersTotalSum = litersTotalSum;
+	}
+
+	public BigDecimal getListTotalSumDecimal() {
+		return listTotalSumDecimal;
+	}
+
+	public void setListTotalSumDecimal(BigDecimal listTotalSumDecimal) {
+		this.listTotalSumDecimal = listTotalSumDecimal;
+	}
+
+	public BigDecimal getLitersTotalSumDecimal() {
+		return litersTotalSumDecimal;
+	}
+
+	public void setLitersTotalSumDecimal(BigDecimal litersTotalSumDecimal) {
+		this.litersTotalSumDecimal = litersTotalSumDecimal;
 	}
 
 }

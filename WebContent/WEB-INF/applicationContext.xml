@@ -58,15 +58,16 @@
 		class="com.mchange.v2.c3p0.ComboPooledDataSource"
 		destroy-method="close">
 		<property name="driverClass" value="com.mysql.jdbc.Driver" />
-<!-- 		<property name="jdbcUrl" -->
-<!-- 		value="jdbc:mysql://localhost:3306/banzenadb?zeroDateTimeBehavior=convertToNull" /> -->
-<!-- 		<property name="user" value="root" /> -->
-<!-- 		<property name="password" value="root" /> -->
-
 		<property name="jdbcUrl"
-			value="jdbc:mysql://mysql3000.mochahost.com:3306/thorapet_bnzena?zeroDateTimeBehavior=convertToNull" />
-		<property name="user" value="thorapet_bnzDBA" />
-		<property name="password" value="01143832045Aa" />
+			value="jdbc:mysql://localhost:3306/banzenadb?zeroDateTimeBehavior=convertToNull" />
+		<property name="user" value="root" />
+		<property name="password" value="root" />
+
+		<!-- <property name="jdbcUrl" -->
+		<!-- value="jdbc:mysql://mysql3000.mochahost.com:3306/thorapet_bnzena?zeroDateTimeBehavior=convertToNull" 
+			/> -->
+		<!-- <property name="user" value="thorapet_bnzDBA" /> -->
+		<!-- <property name="password" value="01143832045Aa" /> -->
 		<property name="initialPoolSize" value="1" />
 		<property name="maxPoolSize" value="20" />
 		<property name="maxStatements" value="20" />
@@ -97,6 +98,8 @@
 				<value>com.entities.Taxs</value>
 				<value>com.entities.SndSrfQbd</value>
 				<value>com.entities.FirstDayAmount</value>
+				<value>com.entities.GeneralPay</value>
+				<value>com.entities.Constantsasoul</value>
 			</list>
 		</property>
 		<property name="hibernateProperties">

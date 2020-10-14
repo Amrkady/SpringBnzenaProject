@@ -8,8 +8,8 @@
 
 	<div class="layout-sidebar layout-sidebar-dark}">
 		<div class="sidebar-logo" align="center">
-			<p:graphicImage style="width:40%;align:center" name="images/login/logo.png"
-				library="serenity-layout" />
+			<p:graphicImage style="width:40%;align:center"
+				name="images/login/logo.png" library="serenity-layout" />
 			<!--                 <span class="app-name">#{msg['municipality']}</span> -->
 			<a href="#" class="sidebar-anchor" title="Toggle Menu"></a>
 		</div>
@@ -25,13 +25,15 @@
 								icon="ui-icon ui-icon-home" />
 							<p:submenu label="الحسابات العمومية"
 								icon="ui-icon ui-icon-account-balance">
+								<p:menuitem value="بيان المبيعات والمشتريات  "
+									icon="ui-icon ui-icon-attach-money" outcome="generalPays" />
 								<p:menuitem value="ايرادات عمومية "
 									icon="ui-icon ui-icon-attach-money" outcome="generalrevns" />
 								<p:menuitem value="مصروفات عمومية وادارية"
 									icon="ui-icon ui-icon-exposure" outcome="generalexposis" />
 								<p:menuitem value="انواع المصروفات"
 									icon="ui-icon ui-icon-exposure" outcome="expensisType" />
-									
+
 							</p:submenu>
 							<p:submenu label="المحطات"
 								icon="ui-icon ui-icon-local-gas-station">

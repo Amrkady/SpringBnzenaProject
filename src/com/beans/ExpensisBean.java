@@ -1,5 +1,7 @@
 package com.beans;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -14,10 +16,12 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
+import javax.faces.event.AjaxBehaviorEvent;
 import javax.servlet.http.HttpSession;
 
 import org.primefaces.event.RowEditEvent;
 
+import com.entities.Constantsasoul;
 import com.entities.Expensis;
 import com.entities.ExpensisTypes;
 import com.entities.SndSrfQbd;
@@ -43,6 +47,10 @@ public class ExpensisBean {
 	private Integer supType;
 	private List<SndSrfQbd> sndList = new ArrayList<SndSrfQbd>();
 	private SndSrfQbd snd = new SndSrfQbd();
+	private double listTotalSum;
+	private BigDecimal listTotalSumDecimal;
+	private List<Constantsasoul> asoulList = new ArrayList<>();
+	private boolean show = false;
 
 	@PostConstruct
 	public void init() {
@@ -53,12 +61,28 @@ public class ExpensisBean {
 			expensisList = accountsServiceImpl.loadExpensisByStationId(stId);
 			expensisTypesList = accountsServiceImpl.loadAllExpensisTypes(0);
 			sndList = accountsServiceImpl.loadSndByType(2, stId);
+			if (expensisList != null && expensisList.size() > 0) {
+				listTotalSum = expensisList.stream().filter(fdet -> fdet.getExpensisQuantity() != 0.0d)
+						.mapToDouble(fdet -> fdet.getExpensisQuantity()).sum();
+				BigDecimal sum = new BigDecimal(listTotalSum).setScale(3, RoundingMode.HALF_UP);
+				listTotalSumDecimal = sum;
+				System.out.println("" + listTotalSumDecimal);
+
+			}
 		}
 	}
 
 	public String loadListByDates() {
 		expensisList = new ArrayList<Expensis>();
 		expensisList = accountsServiceImpl.loadExpensisByDates(dateFrom, dateTo, supType, stId);
+		if (expensisList != null && expensisList.size() > 0) {
+			listTotalSum = expensisList.stream().filter(fdet -> fdet.getExpensisQuantity() != 0.0d)
+					.mapToDouble(fdet -> fdet.getExpensisQuantity()).sum();
+			BigDecimal sum = new BigDecimal(listTotalSum).setScale(3, RoundingMode.HALF_UP);
+			listTotalSumDecimal = sum;
+			System.out.println("" + listTotalSumDecimal);
+
+		}
 		return "";
 	}
 
@@ -73,10 +97,19 @@ public class ExpensisBean {
 					snd.setStationId(stId);
 					snd.setSndType(2);
 					snd.setExpensisTypesId(sssAdd.getExpensisType());
+					snd.setAsoulId(sssAdd.getAsoulId());
 					departmentServiceImpl.save(snd);
 				}
 				MsgEntry.addInfoMessage(Utils.loadMessagesFromFile("success.operation"));
 				expensisList = accountsServiceImpl.loadExpensisByStationId(stId);
+				if (expensisList != null && expensisList.size() > 0) {
+					listTotalSum = expensisList.stream().filter(fdet -> fdet.getExpensisQuantity() != 0.0d)
+							.mapToDouble(fdet -> fdet.getExpensisQuantity()).sum();
+					BigDecimal sum = new BigDecimal(listTotalSum).setScale(3, RoundingMode.HALF_UP);
+					listTotalSumDecimal = sum;
+					System.out.println("" + listTotalSumDecimal);
+
+				}
 				sndList = accountsServiceImpl.loadSndByType(2, stId);
 				sssAdd = new Expensis();
 			}
@@ -85,6 +118,20 @@ public class ExpensisBean {
 			e.printStackTrace();
 		}
 		return "";
+	}
+
+	public void loadAsoulList(AjaxBehaviorEvent event) {
+		show = false;
+		asoulList = accountsServiceImpl.loadAsoulByTypeId(sssAdd.getExpensisType());
+		if (asoulList != null && asoulList.size() > 0) {
+			show = true;
+		}
+	}
+
+	public void loadAsList(Expensis expensis) {
+
+		asoulList = accountsServiceImpl.loadAsoulByTypeId(expensis.getExpensisType());
+
 	}
 
 //	public void loadGuns(AjaxBehaviorEvent event) {
@@ -150,6 +197,14 @@ public class ExpensisBean {
 				departmentServiceImpl.delete(gs);
 				MsgEntry.addInfoMessage(Utils.loadMessagesFromFile("success.delete"));
 				expensisList = accountsServiceImpl.loadExpensisByStationId(stId);
+				if (expensisList != null && expensisList.size() > 0) {
+					listTotalSum = expensisList.stream().filter(fdet -> fdet.getExpensisQuantity() != 0.0d)
+							.mapToDouble(fdet -> fdet.getExpensisQuantity()).sum();
+					BigDecimal sum = new BigDecimal(listTotalSum).setScale(3, RoundingMode.HALF_UP);
+					listTotalSumDecimal = sum;
+					System.out.println("" + listTotalSumDecimal);
+
+				}
 			} catch (Exception e) {
 				MsgEntry.addErrorMessage(Utils.loadMessagesFromFile("error.delete"));
 				e.printStackTrace();
@@ -165,6 +220,14 @@ public class ExpensisBean {
 			departmentServiceImpl.update(gs);
 			MsgEntry.addInfoMessage(Utils.loadMessagesFromFile("success.update"));
 			expensisList = accountsServiceImpl.loadExpensisByStationId(stId);
+			if (expensisList != null && expensisList.size() > 0) {
+				listTotalSum = expensisList.stream().filter(fdet -> fdet.getExpensisQuantity() != 0.0d)
+						.mapToDouble(fdet -> fdet.getExpensisQuantity()).sum();
+				BigDecimal sum = new BigDecimal(listTotalSum).setScale(3, RoundingMode.HALF_UP);
+				listTotalSumDecimal = sum;
+				System.out.println("" + listTotalSumDecimal);
+
+			}
 		} catch (Exception e) {
 			MsgEntry.addErrorMessage(Utils.loadMessagesFromFile("error.update"));
 			e.printStackTrace();
@@ -265,6 +328,38 @@ public class ExpensisBean {
 
 	public void setSnd(SndSrfQbd snd) {
 		this.snd = snd;
+	}
+
+	public double getListTotalSum() {
+		return listTotalSum;
+	}
+
+	public void setListTotalSum(double listTotalSum) {
+		this.listTotalSum = listTotalSum;
+	}
+
+	public BigDecimal getListTotalSumDecimal() {
+		return listTotalSumDecimal;
+	}
+
+	public void setListTotalSumDecimal(BigDecimal listTotalSumDecimal) {
+		this.listTotalSumDecimal = listTotalSumDecimal;
+	}
+
+	public List<Constantsasoul> getAsoulList() {
+		return asoulList;
+	}
+
+	public void setAsoulList(List<Constantsasoul> asoulList) {
+		this.asoulList = asoulList;
+	}
+
+	public boolean isShow() {
+		return show;
+	}
+
+	public void setShow(boolean show) {
+		this.show = show;
 	}
 
 }

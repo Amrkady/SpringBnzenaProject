@@ -1,5 +1,7 @@
 package com.beans;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -23,6 +25,7 @@ import com.entities.Gas;
 import com.entities.GasGuns;
 import com.entities.GunsRevenus;
 import com.entities.Taxs;
+import com.models.GasModel;
 import com.services.AccountsService;
 import com.services.DepartmentService;
 
@@ -41,11 +44,18 @@ public class RevenuesBean {
 	private List<GasGuns> gunsList = new ArrayList<GasGuns>();
 	private List<Gas> gasList = new ArrayList<Gas>();
 	private List<GunsRevenus> gunsRevenuList = new ArrayList<GunsRevenus>();
+	private List<GunsRevenus> gunsRevenus = new ArrayList<GunsRevenus>();
 	private Date dateFrom;
 	private Date dateTo;
 	private Integer gasId;
+	private double listTotalSum;
+	private double litersTotalSum;
+	private BigDecimal listTotalSumDecimal;
+	private BigDecimal litersTotalSumDecimal;
+	List<GasModel> gmList = new ArrayList<GasModel>();
 	private List<Taxs> taxsList = new ArrayList<Taxs>();
 	FirstDayAmount addObj = new FirstDayAmount();
+
 	@PostConstruct
 	public void init() {
 		FacesContext facesContext = FacesContext.getCurrentInstance();
@@ -56,12 +66,43 @@ public class RevenuesBean {
 			// gunsList = departmentServiceImpl.loadGuns(stId);
 			gasList = departmentServiceImpl.loadGass(stId);
 			taxsList = departmentServiceImpl.loadTaxs();
+			if (gunsRevenuList != null && gunsRevenuList.size() > 0) {
+				listTotalSum = gunsRevenuList.stream().filter(fdet -> fdet.getTotalPrice() != 0.0d)
+						.mapToDouble(fdet -> fdet.getTotalPrice()).sum();
+
+				litersTotalSum = gunsRevenuList.stream().filter(fdet -> fdet.getLitersNum() != 0.0d)
+						.mapToDouble(fdet -> fdet.getLitersNum()).sum();
+
+				BigDecimal sum = new BigDecimal(listTotalSum).setScale(3, RoundingMode.HALF_UP);
+				listTotalSumDecimal = sum;
+				sum = new BigDecimal(litersTotalSum).setScale(3, RoundingMode.HALF_UP);
+				litersTotalSumDecimal = sum;
+				System.out.println("" + listTotalSumDecimal + ">>>>" + litersTotalSumDecimal);
+
+			}
 		}
 	}
 
 	public String loadListByDates() {
 		gunsRevenuList = new ArrayList<GunsRevenus>();
 		gunsRevenuList = accountsServiceImpl.loadRevsByDates(dateFrom, dateTo, gasId, stId);
+		if (gunsRevenuList != null && gunsRevenuList.size() > 0) {
+			listTotalSum = gunsRevenuList.stream().filter(fdet -> fdet.getTotalPrice() != 0.0d)
+					.mapToDouble(fdet -> fdet.getTotalPrice()).sum();
+
+			litersTotalSum = gunsRevenuList.stream().filter(fdet -> fdet.getLitersNum() != 0.0d)
+					.mapToDouble(fdet -> fdet.getLitersNum()).sum();
+
+			BigDecimal sum = new BigDecimal(listTotalSum).setScale(3, RoundingMode.HALF_UP);
+			listTotalSumDecimal = sum;
+			sum = new BigDecimal(litersTotalSum).setScale(3, RoundingMode.HALF_UP);
+			litersTotalSumDecimal = sum;
+			System.out.println("" + listTotalSumDecimal + ">>>>" + litersTotalSumDecimal);
+
+		}
+		if (stId != null && dateFrom != null && dateTo != null) {
+			gmList = accountsServiceImpl.getAllLitersBetweenDates(stId, dateFrom, dateTo);
+		}
 		return "";
 	}
 
@@ -76,6 +117,19 @@ public class RevenuesBean {
 				departmentServiceImpl.save(sssAdd);
 				MsgEntry.addInfoMessage(Utils.loadMessagesFromFile("success.operation"));
 				gunsRevenuList = accountsServiceImpl.loadGunsRevenusList(stId);
+				if (gunsRevenuList != null && gunsRevenuList.size() > 0) {
+					listTotalSum = gunsRevenuList.stream().filter(fdet -> fdet.getTotalPrice() != 0.0d)
+							.mapToDouble(fdet -> fdet.getTotalPrice()).sum();
+
+					litersTotalSum = gunsRevenuList.stream().filter(fdet -> fdet.getLitersNum() != 0.0d)
+							.mapToDouble(fdet -> fdet.getLitersNum()).sum();
+
+					BigDecimal sum = new BigDecimal(listTotalSum).setScale(3, RoundingMode.HALF_UP);
+					listTotalSum = sum.doubleValue();
+					sum = new BigDecimal(litersTotalSum).setScale(3, RoundingMode.HALF_UP);
+					litersTotalSum = sum.doubleValue();
+
+				}
 				sssAdd = new GunsRevenus();
 			}
 		} catch (Exception e) {
@@ -136,6 +190,21 @@ public class RevenuesBean {
 				departmentServiceImpl.delete(gs);
 				MsgEntry.addInfoMessage(Utils.loadMessagesFromFile("success.delete"));
 				gunsRevenuList = accountsServiceImpl.loadGunsRevenusList(stId);
+				if (gunsRevenuList != null && gunsRevenuList.size() > 0) {
+					listTotalSum = gunsRevenuList.stream().filter(fdet -> fdet.getTotalPrice() != 0.0d)
+							.mapToDouble(fdet -> fdet.getTotalPrice()).sum();
+
+					litersTotalSum = gunsRevenuList.stream().filter(fdet -> fdet.getLitersNum() != 0.0d)
+							.mapToDouble(fdet -> fdet.getLitersNum()).sum();
+
+					BigDecimal sum = new BigDecimal(listTotalSum).setScale(3, RoundingMode.HALF_UP);
+					listTotalSum = sum.doubleValue();
+					sum = new BigDecimal(litersTotalSum).setScale(3, RoundingMode.HALF_UP);
+					litersTotalSum = sum.doubleValue();
+
+					Utils.updateUIComponent("form:myTable");
+
+				}
 			} catch (Exception e) {
 				MsgEntry.addErrorMessage(Utils.loadMessagesFromFile("error.delete"));
 				e.printStackTrace();
@@ -148,9 +217,27 @@ public class RevenuesBean {
 	public void onRowEdit(RowEditEvent event) {
 		try {
 			GunsRevenus gs = (GunsRevenus) event.getObject();
+			gs.setLitersNum(gs.getLastRead() - gs.getFirstRead());
+			gs.setTotalPrice(gs.getLiterPrice() * gs.getLitersNum());
+			gs.setTotalPrice(Math.round(gs.getTotalPrice() * 100) / 100.00d);
+			gs.setLitersNum(Math.round(gs.getLitersNum() * 100) / 100.00d);
 			departmentServiceImpl.update(gs);
 			MsgEntry.addInfoMessage(Utils.loadMessagesFromFile("success.update"));
 			gunsRevenuList = accountsServiceImpl.loadGunsRevenusList(stId);
+			if (gunsRevenuList != null && gunsRevenuList.size() > 0) {
+				listTotalSum = gunsRevenuList.stream().filter(fdet -> fdet.getTotalPrice() != 0.0d)
+						.mapToDouble(fdet -> fdet.getTotalPrice()).sum();
+
+				litersTotalSum = gunsRevenuList.stream().filter(fdet -> fdet.getLitersNum() != 0.0d)
+						.mapToDouble(fdet -> fdet.getLitersNum()).sum();
+
+				BigDecimal sum = new BigDecimal(listTotalSum).setScale(3, RoundingMode.HALF_UP);
+				listTotalSum = sum.doubleValue();
+				sum = new BigDecimal(litersTotalSum).setScale(3, RoundingMode.HALF_UP);
+				litersTotalSum = sum.doubleValue();
+				Utils.updateUIComponent("form:myTable");
+
+			}
 		} catch (Exception e) {
 			MsgEntry.addErrorMessage(Utils.loadMessagesFromFile("error.update"));
 			e.printStackTrace();
@@ -295,6 +382,54 @@ public class RevenuesBean {
 
 	public void setAddObj(FirstDayAmount addObj) {
 		this.addObj = addObj;
+	}
+
+	public double getListTotalSum() {
+		return listTotalSum;
+	}
+
+	public void setListTotalSum(double listTotalSum) {
+		this.listTotalSum = listTotalSum;
+	}
+
+	public double getLitersTotalSum() {
+		return litersTotalSum;
+	}
+
+	public void setLitersTotalSum(double litersTotalSum) {
+		this.litersTotalSum = litersTotalSum;
+	}
+
+	public BigDecimal getListTotalSumDecimal() {
+		return listTotalSumDecimal;
+	}
+
+	public void setListTotalSumDecimal(BigDecimal listTotalSumDecimal) {
+		this.listTotalSumDecimal = listTotalSumDecimal;
+	}
+
+	public BigDecimal getLitersTotalSumDecimal() {
+		return litersTotalSumDecimal;
+	}
+
+	public void setLitersTotalSumDecimal(BigDecimal litersTotalSumDecimal) {
+		this.litersTotalSumDecimal = litersTotalSumDecimal;
+	}
+
+	public List<GunsRevenus> getGunsRevenus() {
+		return gunsRevenus;
+	}
+
+	public void setGunsRevenus(List<GunsRevenus> gunsRevenus) {
+		this.gunsRevenus = gunsRevenus;
+	}
+
+	public List<GasModel> getGmList() {
+		return gmList;
+	}
+
+	public void setGmList(List<GasModel> gmList) {
+		this.gmList = gmList;
 	}
 
 }

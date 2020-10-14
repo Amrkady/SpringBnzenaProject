@@ -1,6 +1,7 @@
 package com.beans;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -48,6 +49,8 @@ public class GeneralExpensisBean {
 	private SandModel sm = new SandModel();
 	private SndSrfQbd snd = new SndSrfQbd();
 	private List<SndSrfQbd> sndList = new ArrayList<SndSrfQbd>();
+	private double listTotalSum;
+	private BigDecimal listTotalSumDecimal;
 	@PostConstruct
 	public void init() {
 //		FacesContext facesContext = FacesContext.getCurrentInstance();
@@ -59,6 +62,14 @@ public class GeneralExpensisBean {
 		expensisTypesSearch = accountsServiceImpl.loadAllExpensisTypesList();
 		stationsList = departmentServiceImpl.loadStations();
 		sndList = accountsServiceImpl.loadSndByType(3, -1);
+		if (expensisList != null && expensisList.size() > 0) {
+			listTotalSum = expensisList.stream().filter(fdet -> fdet.getExpensisQuantity() != 0.0d)
+					.mapToDouble(fdet -> fdet.getExpensisQuantity()).sum();
+			BigDecimal sum = new BigDecimal(listTotalSum).setScale(3, RoundingMode.HALF_UP);
+			listTotalSumDecimal = sum;
+			System.out.println("" + listTotalSumDecimal);
+
+		}
 		// }
 	}
 
@@ -68,6 +79,14 @@ public class GeneralExpensisBean {
 			stId = -1;
 		}
 		expensisList = accountsServiceImpl.loadExpensisByDates(dateFrom, dateTo, supType, stId);
+		if (expensisList != null && expensisList.size() > 0) {
+			listTotalSum = expensisList.stream().filter(fdet -> fdet.getExpensisQuantity() != 0.0d)
+					.mapToDouble(fdet -> fdet.getExpensisQuantity()).sum();
+			BigDecimal sum = new BigDecimal(listTotalSum).setScale(3, RoundingMode.HALF_UP);
+			listTotalSumDecimal = sum;
+			System.out.println("" + listTotalSumDecimal);
+
+		}
 		return "";
 	}
 
@@ -78,6 +97,14 @@ public class GeneralExpensisBean {
 				departmentServiceImpl.save(sssAdd);
 				MsgEntry.addInfoMessage(Utils.loadMessagesFromFile("success.operation"));
 				expensisList = accountsServiceImpl.loadAllExpensisList();
+				if (expensisList != null && expensisList.size() > 0) {
+					listTotalSum = expensisList.stream().filter(fdet -> fdet.getExpensisQuantity() != 0.0d)
+							.mapToDouble(fdet -> fdet.getExpensisQuantity()).sum();
+					BigDecimal sum = new BigDecimal(listTotalSum).setScale(3, RoundingMode.HALF_UP);
+					listTotalSumDecimal = sum;
+					System.out.println("" + listTotalSumDecimal);
+
+				}
 				sssAdd = new Expensis();
 			}
 		} catch (Exception e) {
@@ -94,6 +121,14 @@ public class GeneralExpensisBean {
 				departmentServiceImpl.delete(gs);
 				MsgEntry.addInfoMessage(Utils.loadMessagesFromFile("success.delete"));
 				expensisList = accountsServiceImpl.loadAllExpensisList();
+				if (expensisList != null && expensisList.size() > 0) {
+					listTotalSum = expensisList.stream().filter(fdet -> fdet.getExpensisQuantity() != 0.0d)
+							.mapToDouble(fdet -> fdet.getExpensisQuantity()).sum();
+					BigDecimal sum = new BigDecimal(listTotalSum).setScale(3, RoundingMode.HALF_UP);
+					listTotalSumDecimal = sum;
+					System.out.println("" + listTotalSumDecimal);
+
+				}
 			} catch (Exception e) {
 				MsgEntry.addErrorMessage(Utils.loadMessagesFromFile("error.delete"));
 				e.printStackTrace();
@@ -109,6 +144,14 @@ public class GeneralExpensisBean {
 			departmentServiceImpl.update(gs);
 			MsgEntry.addInfoMessage(Utils.loadMessagesFromFile("success.update"));
 			expensisList = accountsServiceImpl.loadAllExpensisList();
+			if (expensisList != null && expensisList.size() > 0) {
+				listTotalSum = expensisList.stream().filter(fdet -> fdet.getExpensisQuantity() != 0.0d)
+						.mapToDouble(fdet -> fdet.getExpensisQuantity()).sum();
+				BigDecimal sum = new BigDecimal(listTotalSum).setScale(3, RoundingMode.HALF_UP);
+				listTotalSumDecimal = sum;
+				System.out.println("" + listTotalSumDecimal);
+
+			}
 		} catch (Exception e) {
 			MsgEntry.addErrorMessage(Utils.loadMessagesFromFile("error.update"));
 			e.printStackTrace();
@@ -147,7 +190,7 @@ public class GeneralExpensisBean {
 				String grigDate = sdf.format(sm.getEntryDate());
 				parameters.put("date", grigDate);
 				parameters.put("dateH", hDate);
-				parameters.put("costByLet", new BigDecimal(sm.getAmount()));
+				parameters.put("costByLet", sm.getAmount());
 				String headerPath = FacesContext.getCurrentInstance().getExternalContext()
 						.getRealPath("/reports/logoreport.png");
 				parameters.put("header", headerPath);
@@ -220,7 +263,7 @@ public class GeneralExpensisBean {
 				String grigDate = sdf.format(sm.getSndDate());
 				parameters.put("date", grigDate);
 				parameters.put("dateH", hDate);
-				parameters.put("costByLet", new BigDecimal(sm.getAmount()));
+				parameters.put("costByLet",sm.getAmount());
 				String headerPath = FacesContext.getCurrentInstance().getExternalContext()
 						.getRealPath("/reports/logoreport.png");
 				parameters.put("header", headerPath);
@@ -344,6 +387,22 @@ public class GeneralExpensisBean {
 
 	public void setSndList(List<SndSrfQbd> sndList) {
 		this.sndList = sndList;
+	}
+
+	public double getListTotalSum() {
+		return listTotalSum;
+	}
+
+	public void setListTotalSum(double listTotalSum) {
+		this.listTotalSum = listTotalSum;
+	}
+
+	public BigDecimal getListTotalSumDecimal() {
+		return listTotalSumDecimal;
+	}
+
+	public void setListTotalSumDecimal(BigDecimal listTotalSumDecimal) {
+		this.listTotalSumDecimal = listTotalSumDecimal;
 	}
 
 }

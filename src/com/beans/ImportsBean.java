@@ -1,5 +1,7 @@
 package com.beans;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -47,6 +49,8 @@ public class ImportsBean {
 	private List<Gas> gasList = new ArrayList<Gas>();
 	private Integer supplierId;
 	private String supType = null;
+	private double listTotalSum;
+	private BigDecimal listTotalSumDecimal;
 
 	@PostConstruct
 	public void init() {
@@ -56,6 +60,15 @@ public class ImportsBean {
 		if (stId != null) {
 			sssList = accountsServiceImpl.loadsssList(stId);
 			gasList = departmentServiceImpl.loadGass(stId);
+			if (sssList != null && sssList.size() > 0) {
+				listTotalSum = sssList.stream().filter(fdet -> fdet.getPrice() != 0.0d)
+						.mapToDouble(fdet -> fdet.getPrice()).sum();
+
+				listTotalSumDecimal = new BigDecimal(listTotalSum).setScale(3, RoundingMode.HALF_UP);
+
+				System.out.println("" + listTotalSumDecimal);
+
+			}
 		}
 	}
 
@@ -67,7 +80,15 @@ public class ImportsBean {
 
 			sssList = accountsServiceImpl.loadsssByDates(dateFrom, dateTo, supplierId, Integer.parseInt(supType), stId);
 		}
+		if (sssList != null && sssList.size() > 0) {
+			listTotalSum = sssList.stream().filter(fdet -> fdet.getPrice() != 0.0d).mapToDouble(fdet -> fdet.getPrice())
+					.sum();
 
+			listTotalSumDecimal = new BigDecimal(listTotalSum).setScale(3, RoundingMode.HALF_UP);
+
+			System.out.println("" + listTotalSumDecimal);
+
+		}
 		return "";
 	}
 
@@ -80,6 +101,15 @@ public class ImportsBean {
 				departmentServiceImpl.save(sssAdd);
 				MsgEntry.addInfoMessage(Utils.loadMessagesFromFile("success.operation"));
 				sssList = accountsServiceImpl.loadsssList(stId);
+				if (sssList != null && sssList.size() > 0) {
+					listTotalSum = sssList.stream().filter(fdet -> fdet.getPrice() != 0.0d)
+							.mapToDouble(fdet -> fdet.getPrice()).sum();
+
+					listTotalSumDecimal = new BigDecimal(listTotalSum).setScale(3, RoundingMode.HALF_UP);
+
+					System.out.println("" + listTotalSumDecimal);
+
+				}
 				sssAdd = new GasStationSuppliers();
 			}
 		} catch (Exception e) {
@@ -132,6 +162,15 @@ public class ImportsBean {
 				departmentServiceImpl.delete(gs);
 				MsgEntry.addInfoMessage(Utils.loadMessagesFromFile("success.delete"));
 				sssList = accountsServiceImpl.loadsssList(stId);
+				if (sssList != null && sssList.size() > 0) {
+					listTotalSum = sssList.stream().filter(fdet -> fdet.getPrice() != 0.0d)
+							.mapToDouble(fdet -> fdet.getPrice()).sum();
+
+					listTotalSumDecimal = new BigDecimal(listTotalSum).setScale(3, RoundingMode.HALF_UP);
+
+					System.out.println("" + listTotalSumDecimal);
+
+				}
 			} catch (Exception e) {
 				MsgEntry.addErrorMessage(Utils.loadMessagesFromFile("error.delete"));
 				e.printStackTrace();
@@ -147,6 +186,15 @@ public class ImportsBean {
 			departmentServiceImpl.update(gs);
 			MsgEntry.addInfoMessage(Utils.loadMessagesFromFile("success.update"));
 			sssList = accountsServiceImpl.loadsssList(stId);
+			if (sssList != null && sssList.size() > 0) {
+				listTotalSum = sssList.stream().filter(fdet -> fdet.getPrice() != 0.0d)
+						.mapToDouble(fdet -> fdet.getPrice()).sum();
+
+				listTotalSumDecimal = new BigDecimal(listTotalSum).setScale(3, RoundingMode.HALF_UP);
+
+				System.out.println("" + listTotalSumDecimal);
+
+			}
 		} catch (Exception e) {
 			MsgEntry.addErrorMessage(Utils.loadMessagesFromFile("error.update"));
 			e.printStackTrace();
@@ -159,6 +207,45 @@ public class ImportsBean {
 		FacesMessage msg = new FacesMessage("·„ Ì „ «· ⁄œÌ·", "");
 		FacesContext.getCurrentInstance().addMessage(null, msg);
 
+	}
+
+	public String printAccount() {
+		if (supplierId != null && supType != null && !supType.isEmpty() && supType.equalsIgnoreCase("1") == true) {
+			try {
+
+				String reportName = "/reports/importsImportant.jasper";
+				Map<String, Object> parameters = new HashMap<String, Object>();
+				parameters.put("stationId", stId);
+				String fromDate = "1";
+				String toDate = "1";
+				String fromD = "1";
+				String toD = "1";
+				if (dateTo == null || dateFrom == null) {
+					dateTo = null;
+					dateFrom = null;
+				} else {
+					SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+					fromDate = sdf.format(dateFrom);
+					toDate = sdf.format(dateTo);
+					sdf = new SimpleDateFormat("dd/MM/yyyy");
+					fromD = sdf.format(dateFrom);
+					toD = sdf.format(dateTo);
+				}
+				parameters.put("dateFrom", fromDate);
+				parameters.put("dateTo", toDate);
+				parameters.put("dateF", fromD);
+				parameters.put("dateT", toD);
+				parameters.put("supId", supplierId);
+				String headerPath = FacesContext.getCurrentInstance().getExternalContext()
+						.getRealPath("/reports/logoreport.png");
+				parameters.put("header", headerPath);
+				Utils.printPdfReport(reportName, parameters);
+
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+		return "";
 	}
 
 	public String printAll() {
@@ -321,6 +408,22 @@ public class ImportsBean {
 
 	public void setSupType(String supType) {
 		this.supType = supType;
+	}
+
+	public double getListTotalSum() {
+		return listTotalSum;
+	}
+
+	public void setListTotalSum(double listTotalSum) {
+		this.listTotalSum = listTotalSum;
+	}
+
+	public BigDecimal getListTotalSumDecimal() {
+		return listTotalSumDecimal;
+	}
+
+	public void setListTotalSumDecimal(BigDecimal listTotalSumDecimal) {
+		this.listTotalSumDecimal = listTotalSumDecimal;
 	}
 
 }

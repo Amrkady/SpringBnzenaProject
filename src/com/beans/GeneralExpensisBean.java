@@ -51,6 +51,9 @@ public class GeneralExpensisBean {
 	private List<SndSrfQbd> sndList = new ArrayList<SndSrfQbd>();
 	private double listTotalSum;
 	private BigDecimal listTotalSumDecimal;
+	private boolean vat;
+	private double taxValue;
+
 	@PostConstruct
 	public void init() {
 //		FacesContext facesContext = FacesContext.getCurrentInstance();
@@ -61,7 +64,7 @@ public class GeneralExpensisBean {
 		expensisTypesList = accountsServiceImpl.loadAllExpensisTypes(1);
 		expensisTypesSearch = accountsServiceImpl.loadAllExpensisTypesList();
 		stationsList = departmentServiceImpl.loadStations();
-		sndList = accountsServiceImpl.loadSndByType(3, -1);
+		sndList = accountsServiceImpl.findGeneralSndByType(2, -1);
 		if (expensisList != null && expensisList.size() > 0) {
 			listTotalSum = expensisList.stream().filter(fdet -> fdet.getExpensisQuantity() != 0.0d)
 					.mapToDouble(fdet -> fdet.getExpensisQuantity()).sum();
@@ -114,7 +117,6 @@ public class GeneralExpensisBean {
 		return "";
 	}
 
-
 	public String deleteGas(Expensis gs) {
 		if (gs != null) {
 			try {
@@ -157,6 +159,16 @@ public class GeneralExpensisBean {
 			e.printStackTrace();
 		}
 
+	}
+
+	public void updateCom() {
+		if (sm.getAmount() > 0 && vat == true) {
+			taxValue = (sm.getAmount() / 1.15) * 0.15;
+			taxValue = Math.round(taxValue * 100) / 100.00d;
+
+		} else {
+			taxValue = 0.0;
+		}
 	}
 
 	public String print() {
@@ -203,6 +215,7 @@ public class GeneralExpensisBean {
 		}
 		return "";
 	}
+
 //
 	public void onRowCancel(RowEditEvent event) {
 		FacesMessage msg = new FacesMessage("·„ Ì „ «· ⁄œÌ·", "");
@@ -218,11 +231,12 @@ public class GeneralExpensisBean {
 				snd.setName(sm.getName());
 				snd.setForReason(sm.getForWhat());
 				snd.setPayType(sm.getPayType());
-				snd.setSndType(3); // 1 snd qabd
+				snd.setSndType(2); // 2 snd srf general
+				snd.setExpensisTypesId(-1);
 				departmentServiceImpl.save(snd);
 				// canPrint = false;
 				MsgEntry.addInfoMessage(Utils.loadMessagesFromFile("success.operation"));
-				sndList = accountsServiceImpl.loadSndByType(3, -1);
+				sndList = accountsServiceImpl.findGeneralSndByType(2, -1);
 				snd = new SndSrfQbd();
 				sm = new SandModel();
 			}
@@ -263,7 +277,7 @@ public class GeneralExpensisBean {
 				String grigDate = sdf.format(sm.getSndDate());
 				parameters.put("date", grigDate);
 				parameters.put("dateH", hDate);
-				parameters.put("costByLet",sm.getAmount());
+				parameters.put("costByLet", sm.getAmount());
 				String headerPath = FacesContext.getCurrentInstance().getExternalContext()
 						.getRealPath("/reports/logoreport.png");
 				parameters.put("header", headerPath);
@@ -272,6 +286,20 @@ public class GeneralExpensisBean {
 
 			} catch (Exception e) {
 				// TODO: handle exception
+			}
+		}
+		return "";
+	}
+
+	public String deletesnd(SndSrfQbd gs) {
+		if (gs != null) {
+			try {
+				departmentServiceImpl.delete(gs);
+				MsgEntry.addInfoMessage(Utils.loadMessagesFromFile("success.delete"));
+				sndList = accountsServiceImpl.findGeneralSndByType(2, -1);
+			} catch (Exception e) {
+				MsgEntry.addErrorMessage(Utils.loadMessagesFromFile("error.delete"));
+				e.printStackTrace();
 			}
 		}
 		return "";
@@ -403,6 +431,22 @@ public class GeneralExpensisBean {
 
 	public void setListTotalSumDecimal(BigDecimal listTotalSumDecimal) {
 		this.listTotalSumDecimal = listTotalSumDecimal;
+	}
+
+	public boolean isVat() {
+		return vat;
+	}
+
+	public void setVat(boolean vat) {
+		this.vat = vat;
+	}
+
+	public double getTaxValue() {
+		return taxValue;
+	}
+
+	public void setTaxValue(double taxValue) {
+		this.taxValue = taxValue;
 	}
 
 }

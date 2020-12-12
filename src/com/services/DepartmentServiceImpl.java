@@ -1,5 +1,6 @@
 package com.services;
 
+import java.util.Date;
 import java.util.List;
 
 import com.common.CommonDao;
@@ -9,6 +10,7 @@ import com.entities.Gas;
 import com.entities.GasGuns;
 import com.entities.Rents;
 import com.entities.Shops;
+import com.entities.SndSrfQbd;
 import com.entities.Stations;
 import com.entities.Suppliers;
 import com.entities.Taxs;
@@ -123,6 +125,11 @@ public class DepartmentServiceImpl implements DepartmentService {
 	public List<ExpensisTypes> loadExpTypes() {
 		List stations = commonDao.findAll(ExpensisTypes.class);
 		return stations;
+	}
+
+	@Override
+	public List<SndSrfQbd> LoadAllSands(Date dateFrom, Date dateTo, Integer sndType) {
+		return commonDao.LoadAllSands(dateFrom, dateTo, sndType);
 	}
 
 }

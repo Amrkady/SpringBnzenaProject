@@ -7,12 +7,14 @@ import com.common.CommonDao;
 import com.entities.Constantsasoul;
 import com.entities.Expensis;
 import com.entities.ExpensisTypes;
+import com.entities.FirstDayAmount;
 import com.entities.GasGuns;
 import com.entities.GasStationSuppliers;
 import com.entities.GeneralPay;
 import com.entities.GunsRevenus;
 import com.entities.SndSrfQbd;
 import com.models.GasModel;
+import com.models.RevuensModel;
 
 public class AccountsServiceImpl implements AccountsService {
 
@@ -101,10 +103,17 @@ public class AccountsServiceImpl implements AccountsService {
 	}
 
 	@Override
+	public List<SndSrfQbd> findGeneralSndByType(Integer type, Integer stationId) {
+		List ls = commonDao.findGeneralSndByType(type, stationId);
+		return ls;
+	}
+
+	@Override
 	public List<GasModel> getAllLitersBetweenDates(Integer stationId, Date beginDate, Date endDate) {
 		List ls = commonDao.getAllLitersBetweenDates(stationId, beginDate, endDate);
 		return ls;
 	}
+
 
 	@Override
 	public List<GeneralPay> loadAllGeneralPayBetweenDates(Integer stationId, Date beginDate, Date endDate) {
@@ -124,5 +133,29 @@ public class AccountsServiceImpl implements AccountsService {
 		return ls;
 	}
 
-}
+	@Override
+	public List<RevuensModel> getFinancialMuneDates(Date beginDate, Date endDate) {
+		List ls = commonDao.getFinancialMuneDates(beginDate, endDate);
+		return ls;
 
+	}
+
+	@Override
+	public List<SndSrfQbd> LoadAllAsoul(Date beginDate, Date endDate) {
+		List ls = commonDao.LoadAllAsoul(beginDate, endDate);
+		return ls;
+	}
+
+	@Override
+	public List<SndSrfQbd> LoadAllSndsWithoutTaxa(Date beginDate, Date endDate) {
+		List ls = commonDao.LoadAllSndsWithoutTaxa(beginDate, endDate);
+		return ls;
+	}
+
+	@Override
+	public List<FirstDayAmount> loadAllfRead(Integer stId) {
+		List ls = commonDao.loadAllfRead(stId);
+		return ls;
+	}
+
+}

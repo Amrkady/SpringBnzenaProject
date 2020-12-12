@@ -19,15 +19,16 @@
 				<p:messages id="msg" autoUpdate="true" closable="true"></p:messages>
 				<h1 style="color: #1565C0; text-align: center;">انواع المحروقات</h1>
 				<div class="image-box-footer" align="left">
-					<p:commandButton id="cBadd" value="اضافة نوع محروقات" immediate="true"
-						icon="ui-icon ui-icon-plus" onclick="PF('whsdlAdd').show();">
+					<p:commandButton id="cBadd" value="اضافة نوع محروقات"
+						immediate="true" icon="ui-icon ui-icon-plus"
+						onclick="PF('whsdlAdd').show();">
 					</p:commandButton>
 				</div>
 				<br />
 				<br />
 				<p:dataTable id="myTable" var="gas" value="#{gasBean.gasList}"
 					emptyMessage="لايوجد بيانات" rowIndexVar="rowIndex" editable="true"
-					widgetVar="cellemp" paginatorPosition="bottom"
+					paginatorPosition="bottom"
 					paginatorTemplate="{FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink}"
 					paginator="true" rows="10">
 					<p:ajax event="rowEdit" listener="#{gasBean.onRowEdit}"
@@ -56,8 +57,20 @@
 								<h:outputText value="#{gas.price}" />
 							</f:facet>
 							<f:facet name="input">
-								<p:inputText value="#{gas.price}" required="true"
+								<p:inputNumber value="#{gas.price}" required="true"
 									requiredMessage="السعر مطلوب" style="width:100%" />
+							</f:facet>
+						</p:cellEditor>
+					</p:column>
+					<p:column headerText="سعة التانك" style="width: 10%"
+						filterBy="#{gas.tankWidth}" filterMatchMode="contains">
+						<p:cellEditor>
+							<f:facet name="output">
+								<h:outputText value="#{gas.tankWidth}" />
+							</f:facet>
+							<f:facet name="input">
+								<p:inputNumber value="#{gas.tankWidth}" required="true"
+									requiredMessage="السعة مطلوبة" style="width:100%" />
 							</f:facet>
 						</p:cellEditor>
 					</p:column>
@@ -78,9 +91,9 @@
 				</p:dataTable>
 			</h:form>
 			<h:form>
-				<p:dialog position="center" widgetVar="whsdlAdd" responsive="true" dynamic="true"
-					hideEffect="explode" showEffect="fade" width="60%" closable="true"
-					 resizable="true" modal="true" dir="rtl">
+				<p:dialog position="center" widgetVar="whsdlAdd" responsive="true"
+					dynamic="true" hideEffect="explode" showEffect="fade" width="60%"
+					closable="true" resizable="true" modal="true" dir="rtl">
 					<h:panelGroup id="panelGroupAdd" width="60%">
 						<p:fieldset legend="بيانات نوع المحروقات" width="100%">
 							<div class="ui-g">
@@ -100,14 +113,15 @@
 										requiredMessage="السعر مطلوب" />
 								</div>
 							</div>
-<!-- 							<div class="ui-g"> -->
-<!-- 								<div class="ui-g-2"> -->
-<!-- 									<h:outputLabel value="رصيد اول" /> -->
-<!-- 								</div> -->
-<!-- 								<div class="ui-g-3"> -->
-<!-- 									<p:inputNumber value="#{gasBean.gasAdd.firstRead}" /> -->
-<!-- 								</div> -->
-<!-- 							</div> -->
+							<div class="ui-g">
+								<div class="ui-g-2">
+									<h:outputLabel value="سعة التانك " />
+								</div>
+								<div class="ui-g-3">
+									<p:inputNumber value="#{gasBean.gasAdd.tankWidth}"
+										required="true" requiredMessage="سعة التانك مطلوبة" />
+								</div>
+							</div>
 							<br />
 							<div class="iamge-box-footer" align="left">
 								<p:commandButton value="حفظ" onsuccess="PF('whsdlAdd').hide();"

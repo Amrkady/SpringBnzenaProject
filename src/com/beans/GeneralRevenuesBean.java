@@ -122,6 +122,7 @@ public class GeneralRevenuesBean {
 				snd.setForReason(sm.getForWhat());
 				snd.setPayType(sm.getPayType());
 				snd.setSndType(1); // 1 snd qabd
+				snd.setExpensisTypesId(0);
 				departmentServiceImpl.save(snd);
 				// canPrint = false;
 				MsgEntry.addInfoMessage(Utils.loadMessagesFromFile("success.operation"));
@@ -183,6 +184,20 @@ public class GeneralRevenuesBean {
 			}
 		}
 
+	}
+
+	public String deleteGas(SndSrfQbd gs) {
+		if (gs != null) {
+			try {
+				departmentServiceImpl.delete(gs);
+				MsgEntry.addInfoMessage(Utils.loadMessagesFromFile("success.delete"));
+				sndList = accountsServiceImpl.loadSndByType(1, -1);
+			} catch (Exception e) {
+				MsgEntry.addErrorMessage(Utils.loadMessagesFromFile("error.delete"));
+				e.printStackTrace();
+			}
+		}
+		return "";
 	}
 
 	public double sumPrice() {

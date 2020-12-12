@@ -19,11 +19,22 @@
 				<p:messages id="msg" autoUpdate="true" closable="true"></p:messages>
 				<h1 style="color: #1565C0; text-align: center;">مشتريات ومبيعات
 					المحطات</h1>
-				<!-- 					<p:commandButton value="طباعة الايرادات" process="@all" -->
-				<!-- 						icon="ui-icon ui-icon-print " immediate="true" -->
-				<!-- 						action="#{generalRevenuesBean.printAll}" -->
-				<!-- 						onclick="this.form.target='_blank'" ajax="false"> -->
-				<!-- 					</p:commandButton> -->
+				<div class="image-box-footer" align="left">
+					<p:commandButton id="save" value="حفظ" immediate="true"
+						icon="ui-icon ui-icon-save" action="#{payImportsBean.save}">
+					</p:commandButton>
+					<p:spacer width="10" height="10"></p:spacer>
+					<p:commandButton value="طباعة" process="@all"
+						icon="ui-icon ui-icon-print " immediate="true"
+						action="#{payImportsBean.printAll}" styleClass="orange-btn"
+						onclick="this.form.target='_blank'" ajax="false">
+					</p:commandButton>
+					<!-- 					<p:commandButton value="كشف حساب"  -->
+					<!-- 						icon="ui-icon ui-icon-print" immediate="true" -->
+					<!-- 						action="#{importsBean.printAccount}" -->
+					<!-- 						onclick="this.form.target='_blank'" ajax="false"> -->
+					<!-- 					</p:commandButton> -->
+				</div>
 
 				<br />
 				<h:panelGroup id="png">
@@ -102,8 +113,7 @@
 							<f:convertNumber pattern="##################.##">
 							</f:convertNumber>
 							<p:ajax event="blur" process="@this"
-								listener="#{payImportsBean.calcFineValSum(gunR)}"
-								update="total" />
+								listener="#{payImportsBean.calcFineValSum(gunR)}" update="total" />
 						</p:inputText>
 					</p:column>
 					<p:column headerText="العجز / الزيادة"

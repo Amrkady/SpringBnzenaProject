@@ -33,6 +33,7 @@ import com.entities.Stations;
 import com.entities.Suppliers;
 import com.entities.Users;
 import com.models.GasModel;
+import com.models.RevuensModel;
 
 public class CommonDaoImpl extends HibernateTemplate implements CommonDao {
 	private SessionFactory sessionFactory;
@@ -266,6 +267,9 @@ public class CommonDaoImpl extends HibernateTemplate implements CommonDao {
 			criteria.add(Restrictions.le("supDate", dateTo));
 		}
 
+		if (suppType != null) {
+			criteria.add(Restrictions.eq("supplierType", suppType));
+		}
 		if (supplierId != null) {
 			if (suppType == 1) {
 				criteria.add(Restrictions.eq("supplierId", supplierId));
@@ -346,6 +350,21 @@ public class CommonDaoImpl extends HibernateTemplate implements CommonDao {
 			criteria.add(Restrictions.eq("stationId", stationId));
 		}
 		criteria.add(Restrictions.eq("sndType", type));
+		criteria.add(Restrictions.ne("expensisTypesId", -1));
+		List<SndSrfQbd> list = criteria.list();
+		return list;
+	}
+
+	@SuppressWarnings("unchecked")
+	@Override
+	@Transactional
+	public List<SndSrfQbd> findGeneralSndByType(Integer type, Integer stationId) {
+		Criteria criteria = sessionFactory.getCurrentSession().createCriteria(SndSrfQbd.class);
+		if (stationId != -1) {
+			criteria.add(Restrictions.eq("stationId", stationId));
+		}
+		criteria.add(Restrictions.eq("sndType", type));
+		criteria.add(Restrictions.eq("expensisTypesId", -1));
 		List<SndSrfQbd> list = criteria.list();
 		return list;
 	}
@@ -397,8 +416,10 @@ public class CommonDaoImpl extends HibernateTemplate implements CommonDao {
 				gm.setGasId(gas.getId());
 				gm.setImportsAmount(importsSum);
 				gm.setLitrsAmount(litrsSum);
+				gm.setGasTank(gas.getTankWidth());
 				gm.setGasName(gas.getName());
 				gm.setStationId(gas.getStationId());
+
 				values.add(gm);
 				litrsSum = new BigDecimal(0);
 				litSum = 0d;
@@ -534,6 +555,92 @@ public class CommonDaoImpl extends HibernateTemplate implements CommonDao {
 
 		criteria.add(Restrictions.eq("expensisId", expensisType));
 		List<Constantsasoul> list = criteria.list();
+		return list;
+	}
+
+	@Transactional
+	@Override
+	public List<SndSrfQbd> LoadAllSands(Date dateFrom, Date dateTo, Integer sndType) {
+		Criteria criteria = sessionFactory.getCurrentSession().createCriteria(SndSrfQbd.class);
+		criteria.add(Restrictions.ge("sndDate", dateFrom));
+		criteria.add(Restrictions.le("sndDate", dateTo));
+		// criteria.add(Restrictions.ne("expensisTypesId", 5)); // tax
+		// criteria.add(Restrictions.ne("expensisTypesId", 9)); // asoul
+		criteria.add(Restrictions.eq("sndType", sndType));
+		List<SndSrfQbd> list = criteria.list();
+//		list.stream().mapToInt(snd -> snd.getExpensisTypesId()).filter(snd -> snd != 9);
+		return list;
+	}
+
+	@Transactional
+	@Override
+	public List<RevuensModel> getFinancialMuneDates(Date beginDate, Date endDate) {
+		List<RevuensModel> list = new ArrayList<RevuensModel>();
+		List<Stations> sts = loadAll(Stations.class);
+		BigDecimal amountSumDecimal = new BigDecimal(0);
+		Double amountSum = 0d;
+		for (Stations stns : sts) {
+			RevuensModel rm = new RevuensModel();
+			List<GunsRevenus> revenus = findRevsByDates(beginDate, endDate, null, stns.getId());
+			amountSum = revenus.stream().filter(fdet -> fdet.getTotalPrice() != 0.0d)
+					.mapToDouble(fdet -> fdet.getTotalPrice()).sum();
+			amountSumDecimal = new BigDecimal(amountSum).setScale(3, RoundingMode.HALF_UP);
+			List<Expensis> expensisList = findExpensisByDates(beginDate, endDate, null, stns.getId());
+			Double listTotalSum = expensisList.stream().filter(fdet -> fdet.getExpensisQuantity() != 0.0d)
+					.mapToDouble(fdet -> fdet.getExpensisQuantity()).sum();
+			BigDecimal sum = new BigDecimal(listTotalSum).setScale(3, RoundingMode.HALF_UP);
+			List<Expensis> expensisTax = findExpensisByDates(beginDate, endDate, 5, stns.getId());
+			Double taxSum = expensisTax.stream().filter(fdet -> fdet.getExpensisQuantity() != 0.0d)
+					.mapToDouble(fdet -> fdet.getExpensisQuantity()).sum();
+			BigDecimal tax = new BigDecimal(taxSum).setScale(3, RoundingMode.HALF_UP);
+
+			rm.setStationId(1);
+			rm.setStationName(stns.getName());
+			rm.setExpAmount(sum);
+			rm.setTaxs(tax);
+			rm.setRevAmount(amountSumDecimal);
+			double dif = amountSumDecimal.doubleValue() - sum.doubleValue();
+			rm.setProfit(new BigDecimal(dif).setScale(2, RoundingMode.HALF_UP));
+			list.add(rm);
+			amountSumDecimal = new BigDecimal(0);
+			amountSum = 0d;
+			sum = new BigDecimal(0);
+		}
+		return list;
+	}
+
+	@Transactional
+	@Override
+	public List<SndSrfQbd> LoadAllAsoul(Date dateFrom, Date dateTo) {
+		Criteria criteria = sessionFactory.getCurrentSession().createCriteria(SndSrfQbd.class);
+		criteria.add(Restrictions.ge("sndDate", dateFrom));
+		criteria.add(Restrictions.le("sndDate", dateTo));
+		// criteria.add(Restrictions.ne("expensisTypesId", 5)); // tax
+		criteria.add(Restrictions.eq("expensisTypesId", 9)); // asoul
+		List<SndSrfQbd> list = criteria.list();
+//		list.stream().mapToInt(snd -> snd.getExpensisTypesId()).filter(snd -> snd != 9);
+		return list;
+	}
+
+	@Transactional
+	@Override
+	public List<SndSrfQbd> LoadAllSndsWithoutTaxa(Date dateFrom, Date dateTo) {
+		Criteria criteria = sessionFactory.getCurrentSession().createCriteria(SndSrfQbd.class);
+		criteria.add(Restrictions.ge("sndDate", dateFrom));
+		criteria.add(Restrictions.le("sndDate", dateTo));
+		criteria.add(Restrictions.ne("expensisTypesId", 5)); // tax
+		// criteria.add(Restrictions.eq("expensisTypesId", 9)); // asoul
+		List<SndSrfQbd> list = criteria.list();
+//		list.stream().mapToInt(snd -> snd.getExpensisTypesId()).filter(snd -> snd != 9);
+		return list;
+	}
+
+	@Transactional
+	@Override
+	public List<FirstDayAmount> loadAllfRead(Integer stId) {
+		Criteria criteria = sessionFactory.getCurrentSession().createCriteria(FirstDayAmount.class);
+		criteria.add(Restrictions.eq("stationId", stId));
+		List<FirstDayAmount> list = criteria.list();
 		return list;
 	}
 

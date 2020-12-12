@@ -19,8 +19,9 @@
 				<p:messages id="msg" autoUpdate="true" closable="true"></p:messages>
 				<h1 style="color: #1565C0; text-align: center;">المصروفات</h1>
 				<div class="image-box-footer" align="left">
-					<p:commandButton id="cBadd" value="اضافة " immediate="true"
-						icon="ui-icon ui-icon-plus" onclick="PF('whsdlAdd').show();">
+					<p:commandButton id="cBadd" value="اضافة مصروفات وسند صرف"
+						immediate="true" icon="ui-icon ui-icon-plus"
+						onclick="PF('whsdlAdd').show();">
 					</p:commandButton>
 					<p:spacer width="5" height="10"></p:spacer>
 					<p:commandButton id="d" value="سندات الصرف" immediate="true"
@@ -71,9 +72,8 @@
 				<br />
 				<p:dataTable id="myTable" var="exp"
 					value="#{expensisBean.expensisList}" emptyMessage="لايوجد بيانات"
-					rowIndexVar="rowIndex" editable="true" widgetVar="cellemp"
-					paginatorPosition="bottom" sortBy="#{exp.monthDate}"
-					sortOrder="descending"
+					rowIndexVar="rowIndex" editable="true" paginatorPosition="bottom"
+					sortBy="#{exp.monthDate}" sortOrder="descending"
 					paginatorTemplate="{FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink}"
 					paginator="true" rows="10">
 					<p:ajax event="rowEdit" listener="#{expensisBean.onRowEdit}"
@@ -111,7 +111,7 @@
 									<f:selectItem itemLabel="اختر....." noSelectionOption="true" />
 									<f:selectItems value="#{expensisBean.expensisTypesList}"
 										var="et" itemLabel="#{et.name}" itemValue="#{et.id}" />
-									<f:ajax process="@this"  render="asList"
+									<f:ajax process="@this" render="asList"
 										listener="#{expensisBean.loadAsList(exp)}" />
 								</p:selectOneMenu>
 							</f:facet>
@@ -176,9 +176,10 @@
 				</p:dataTable>
 			</h:form>
 			<h:form>
-				<p:dialog position="center" widgetVar="whsdlAdd" responsive="true"
-					dynamic="true" hideEffect="explode" showEffect="fade" width="60%"
-					closable="true" resizable="true" modal="true" dir="rtl">
+				<p:dialog position="center" height="400" widgetVar="whsdlAdd"
+					responsive="true" dynamic="true" hideEffect="explode"
+					showEffect="fade" width="60%" closable="true" resizable="true"
+					modal="true" dir="rtl">
 					<h:panelGroup id="panelGroupAdd" width="60%">
 						<p:fieldset legend="بيانات المصروفات وسند الصرف " width="100%">
 							<div class="ui-g">
@@ -268,6 +269,23 @@
 									</p:inputText>
 								</div>
 							</div>
+							<div class="ui-g">
+								<div class="ui-g-2">
+									<p:outputLabel value="يوجد ضريبة ؟"></p:outputLabel>
+								</div>
+								<div class="ui-g-3">
+									<p:selectBooleanCheckbox value="#{expensisBean.vat}">
+										<p:ajax update="d2" listener="#{expensisBean.updateCom}" />
+									</p:selectBooleanCheckbox>
+								</div>
+								<div class="ui-g-2">
+									<p:outputLabel value="قيمة الضريبة"></p:outputLabel>
+								</div>
+								<div class="ui-g-3">
+									<p:outputLabel id="d2" value="#{expensisBean.taxValue}"></p:outputLabel>
+								</div>
+							</div>
+
 							<div class="iamge-box-footer" align="left">
 								<p:commandButton value="حفظ" onsuccess="PF('whsdlAdd').hide();"
 									icon="ui-icon ui-icon-save" process="@all"
@@ -282,21 +300,23 @@
 						</p:fieldset>
 					</h:panelGroup>
 				</p:dialog>
-				<p:dialog position="center" widgetVar="showsnd" responsive="true"
-					dynamic="true" hideEffect="explode" showEffect="fade" width="90%"
-					closable="true" resizable="true" modal="true" dir="rtl">
+				<p:dialog height="400" position="center" widgetVar="showsnd"
+					responsive="true" dynamic="true" hideEffect="explode"
+					showEffect="fade" width="90%" closable="true" resizable="true"
+					modal="true" dir="rtl">
 					<h:panelGroup id="paneldd" width="90%">
 						<p:fieldset legend="سندات الصرف" width="100%">
 							<p:dataTable id="ble" var="snd" sortBy="#{snd.sndDate}"
 								sortOrder="descending" value="#{expensisBean.sndList}"
 								emptyMessage="لايوجد بيانات" rowIndexVar="rowIndex"
-								widgetVar="cellemp" paginatorPosition="bottom"
+								paginatorPosition="bottom"
 								paginatorTemplate="{FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink}"
-								paginator="true" rows="10">
+								paginator="true" rows="5">
 								<p:column headerText="رقم" style="width: 5%">
 									<h:outputText value="#{rowIndex+1}" />
 								</p:column>
-								<p:column headerText="التاريخ " style="width: 15%"
+								<p:column headerText="التاريخ "
+									style="width: 12% ; ; text-align:center"
 									filterBy="#{snd.sndDate}" filterMatchMode="contains">
 									<h:outputText value="#{snd.sndDate}">
 										<f:convertDateTime pattern="yyyy/MM/dd" />
@@ -310,8 +330,9 @@
 									filterBy="#{snd.name}" filterMatchMode="contains">
 									<h:outputText value="#{snd.name}" />
 								</p:column>
-								<p:column headerText="القيمة" style="width: 10%"
-									filterBy="#{snd.amount}" filterMatchMode="contains">
+								<p:column headerText="القيمة"
+									style="width: 12% ; text-align:center" filterBy="#{snd.amount}"
+									filterMatchMode="contains">
 									<h:outputText value="#{snd.amount}" />
 								</p:column>
 								<p:column headerText="نوع الاصول الثابته" style="width: 15%"
@@ -319,15 +340,16 @@
 									<h:outputText value="#{snd.asoulName}" />
 								</p:column>
 
-								<p:column headerText="طريقة الدفع(الى حساب)" style="width: 15%"
-									filterBy="#{snd.payType}" filterMatchMode="contains">
+								<p:column headerText="طريقة الدفع(الى حساب)"
+									style="width: 7% ; text-align:center" filterBy="#{snd.payType}"
+									filterMatchMode="contains">
 									<h:outputText value="#{snd.payType == '1' ? 'بنك':'صندوق'}" />
 								</p:column>
 								<!-- 								<p:column headerText="طريقة الدفع" style="width: 20%" -->
 								<!-- 									filterBy="#{snd.payType}" filterMatchMode="contains"> -->
 								<!-- 									#{snd.payType == '1' ?  snd.expensisTypesName + 'من حساب': snd.expensisTypesName} -->
 								<!-- 								</p:column> -->
-								<p:column headerText="ذلك مقابل" style="width: 15%"
+								<p:column headerText="ذلك مقابل" style="width:18%"
 									filterBy="#{snd.forReason}" filterMatchMode="contains">
 									<h:outputLabel value="#{snd.forReason}" />
 								</p:column>
@@ -335,6 +357,12 @@
 									<p:commandButton value="طباعة" immediate="true"
 										action="#{expensisBean.print(snd)}"
 										onclick="this.form.target='_blank'" ajax="false">
+									</p:commandButton>
+								</p:column>
+								<p:column headerText="حذف" style="width:5%">
+									<p:commandButton update="ble" immediate="true"
+										style="background-color:red" icon="ui-icon ui-icon-remove"
+										title="حذف" action="#{expensisBean.deletesnd(snd)}">
 									</p:commandButton>
 								</p:column>
 							</p:dataTable>

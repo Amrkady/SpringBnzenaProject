@@ -29,7 +29,7 @@
 				<br />
 				<p:dataTable id="myTable" var="user" value="#{userBean.users}"
 					emptyMessage="لايوجد بيانات" rowIndexVar="rowIndex"
-					widgetVar="cellemp" paginatorPosition="bottom" editable="true"
+					 paginatorPosition="bottom" editable="true"
 					paginatorTemplate="{FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink}"
 					paginator="true" rows="10">
 					
@@ -100,7 +100,7 @@
 			</h:form>
 			<h:form>
 			<p:dialog position="center" widgetVar="whsdlAdd" responsive="true"
-				hideEffect="explode" showEffect="explode" width="70%"
+				hideEffect="explode" showEffect="explode" width="70%" 
 				closable="true" dir="rtl" resizable="true" modal="true">
 				
 				<h:panelGroup id="panelGroupAdd" width="70%">

@@ -51,6 +51,8 @@ public class ImportsBean {
 	private String supType = null;
 	private double listTotalSum;
 	private BigDecimal listTotalSumDecimal;
+	private double listTotalLitrs;
+	private BigDecimal listTotalLitrsDecimal;
 
 	@PostConstruct
 	public void init() {
@@ -65,6 +67,11 @@ public class ImportsBean {
 						.mapToDouble(fdet -> fdet.getPrice()).sum();
 
 				listTotalSumDecimal = new BigDecimal(listTotalSum).setScale(3, RoundingMode.HALF_UP);
+
+				listTotalLitrs = sssList.stream().filter(fdet -> fdet.getQuantity() != 0.0d)
+						.mapToDouble(fdet -> fdet.getQuantity()).sum();
+
+				listTotalLitrsDecimal = new BigDecimal(listTotalLitrs).setScale(3, RoundingMode.HALF_UP);
 
 				System.out.println("" + listTotalSumDecimal);
 
@@ -85,6 +92,10 @@ public class ImportsBean {
 					.sum();
 
 			listTotalSumDecimal = new BigDecimal(listTotalSum).setScale(3, RoundingMode.HALF_UP);
+			listTotalLitrs = sssList.stream().filter(fdet -> fdet.getQuantity() != 0.0d)
+					.mapToDouble(fdet -> fdet.getQuantity()).sum();
+
+			listTotalLitrsDecimal = new BigDecimal(listTotalLitrs).setScale(3, RoundingMode.HALF_UP);
 
 			System.out.println("" + listTotalSumDecimal);
 
@@ -96,7 +107,8 @@ public class ImportsBean {
 		try {
 			if (sssAdd != null) {
 				sssAdd.setSupplierType(Integer.parseInt(sssAdd.getSupType()));
-				sssAdd.setSadad(Integer.parseInt((sssAdd.getSadType().isEmpty() == true ? "1" : sssAdd.getSadType())));
+				sssAdd.setSadad(0);
+//				Integer.parseInt((sssAdd.getSadType().isEmpty() == true ? "1" : sssAdd.getSadType()))
 				sssAdd.setStationId(stId);
 				departmentServiceImpl.save(sssAdd);
 				MsgEntry.addInfoMessage(Utils.loadMessagesFromFile("success.operation"));
@@ -106,6 +118,10 @@ public class ImportsBean {
 							.mapToDouble(fdet -> fdet.getPrice()).sum();
 
 					listTotalSumDecimal = new BigDecimal(listTotalSum).setScale(3, RoundingMode.HALF_UP);
+					listTotalLitrs = sssList.stream().filter(fdet -> fdet.getQuantity() != 0.0d)
+							.mapToDouble(fdet -> fdet.getQuantity()).sum();
+
+					listTotalLitrsDecimal = new BigDecimal(listTotalLitrs).setScale(3, RoundingMode.HALF_UP);
 
 					System.out.println("" + listTotalSumDecimal);
 
@@ -167,6 +183,10 @@ public class ImportsBean {
 							.mapToDouble(fdet -> fdet.getPrice()).sum();
 
 					listTotalSumDecimal = new BigDecimal(listTotalSum).setScale(3, RoundingMode.HALF_UP);
+					listTotalLitrs = sssList.stream().filter(fdet -> fdet.getQuantity() != 0.0d)
+							.mapToDouble(fdet -> fdet.getQuantity()).sum();
+
+					listTotalLitrsDecimal = new BigDecimal(listTotalLitrs).setScale(3, RoundingMode.HALF_UP);
 
 					System.out.println("" + listTotalSumDecimal);
 
@@ -191,6 +211,10 @@ public class ImportsBean {
 						.mapToDouble(fdet -> fdet.getPrice()).sum();
 
 				listTotalSumDecimal = new BigDecimal(listTotalSum).setScale(3, RoundingMode.HALF_UP);
+				listTotalLitrs = sssList.stream().filter(fdet -> fdet.getQuantity() != 0.0d)
+						.mapToDouble(fdet -> fdet.getQuantity()).sum();
+
+				listTotalLitrsDecimal = new BigDecimal(listTotalLitrs).setScale(3, RoundingMode.HALF_UP);
 
 				System.out.println("" + listTotalSumDecimal);
 
@@ -424,6 +448,22 @@ public class ImportsBean {
 
 	public void setListTotalSumDecimal(BigDecimal listTotalSumDecimal) {
 		this.listTotalSumDecimal = listTotalSumDecimal;
+	}
+
+	public double getListTotalLitrs() {
+		return listTotalLitrs;
+	}
+
+	public void setListTotalLitrs(double listTotalLitrs) {
+		this.listTotalLitrs = listTotalLitrs;
+	}
+
+	public BigDecimal getListTotalLitrsDecimal() {
+		return listTotalLitrsDecimal;
+	}
+
+	public void setListTotalLitrsDecimal(BigDecimal listTotalLitrsDecimal) {
+		this.listTotalLitrsDecimal = listTotalLitrsDecimal;
 	}
 
 }

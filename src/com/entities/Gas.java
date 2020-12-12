@@ -31,6 +31,9 @@ public class Gas {
 	@Column(name = "first_read")
 	private double firstRead;
 
+	@Column(name = "tank_width")
+	private Integer tankWidth;
+
 	@Formula("(select s.station_name from stations s where s.id = station_id)")
 	private String stationName;
 
@@ -80,6 +83,14 @@ public class Gas {
 
 	public void setFirstRead(double firstRead) {
 		this.firstRead = firstRead;
+	}
+
+	public Integer getTankWidth() {
+		return tankWidth;
+	}
+
+	public void setTankWidth(Integer tankWidth) {
+		this.tankWidth = tankWidth;
 	}
 
 }

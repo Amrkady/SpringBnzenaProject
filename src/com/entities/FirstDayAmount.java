@@ -36,6 +36,9 @@ public class FirstDayAmount {
 	@Formula("(select s.station_name from stations s where s.id = station_id)")
 	private String stationName;
 
+	@Formula("(select g.name from gas g where g.id = gas_id)")
+	private String gasName;
+
 	public Integer getId() {
 		return id;
 	}
@@ -84,5 +87,12 @@ public class FirstDayAmount {
 		this.stationName = stationName;
 	}
 
+	public String getGasName() {
+		return gasName;
+	}
+
+	public void setGasName(String gasName) {
+		this.gasName = gasName;
+	}
 
 }

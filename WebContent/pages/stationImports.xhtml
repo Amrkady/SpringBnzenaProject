@@ -28,9 +28,8 @@
 						action="#{importsBean.printAll}"
 						onclick="this.form.target='_blank'" ajax="false">
 					</p:commandButton>
-					<p:commandButton value="كشف حساب" process="@all"
-						icon="ui-icon ui-icon-print" immediate="true"
-						action="#{importsBean.printAccount}"
+					<p:commandButton value="كشف حساب" icon="ui-icon ui-icon-search"
+						immediate="true" action="#{importsBean.printAccount}"
 						onclick="this.form.target='_blank'" ajax="false">
 					</p:commandButton>
 				</div>
@@ -106,22 +105,32 @@
 				<br />
 				<p:dataTable id="myTable" var="sss" value="#{importsBean.sssList}"
 					emptyMessage="لايوجد بيانات" rowIndexVar="rowIndex" editable="true"
-					widgetVar="cellemp" paginatorPosition="bottom"
-					sortBy="#{sss.supDate}" sortOrder="descending"
+					paginatorPosition="bottom" sortBy="#{sss.supDate}"
+					sortOrder="descending"
 					paginatorTemplate="{FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink}"
 					paginator="true" rows="10">
-					<p:ajax event="rowEdit" listener="#{rentsBean.onRowEdit}"
+					<p:ajax event="rowEdit" listener="#{importsBean.onRowEdit}"
 						update=":form:msg  :form:myTable" />
-					<p:ajax event="rowEditCancel" listener="#{rentsBean.onRowCancel}"
+					<p:ajax event="rowEditCancel" listener="#{importsBean.onRowCancel}"
 						update=":form:msg" />
 					<p:column headerText="رقم" style="width: 5%">
 						<h:outputText value="#{rowIndex+1}" />
 					</p:column>
 					<p:column headerText="تاريخ الوارد" style="width: 10%"
 						filterBy="#{sss.supDate}" filterMatchMode="contains">
-						<h:outputText value="#{sss.supDate}">
-							<f:convertDateTime pattern="dd/MM/yyyy" />
-						</h:outputText>
+						<p:cellEditor>
+							<f:facet name="output">
+								<h:outputText value="#{sss.supDate}">
+									<f:convertDateTime pattern="yyyy/MM/dd" />
+								</h:outputText>
+							</f:facet>
+							<f:facet name="input">
+								<p:calendar style="width:100%" required="true"
+									requiredMessage="ادخل التاريخ" pattern="yyyy/MM/dd"
+									value="#{sss.supDate}">
+								</p:calendar>
+							</f:facet>
+						</p:cellEditor>
 					</p:column>
 					<p:column headerText="نوع الوقود"
 						style="width: 8% ; text-align:center" filterBy="#{sss.gasName}"
@@ -133,7 +142,7 @@
 						filterMatchMode="contains">
 						<h:outputText value="#{sss.billNo}" />
 					</p:column>
-					<p:column headerText="المورد" style="width: 20%"
+					<p:column headerText="المورد" style="width: 15%"
 						filterBy="#{sss.gasName}" filterMatchMode="contains">
 							#{(sss.supplierType == 1)? sss.supplierName : sss.stationName }
 					</p:column>
@@ -152,8 +161,9 @@
 						filterBy="#{sss.transportPrice}" filterMatchMode="contains">
 						<h:outputText value="#{sss.transportPrice}" />
 					</p:column>
-					<p:column headerText="القيمة" style="width: 10%"
-						filterBy="#{sss.price}" filterMatchMode="contains">
+					<p:column headerText="القيمة"
+						style="width: 15% ; text-align:center" filterBy="#{sss.price}"
+						filterMatchMode="contains">
 						<h:outputText value="#{sss.price}">
 							<f:convertNumber pattern="################.##"></f:convertNumber>
 						</h:outputText>
@@ -164,7 +174,10 @@
 					<!-- 						filterMatchMode="contains"> -->
 					<!-- 						#{(sss.sadad == 1)? 'تم السداد':'غير مسددة'} -->
 					<!-- 					</p:column> -->
-					<p:column headerText="حذف" style="width:5%">
+					<p:column headerText="تعديل" style="width:5% ;text-align:center">
+						<p:rowEditor />
+					</p:column>
+					<p:column headerText="حذف" style="width:5% ;text-align:center">
 						<p:commandButton update=":form:myTable"
 							style="background-color:red" icon="ui-icon ui-icon-remove"
 							title="حذف" action="#{importsBean.deleteGas(sss)}">
@@ -172,20 +185,27 @@
 					</p:column>
 					<p:columnGroup type="footer">
 						<p:row>
-							<p:column colspan="6" footerText="اجمالى الواردات"
+							<p:column colspan="4" footerText="الاجمالى"
 								style="FONT-WEIGHT:bold ;color : #F85F3E " />
-							<p:column colspan="3" style="FONT-WEIGHT:bold ;color : #F85F3E "
+							<p:column colspan="2"
+								style="FONT-WEIGHT:bold ;color : #F85F3E ;text-align:left "
+								footerText="#{importsBean.listTotalLitrsDecimal}" />
+							<p:column colspan="3"
+								style="FONT-WEIGHT:bold ;color : #F85F3E ; text-align:left"
 								footerText="#{importsBean.listTotalSumDecimal}" />
-
+							<p:column />
+							<p:column />
+							
 						</p:row>
 
 					</p:columnGroup>
 				</p:dataTable>
 			</h:form>
 			<h:form>
-				<p:dialog position="center" widgetVar="whsdlAdd" responsive="true"
-					dynamic="true" hideEffect="explode" showEffect="fade" width="60%"
-					closable="true" resizable="true" modal="true" dir="rtl" id="dlg">
+				<p:dialog position="center" widgetVar="whsdlAdd" height="500"
+					responsive="true" dynamic="true" hideEffect="explode"
+					showEffect="fade" width="60%" closable="true" resizable="true"
+					modal="true" dir="rtl" id="dlg">
 					<h:panelGroup id="panelGroupAdd" width="60%">
 						<p:fieldset legend="بيانات عملية التوريد " width="100%">
 							<div class="ui-g">
@@ -210,7 +230,7 @@
 								</div>
 								<h:panelGroup id="pngList">
 									<!-- 									<h:panelGroup> -->
-									<div class="ui-g-2">
+									<div class="ui-g-4">
 										<p:selectOneMenu style="width:100%"
 											rendered="#{!(importsBean.show)}"
 											value="#{importsBean.sssAdd.supplierId}" required="true"
@@ -307,19 +327,19 @@
 								<div class="ui-g-3">
 									<p:inputNumber value="#{importsBean.sssAdd.price}" />
 								</div>
-								<p:spacer height="10" width="10"></p:spacer>
-								<div class="ui-g-2">
-									<h:outputLabel value="نوع السداد" />
-								</div>
-								<div class="ui-g-3">
-									<p:selectOneMenu style="width:100%"
-										value="#{importsBean.sssAdd.sadType}">
-										<f:selectItem itemLabel="اختر " noSelectionOption="true" />
-										<f:selectItem itemLabel="فاتورة" itemValue="0" />
-										<f:selectItem itemLabel="سداد" itemValue="1" />
-										<p:ajax process="@this" />
-									</p:selectOneMenu>
-								</div>
+<!-- 								<p:spacer height="10" width="10"></p:spacer> -->
+<!-- 								<div class="ui-g-2"> -->
+<!-- 									<h:outputLabel value="نوع السداد" /> -->
+<!-- 								</div> -->
+<!-- 								<div class="ui-g-3"> -->
+<!-- 									<p:selectOneMenu style="width:100%" -->
+<!-- 										value="#{importsBean.sssAdd.sadType}"> -->
+<!-- 										<f:selectItem itemLabel="اختر " noSelectionOption="true" /> -->
+<!-- 										<f:selectItem itemLabel="فاتورة" itemValue="0" /> -->
+<!-- 										<f:selectItem itemLabel="سداد" itemValue="1" /> -->
+<!-- 										<p:ajax process="@this" /> -->
+<!-- 									</p:selectOneMenu> -->
+<!-- 								</div> -->
 							</div>
 
 							<div class="iamge-box-footer" align="left">

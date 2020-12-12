@@ -100,7 +100,7 @@
 					value="#{generalRevenuesBean.gunsRevenuList}"
 					sortBy="#{gunR.revDate}" sortOrder="descending"
 					emptyMessage="لايوجد بيانات" rowIndexVar="rowIndex"
-					widgetVar="cellemp" paginatorPosition="bottom"
+					paginatorPosition="bottom"
 					paginatorTemplate="{FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink}"
 					paginator="true" rows="10">
 					<p:column headerText="رقم" style="width: 10%">
@@ -223,7 +223,7 @@
 						<div class="ui-g">
 							<div class="ui-g-3">
 								<p:outputLabel style="FONT-WEIGHT:bold ;color : green "
-									value="اجمالى المصروفات قبل الضريبة"></p:outputLabel>
+									value="اجمالى المصروفات"></p:outputLabel>
 							</div>
 							<div class="ui-g-3">
 								<p:outputLabel style="FONT-WEIGHT:bold ;color : green "
@@ -232,31 +232,18 @@
 										minFractionDigits="2" pattern="#0.00" />
 								</p:outputLabel>
 							</div>
-							<div class="ui-g-1">
-								<p:outputLabel style="FONT-WEIGHT:bold ;color : green "
-									value="قيمة الضريبة "></p:outputLabel>
-							</div>
-							<div class="ui-g-3">
-								<p:outputLabel style="FONT-WEIGHT:bold ;color : green "
-									value="#{((generalRevenuesBean.expensisList.stream().map(fdet->fdet.expensisQuantity).sum()) / (1+ (generalRevenuesBean.taxsList.get(0).taxValue / 100) ))* (generalRevenuesBean.taxsList.get(0).taxValue / 100)}">
-									<f:convertNumber type="number" groupingUsed="true"
-										minFractionDigits="2" pattern="#0.00" />
-								</p:outputLabel>
-							</div>
-						</div>
-						<div class="ui-g">
-							<div class="ui-g-3">
-								<p:outputLabel style="FONT-WEIGHT:bold ;color : green "
-									value="اجمالى المصروفات بعد الضريبة"></p:outputLabel>
+							<!-- 							<div class="ui-g-3"> -->
+							<!-- 								<p:outputLabel style="FONT-WEIGHT:bold ;color : green " -->
+							<!-- 									value="اجمالى المصروفات بعد الضريبة"></p:outputLabel> -->
 
-							</div>
-							<div class="ui-g-2">
-								<p:outputLabel style="FONT-WEIGHT:bold ;color : green "
-									value="#{(generalRevenuesBean.expensisList.stream().map(fdet->fdet.expensisQuantity).sum())-((generalRevenuesBean.expensisList.stream().map(fdet->fdet.expensisQuantity).sum()) / (1+ (generalRevenuesBean.taxsList.get(0).taxValue / 100) )) * (generalRevenuesBean.taxsList.get(0).taxValue / 100)}">
-									<f:convertNumber type="number" groupingUsed="true"
-										minFractionDigits="2" pattern="#0.00" />
-								</p:outputLabel>
-							</div>
+							<!-- 							</div> -->
+							<!-- 							<div class="ui-g-2"> -->
+							<!-- 								<p:outputLabel style="FONT-WEIGHT:bold ;color : green " -->
+							<!-- 									value="#{(generalRevenuesBean.expensisList.stream().map(fdet->fdet.expensisQuantity).sum())-((generalRevenuesBean.expensisList.stream().map(fdet->fdet.expensisQuantity).sum()) / (1+ (generalRevenuesBean.taxsList.get(0).taxValue / 100) )) * (generalRevenuesBean.taxsList.get(0).taxValue / 100)}"> -->
+							<!-- 									<f:convertNumber type="number" groupingUsed="true" -->
+							<!-- 										minFractionDigits="2" pattern="#0.00" /> -->
+							<!-- 								</p:outputLabel> -->
+							<!-- 							</div> -->
 
 						</div>
 						<div class="ui-g">
@@ -300,8 +287,8 @@
 					</h:panelGroup>
 				</p:fieldset>
 				<p:dialog widgetVar="add_dlg" id="adding_id" width="70%"
-					hideEffect="fade" showEffect="explode" dir="rtl" modal="true"
-					resizable="false">
+					height="200" hideEffect="fade" showEffect="explode" dir="rtl"
+					modal="true" resizable="false">
 					<p:fieldset legend="قيمة الضريبة">
 						<div class="ui-g">
 							<div class="ui-g-2" style="text-align: center">
@@ -328,43 +315,48 @@
 				</p:dialog>
 			</h:form>
 			<h:form>
-				<p:dialog position="center" widgetVar="showsnd" responsive="true"
-					dynamic="true" hideEffect="explode" showEffect="fade" width="80%"
-					closable="true" resizable="true" modal="true" dir="rtl">
-					<h:panelGroup id="paneldd" width="80%">
+				<p:dialog position="left" widgetVar="showsnd" responsive="true"
+					height="500" dynamic="true" hideEffect="explode" showEffect="fade"
+					width="80%" closable="true" resizable="true" modal="true" dir="rtl">
+					<h:panelGroup id="paneldd" width="100%">
 						<p:fieldset legend="سندات القبض" width="100%">
 							<p:dataTable id="ble" var="snd" sortBy="#{snd.sndDate}"
 								sortOrder="descending" value="#{generalRevenuesBean.sndList}"
 								emptyMessage="لايوجد بيانات" rowIndexVar="rowIndex"
-								widgetVar="cellemp" paginatorPosition="bottom"
+								paginatorPosition="bottom"
 								paginatorTemplate="{FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink}"
-								paginator="true" rows="10">
+								paginator="true" rows="5">
 								<p:column headerText="رقم" style="width: 5%">
 									<h:outputText value="#{rowIndex+1}" />
 								</p:column>
-								<p:column headerText="التاريخ " style="width: 20%"
-									filterBy="#{snd.sndDate}" filterMatchMode="contains">
+								<p:column headerText="التاريخ "
+									style="width: 10% ;text-align:center" filterBy="#{snd.sndDate}"
+									filterMatchMode="contains">
 									<h:outputText value="#{snd.sndDate}">
 										<f:convertDateTime pattern="yyyy/MM/dd" />
 									</h:outputText>
 								</p:column>
-								<p:column headerText="استلم من" style="width: 15%"
-									filterBy="#{snd.name}" filterMatchMode="contains">
+								<p:column headerText="استلم من"
+									style="width: 15% ; text-align:center" filterBy="#{snd.name}"
+									filterMatchMode="contains">
 									<h:outputText value="#{snd.name}" />
 								</p:column>
-								<p:column headerText="القيمة" style="width: 10%"
+								<p:column headerText="القيمة" style="width: 15%"
 									filterBy="#{snd.amount}" filterMatchMode="contains">
 									<h:outputText value="#{snd.amount}" />
 								</p:column>
-								<p:column headerText="طريقة الدفع" style="width: 20%"
-									filterBy="#{snd.payType}" filterMatchMode="contains">
+								<p:column headerText="طريقة الدفع"
+									style="width: 8% ; text-align:center" filterBy="#{snd.payType}"
+									filterMatchMode="contains">
 									<h:outputText value="#{snd.payType == '1' ? 'بنك':'صندوق'}" />
 								</p:column>
-								<p:column headerText="طريقة الدفع" style="width: 20%"
+								<p:column headerText="البيان"
+									style="width: 15% ; text-align:center"
 									filterBy="#{snd.payType}" filterMatchMode="contains">
-									<h:outputText value="#{snd.payType == '1' ? 'من حساب بنك الى حساب مبيعات':'من حساب صندوق الى حساب مبيعات'}" />
+									<h:outputText
+										value="#{snd.payType == '1' ? 'من حساب بنك الى حساب مبيعات':'من حساب صندوق الى حساب مبيعات'}" />
 								</p:column>
-								<p:column headerText="ذلك مقابل" style="width: 15%" 
+								<p:column headerText="ذلك مقابل" style="width: 15%"
 									filterBy="#{snd.forReason}" filterMatchMode="contains">
 									<h:outputLabel value="#{snd.forReason}" />
 								</p:column>
@@ -372,6 +364,12 @@
 									<p:commandButton value="طباعة" immediate="true"
 										action="#{generalRevenuesBean.print(snd)}"
 										onclick="this.form.target='_blank'" ajax="false">
+									</p:commandButton>
+								</p:column>
+								<p:column headerText="حذف" style="width:5%">
+									<p:commandButton update="ble" immediate="true"
+										style="background-color:red" icon="ui-icon ui-icon-remove"
+										title="حذف" action="#{generalRevenuesBean.deleteGas(snd)}">
 									</p:commandButton>
 								</p:column>
 							</p:dataTable>
@@ -427,7 +425,7 @@
 								</div>
 								<div class="ui-g-3">
 									<p:selectOneMenu style="width:100%;" required="true"
-										requiredMessage="اختر طريقة الدفع" 
+										requiredMessage="اختر طريقة الدفع"
 										value="#{generalRevenuesBean.sm.payType}">
 										<f:selectItem itemLabel="اختر طريقة الدفع"
 											noSelectionOption="true"></f:selectItem>

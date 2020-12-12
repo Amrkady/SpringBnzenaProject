@@ -2,24 +2,40 @@
 <!-- Created with Jaspersoft Studio version 6.6.0.final using JasperReports Library version 6.6.0  -->
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="Bills_snad" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="b3d43872-09ef-4080-8e66-7a23b6142bd2">
 	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="One Empty Record"/>
-	<parameter name="box" class="java.lang.Double"/>
-	<parameter name="bank" class="java.lang.Double"/>
+	<parameter name="boxqbd" class="java.lang.Double"/>
+	<parameter name="bankqbd" class="java.lang.Double"/>
+	<parameter name="boxsrf" class="java.lang.Double"/>
+	<parameter name="banksrf" class="java.lang.Double"/>
 	<parameter name="income" class="java.lang.Double"/>
 	<parameter name="outcome" class="java.lang.Double"/>
-	<parameter name="totalMadeen" class="java.lang.Double"/>
 	<parameter name="year" class="java.lang.String"/>
 	<parameter name="header" class="java.lang.String"/>
-	<parameter name="footer" class="java.lang.String"/>
 	<queryString language="SQL">
-		<![CDATA[SELECT max(us.id) FROM sqldb.roles us;]]>
+		<![CDATA[SELECT 1 FROM dual;]]>
 	</queryString>
+	<variable name="totalM" class="java.math.BigDecimal" calculation="Sum">
+		<variableExpression><![CDATA[$P{outcome}]]></variableExpression>
+	</variable>
+	<variable name="totalD" class="java.math.BigDecimal" calculation="Sum">
+		<variableExpression><![CDATA[$P{income}]]></variableExpression>
+	</variable>
 	<background>
 		<band splitType="Stretch"/>
 	</background>
 	<pageHeader>
 		<band height="104">
+			<rectangle>
+				<reportElement x="0" y="0" width="553" height="80" uuid="304675f9-b081-472f-b89a-7451068f7d51"/>
+			</rectangle>
+			<staticText>
+				<reportElement x="356" y="20" width="194" height="40" forecolor="#0000FF" uuid="aecb8b89-3bc2-45b3-a177-4f4f2eb323da"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial" size="34" isBold="true" isUnderline="false"/>
+				</textElement>
+				<text><![CDATA[مجموعة ذرا]]></text>
+			</staticText>
 			<image hAlign="Center">
-				<reportElement x="-20" y="-20" width="590" height="110" uuid="b5abcd5a-c848-44a6-8c14-4506dcadaad8"/>
+				<reportElement x="275" y="2" width="86" height="77" uuid="9acd1a35-e11d-4c89-a0e2-97654c571bd6"/>
 				<imageExpression><![CDATA[$P{header}]]></imageExpression>
 			</image>
 		</band>
@@ -27,9 +43,9 @@
 	<detail>
 		<band height="490" splitType="Stretch">
 			<staticText>
-				<reportElement x="247" y="4" width="130" height="30" uuid="7e6afe56-14df-4d3c-902b-03a03f86ba86"/>
+				<reportElement x="247" y="4" width="163" height="30" forecolor="#0000FF" uuid="7e6afe56-14df-4d3c-902b-03a03f86ba86"/>
 				<textElement textAlignment="Right" verticalAlignment="Middle">
-					<font fontName="Arial" size="20" isUnderline="false"/>
+					<font fontName="Arial" size="20" isBold="true" isUnderline="false"/>
 				</textElement>
 				<text><![CDATA[ميزان المراجعة لعام]]></text>
 			</staticText>
@@ -37,14 +53,14 @@
 				<reportElement x="1" y="44" width="552" height="395" uuid="ee24352d-e6f8-479c-8a16-73070e66cc23"/>
 			</rectangle>
 			<staticText>
-				<reportElement x="185" y="347" width="60" height="18" uuid="d0b78f56-79d3-4a2b-86eb-162b49de41a1"/>
+				<reportElement x="100" y="347" width="60" height="18" uuid="d0b78f56-79d3-4a2b-86eb-162b49de41a1"/>
 				<textElement textAlignment="Center">
 					<font fontName="Arial" size="12" isBold="true"/>
 				</textElement>
 				<text><![CDATA[الادارة]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="415" y="347" width="70" height="18" uuid="d096ff3b-bbc6-4af1-9560-58f5401ad29d"/>
+				<reportElement x="367" y="347" width="70" height="18" uuid="d096ff3b-bbc6-4af1-9560-58f5401ad29d"/>
 				<textElement textAlignment="Center">
 					<font fontName="Arial" size="12" isBold="true"/>
 				</textElement>
@@ -72,9 +88,9 @@
 				<text><![CDATA[..............................................................]]></text>
 			</staticText>
 			<textField>
-				<reportElement x="187" y="4" width="60" height="30" uuid="36554da7-36c7-45e3-b333-decb3d8a488f"/>
+				<reportElement x="187" y="4" width="83" height="30" forecolor="#0000FF" uuid="36554da7-36c7-45e3-b333-decb3d8a488f"/>
 				<textElement textAlignment="Right" verticalAlignment="Middle">
-					<font fontName="Arial" size="20" isUnderline="false"/>
+					<font fontName="Arial" size="20" isBold="true" isUnderline="false"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$P{year}.replaceAll("0", "\\\u0660").replaceAll("1", "\\\u0661")
                 .replaceAll("2", "\\\u0662").replaceAll("3", "\\\u0663").replaceAll("4", "\\\u0664").replaceAll("5", "\\\u0665")
@@ -130,21 +146,21 @@
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font fontName="Arial" size="18"/>
 				</textElement>
-				<text><![CDATA[الارصدة الدائنة]]></text>
+				<text><![CDATA[الدائن]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="209" y="73" width="135" height="39" uuid="c2b1c464-8b30-46ce-a27c-3ba24bf1fa4f"/>
+				<reportElement x="209" y="72" width="135" height="39" uuid="c2b1c464-8b30-46ce-a27c-3ba24bf1fa4f"/>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font fontName="Arial" size="18"/>
 				</textElement>
-				<text><![CDATA[الارصدة المدينة]]></text>
+				<text><![CDATA[المدين]]></text>
 			</staticText>
 			<staticText>
 				<reportElement x="346" y="114" width="131" height="39" uuid="b5597d8f-058b-427d-a019-f187e5397732"/>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font fontName="Arial" size="18"/>
 				</textElement>
-				<text><![CDATA[الصندوق]]></text>
+				<text><![CDATA[النقدي]]></text>
 			</staticText>
 			<staticText>
 				<reportElement x="346" y="154" width="131" height="39" uuid="6ebe935d-f055-456e-b757-a8387e71db83"/>
@@ -158,7 +174,7 @@
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font fontName="Arial" size="18"/>
 				</textElement>
-				<text><![CDATA[الايرادات]]></text>
+				<text><![CDATA[المبيعات]]></text>
 			</staticText>
 			<staticText>
 				<reportElement x="345" y="232" width="133" height="39" uuid="baaf2831-ae76-41d1-8dee-babcf3591c84"/>
@@ -183,21 +199,25 @@
 				</textElement>
 				<text><![CDATA[الاجمالي]]></text>
 			</staticText>
-			<staticText>
-				<reportElement x="60" y="114" width="147" height="39" uuid="d22eadc7-1163-44d3-9494-8baa4bc18b8d"/>
+			<textField pattern="###,###,#####.##">
+				<reportElement x="60" y="114" width="147" height="39" uuid="8e846132-699d-4eca-ade1-437c3f26a40c"/>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font fontName="Arial" size="18"/>
 				</textElement>
-				<text><![CDATA[-]]></text>
-			</staticText>
-			<staticText>
-				<reportElement x="60" y="154" width="147" height="39" uuid="b66480f5-ac2f-4ac2-82bc-4fb9d2f00b2a"/>
+				<textFieldExpression><![CDATA[(""+$P{boxqbd}).replaceAll("0", "\\\u0660").replaceAll("1", "\\\u0661")
+                .replaceAll("2", "\\\u0662").replaceAll("3", "\\\u0663").replaceAll("4", "\\\u0664").replaceAll("5", "\\\u0665")
+                .replaceAll("6", "\\\u0666").replaceAll("7", "\\\u0667").replaceAll("8", "\\\u0668").replaceAll("9", "\\\u0669")]]></textFieldExpression>
+			</textField>
+			<textField pattern="###,###,#####.##">
+				<reportElement x="60" y="154" width="147" height="39" uuid="c74dd715-71ac-4908-94c7-8c3c88c0a07a"/>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font fontName="Arial" size="18"/>
 				</textElement>
-				<text><![CDATA[-]]></text>
-			</staticText>
-			<textField>
+				<textFieldExpression><![CDATA[(""+$P{bankqbd}).replaceAll("0", "\\\u0660").replaceAll("1", "\\\u0661")
+                .replaceAll("2", "\\\u0662").replaceAll("3", "\\\u0663").replaceAll("4", "\\\u0664").replaceAll("5", "\\\u0665")
+                .replaceAll("6", "\\\u0666").replaceAll("7", "\\\u0667").replaceAll("8", "\\\u0668").replaceAll("9", "\\\u0669")]]></textFieldExpression>
+			</textField>
+			<textField pattern="###,###,#####.##">
 				<reportElement x="60" y="193" width="147" height="39" uuid="94ba7d96-35ac-4392-b3e7-8e2bf6d8c5d2"/>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font fontName="Arial" size="18"/>
@@ -218,7 +238,7 @@
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font fontName="Arial" size="18"/>
 				</textElement>
-				<textFieldExpression><![CDATA[(""+$P{income}).replaceAll("0", "\\\u0660").replaceAll("1", "\\\u0661")
+				<textFieldExpression><![CDATA[(""+($V{totalD}.setScale( 2, RoundingMode.HALF_UP ))).replaceAll("0", "\\\u0660").replaceAll("1", "\\\u0661")
                 .replaceAll("2", "\\\u0662").replaceAll("3", "\\\u0663").replaceAll("4", "\\\u0664").replaceAll("5", "\\\u0665")
                 .replaceAll("6", "\\\u0666").replaceAll("7", "\\\u0667").replaceAll("8", "\\\u0668").replaceAll("9", "\\\u0669")]]></textFieldExpression>
 			</textField>
@@ -227,11 +247,11 @@
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font fontName="Arial" size="18"/>
 				</textElement>
-				<textFieldExpression><![CDATA[(""+$P{totalMadeen}).replaceAll("0", "\\\u0660").replaceAll("1", "\\\u0661")
+				<textFieldExpression><![CDATA[(""+($V{totalM}.setScale( 2, RoundingMode.HALF_UP ))).replaceAll("0", "\\\u0660").replaceAll("1", "\\\u0661")
                 .replaceAll("2", "\\\u0662").replaceAll("3", "\\\u0663").replaceAll("4", "\\\u0664").replaceAll("5", "\\\u0665")
                 .replaceAll("6", "\\\u0666").replaceAll("7", "\\\u0667").replaceAll("8", "\\\u0668").replaceAll("9", "\\\u0669")]]></textFieldExpression>
 			</textField>
-			<textField>
+			<textField pattern="###,###,#####.##">
 				<reportElement x="209" y="232" width="135" height="39" uuid="2e92c100-a523-4b9e-992a-062154b1b4a6"/>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font fontName="Arial" size="18"/>
@@ -247,21 +267,22 @@
 				</textElement>
 				<text><![CDATA[-]]></text>
 			</staticText>
-			<textField>
+			<textField pattern="###,###,#####.##">
 				<reportElement x="209" y="154" width="135" height="39" uuid="2842d17d-e691-4821-95be-c357fc180a5f"/>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font fontName="Arial" size="18"/>
 				</textElement>
-				<textFieldExpression><![CDATA[(""+$P{bank}).replaceAll("0", "\\\u0660").replaceAll("1", "\\\u0661")
+				<textFieldExpression><![CDATA[(""+$P{banksrf}).replaceAll("0", "\\\u0660").replaceAll("1", "\\\u0661")
                 .replaceAll("2", "\\\u0662").replaceAll("3", "\\\u0663").replaceAll("4", "\\\u0664").replaceAll("5", "\\\u0665")
-                .replaceAll("6", "\\\u0666").replaceAll("7", "\\\u0667").replaceAll("8", "\\\u0668").replaceAll("9", "\\\u0669")]]></textFieldExpression>
+                .replaceAll("6", "\\\u0666").replaceAll("7", "\\\u0667").replaceAll("8", "\\\u0668").replaceAll("9", "\\\u0669")
+]]></textFieldExpression>
 			</textField>
-			<textField>
+			<textField pattern="###,###,#####.##">
 				<reportElement x="209" y="114" width="135" height="39" uuid="3cf0051c-2174-4a63-b333-8c0fd813823b"/>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font fontName="Arial" size="18"/>
 				</textElement>
-				<textFieldExpression><![CDATA[(""+$P{box}).replaceAll("0", "\\\u0660").replaceAll("1", "\\\u0661")
+				<textFieldExpression><![CDATA[ (""+$P{boxsrf}).replaceAll("0", "\\\u0660").replaceAll("1", "\\\u0661")
                 .replaceAll("2", "\\\u0662").replaceAll("3", "\\\u0663").replaceAll("4", "\\\u0664").replaceAll("5", "\\\u0665")
                 .replaceAll("6", "\\\u0666").replaceAll("7", "\\\u0667").replaceAll("8", "\\\u0668").replaceAll("9", "\\\u0669")]]></textFieldExpression>
 			</textField>
@@ -269,10 +290,16 @@
 	</detail>
 	<pageFooter>
 		<band height="80" splitType="Stretch">
-			<image hAlign="Center" vAlign="Middle">
-				<reportElement x="30" y="40" width="520" height="40" uuid="8502abee-b73b-4598-9e68-70fc541295f2"/>
-				<imageExpression><![CDATA[$P{footer}]]></imageExpression>
-			</image>
+			<rectangle>
+				<reportElement x="0" y="6" width="554" height="50" backcolor="#6148AB" uuid="472fd5ae-124a-4af4-80cb-102426f3ec46"/>
+			</rectangle>
+			<staticText>
+				<reportElement x="15" y="16" width="530" height="30" forecolor="#FFFCFC" uuid="d93f06c0-e399-454e-8df9-73aeb50ae29b"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle" markup="none">
+					<font fontName="Arial" size="16" isBold="true"/>
+				</textElement>
+				<text><![CDATA[المملكة العربية السعودية - القصيم - البكيرية - ت :  0163364455  ]]></text>
+			</staticText>
 		</band>
 	</pageFooter>
 </jasperReport>

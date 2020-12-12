@@ -30,7 +30,7 @@
 				<p:dataTable id="myTable" var="rent"
 					value="#{expTypeBean.expensisTypesList}"
 					emptyMessage="لايوجد بيانات" rowIndexVar="rowIndex" editable="true"
-					widgetVar="cellemp" paginatorPosition="bottom"
+					 paginatorPosition="bottom"
 					paginatorTemplate="{FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink}"
 					paginator="true" rows="10">
 					<p:ajax event="rowEdit" listener="#{expTypeBean.onRowEdit}"
@@ -79,7 +79,7 @@
 				</p:dataTable>
 			</h:form>
 			<h:form>
-				<p:dialog position="center" widgetVar="whsdlAdd" responsive="true"
+				<p:dialog position="center" widgetVar="whsdlAdd" responsive="true" 
 					dynamic="true" hideEffect="explode" showEffect="fade" width="60%"
 					closable="true" resizable="true" modal="true" dir="rtl">
 					<h:panelGroup id="panelGroupAdd" width="60%">

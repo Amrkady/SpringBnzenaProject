@@ -27,7 +27,7 @@
 				<br />
 				<p:dataTable id="myTable" var="sup"
 					value="#{suppliersBean.suppliersList}" emptyMessage="لايوجد بيانات"
-					rowIndexVar="rowIndex" editable="true" widgetVar="cellemp"
+					rowIndexVar="rowIndex" editable="true" 
 					paginatorPosition="bottom"
 					paginatorTemplate="{FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink}"
 					paginator="true" rows="10">
@@ -84,7 +84,7 @@
 				</p:dataTable>
 			</h:form>
 			<h:form>
-				<p:dialog position="center" widgetVar="whsdlAdd" responsive="true" dynamic="true"
+				<p:dialog position="center"  widgetVar="whsdlAdd" responsive="true" dynamic="true"
 					hideEffect="explode" showEffect="fade" width="60%" closable="true"
 					resizable="true" modal="true" dir="rtl">
 					<h:panelGroup id="panelGroupAdd" width="60%">

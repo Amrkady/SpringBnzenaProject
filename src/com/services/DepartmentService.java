@@ -1,5 +1,6 @@
 package com.services;
 
+import java.util.Date;
 import java.util.List;
 
 import com.entities.Attachment;
@@ -8,6 +9,7 @@ import com.entities.Gas;
 import com.entities.GasGuns;
 import com.entities.Rents;
 import com.entities.Shops;
+import com.entities.SndSrfQbd;
 import com.entities.Stations;
 import com.entities.Suppliers;
 import com.entities.Taxs;
@@ -47,4 +49,6 @@ public interface DepartmentService {
 	public List<Taxs> loadTaxs();
 
 	public List<ExpensisTypes> loadExpTypes();
+
+	public List<SndSrfQbd> LoadAllSands(Date dateFrom, Date dateTo, Integer sndType);
 }

@@ -14,7 +14,7 @@
 	<parameter name="tax" class="java.lang.Float"/>
 	<queryString language="SQL">
 		<![CDATA[SELECT  s.station_name stationName 
- FROM thorapet_bnzena.stations  s
+ FROM thorape3_bnzena.stations  s
 where s.id =2;]]>
 	</queryString>
 	<field name="stationName" class="java.lang.String"/>
@@ -287,7 +287,7 @@ where s.id =2;]]>
 				<textElement textAlignment="Right">
 					<font fontName="Arial" size="12"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$P{payType}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$P{payType}.equalsIgnoreCase( "1" ) ? "بنك":"نقدا"]]></textFieldExpression>
 			</textField>
 			<textField>
 				<reportElement x="100" y="225" width="360" height="18" forecolor="#000000" uuid="f8bd4a93-4af3-48d0-be5e-de9c7c634208"/>

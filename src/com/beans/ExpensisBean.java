@@ -51,6 +51,8 @@ public class ExpensisBean {
 	private BigDecimal listTotalSumDecimal;
 	private List<Constantsasoul> asoulList = new ArrayList<>();
 	private boolean show = false;
+	private boolean vat;
+	private double taxValue;
 
 	@PostConstruct
 	public void init() {
@@ -99,6 +101,8 @@ public class ExpensisBean {
 					snd.setExpensisTypesId(sssAdd.getExpensisType());
 					snd.setAsoulId(sssAdd.getAsoulId());
 					departmentServiceImpl.save(snd);
+					sssAdd = new Expensis();
+					snd = new SndSrfQbd();
 				}
 				MsgEntry.addInfoMessage(Utils.loadMessagesFromFile("success.operation"));
 				expensisList = accountsServiceImpl.loadExpensisByStationId(stId);
@@ -116,6 +120,30 @@ public class ExpensisBean {
 		} catch (Exception e) {
 			MsgEntry.addErrorMessage(Utils.loadMessagesFromFile("error.operation"));
 			e.printStackTrace();
+		}
+		return "";
+	}
+
+	public void updateCom() {
+		if (sssAdd.getExpensisQuantity() > 0 && vat == true) {
+			taxValue = (sssAdd.getExpensisQuantity() / 1.15) * 0.15;
+			taxValue = Math.round(taxValue * 100) / 100.00d;
+
+		} else {
+			taxValue = 0.0;
+		}
+	}
+
+	public String deletesnd(SndSrfQbd gs) {
+		if (gs != null) {
+			try {
+				departmentServiceImpl.delete(gs);
+				MsgEntry.addInfoMessage(Utils.loadMessagesFromFile("success.delete"));
+				sndList = accountsServiceImpl.loadSndByType(2, stId);
+			} catch (Exception e) {
+				MsgEntry.addErrorMessage(Utils.loadMessagesFromFile("error.delete"));
+				e.printStackTrace();
+			}
 		}
 		return "";
 	}
@@ -360,6 +388,22 @@ public class ExpensisBean {
 
 	public void setShow(boolean show) {
 		this.show = show;
+	}
+
+	public boolean isVat() {
+		return vat;
+	}
+
+	public void setVat(boolean vat) {
+		this.vat = vat;
+	}
+
+	public double getTaxValue() {
+		return taxValue;
+	}
+
+	public void setTaxValue(double taxValue) {
+		this.taxValue = taxValue;
 	}
 
 }

@@ -15,6 +15,8 @@ public class GasModel {
 
 	private BigDecimal lastAmount;
 
+	private Integer gasTank;
+
 	private String gasName;
 
 	public Integer getGasId() {
@@ -71,6 +73,14 @@ public class GasModel {
 
 	public void setStationId(Integer stationId) {
 		this.stationId = stationId;
+	}
+
+	public Integer getGasTank() {
+		return gasTank;
+	}
+
+	public void setGasTank(Integer gasTank) {
+		this.gasTank = gasTank;
 	}
 
 }

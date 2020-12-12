@@ -62,12 +62,11 @@
 			value="jdbc:mysql://localhost:3306/banzenadb?zeroDateTimeBehavior=convertToNull" />
 		<property name="user" value="root" />
 		<property name="password" value="root" />
-
 		<!-- <property name="jdbcUrl" -->
-		<!-- value="jdbc:mysql://mysql3000.mochahost.com:3306/thorapet_bnzena?zeroDateTimeBehavior=convertToNull" 
+		<!-- value="jdbc:mysql://mysql3000.mochahost.com:3306/thorape3_bnzena?zeroDateTimeBehavior=convertToNull" 
 			/> -->
-		<!-- <property name="user" value="thorapet_bnzDBA" /> -->
-		<!-- <property name="password" value="01143832045Aa" /> -->
+		<!-- <property name="user" value="thorape3_bnzDBA" /> -->
+<!-- 		<property name="password" value="01143832045Aa" /> -->
 		<property name="initialPoolSize" value="1" />
 		<property name="maxPoolSize" value="20" />
 		<property name="maxStatements" value="20" />

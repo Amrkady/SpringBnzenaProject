@@ -52,9 +52,10 @@ public class RevenuesBean {
 	private double litersTotalSum;
 	private BigDecimal listTotalSumDecimal;
 	private BigDecimal litersTotalSumDecimal;
-	List<GasModel> gmList = new ArrayList<GasModel>();
+	private List<GasModel> gmList = new ArrayList<GasModel>();
 	private List<Taxs> taxsList = new ArrayList<Taxs>();
-	FirstDayAmount addObj = new FirstDayAmount();
+	private FirstDayAmount addObj = new FirstDayAmount();
+	private List<FirstDayAmount> readList = new ArrayList<FirstDayAmount>();
 
 	@PostConstruct
 	public void init() {
@@ -64,6 +65,7 @@ public class RevenuesBean {
 		if (stId != null) {
 			gunsRevenuList = accountsServiceImpl.loadGunsRevenusList(stId);
 			// gunsList = departmentServiceImpl.loadGuns(stId);
+			readList = accountsServiceImpl.loadAllfRead(stId);
 			gasList = departmentServiceImpl.loadGass(stId);
 			taxsList = departmentServiceImpl.loadTaxs();
 			if (gunsRevenuList != null && gunsRevenuList.size() > 0) {
@@ -145,7 +147,7 @@ public class RevenuesBean {
 				addObj.setStationId(stId);
 				departmentServiceImpl.save(addObj);
 				MsgEntry.addInfoMessage(Utils.loadMessagesFromFile("success.operation"));
-				// gunsRevenuList = accountsServiceImpl.loadGunsRevenusList(stId);
+				readList = accountsServiceImpl.loadAllfRead(stId);
 				addObj = new FirstDayAmount();
 			}
 		} catch (Exception e) {
@@ -181,6 +183,20 @@ public class RevenuesBean {
 			}
 		}
 
+	}
+
+	public String deletefread(FirstDayAmount gs) {
+		if (gs != null) {
+			try {
+				departmentServiceImpl.delete(gs);
+				MsgEntry.addInfoMessage(Utils.loadMessagesFromFile("success.delete"));
+				readList = accountsServiceImpl.loadAllfRead(stId);
+			} catch (Exception e) {
+				MsgEntry.addErrorMessage(Utils.loadMessagesFromFile("error.delete"));
+				e.printStackTrace();
+			}
+		}
+		return "";
 	}
 
 //
@@ -430,6 +446,14 @@ public class RevenuesBean {
 
 	public void setGmList(List<GasModel> gmList) {
 		this.gmList = gmList;
+	}
+
+	public List<FirstDayAmount> getReadList() {
+		return readList;
+	}
+
+	public void setReadList(List<FirstDayAmount> readList) {
+		this.readList = readList;
 	}
 
 }

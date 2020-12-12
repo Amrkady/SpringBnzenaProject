@@ -78,10 +78,10 @@
 				<br />
 				<p:dataTable id="myTable" var="gunR" editable="true"
 					value="#{revenuesBean.gunsRevenuList}" emptyMessage="لايوجد بيانات"
-					rowIndexVar="rowIndex" widgetVar="cellemp" sortBy="#{gunR.revDate}"
+					rowIndexVar="rowIndex" sortBy="#{gunR.revDate}"
 					sortOrder="descending" paginatorPosition="bottom"
 					paginatorTemplate="{FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink}"
-					paginator="true" rows="10">
+					paginator="true" rows="5">
 					<p:ajax event="rowEdit" listener="#{revenuesBean.onRowEdit}"
 						update=":form:msg  form:myTable" />
 					<p:ajax event="rowEditCancel"
@@ -246,9 +246,8 @@
 					<br />
 					<p:dataTable id="myTable2" var="gunR"
 						value="#{revenuesBean.gmList}" emptyMessage="لايوجد بيانات"
-						rowIndexVar="rowIndex" widgetVar="cellemp"
-						sortBy="#{gunR.stationId}" sortOrder="ascending"
-						paginatorPosition="bottom"
+						rowIndexVar="rowIndex" sortBy="#{gunR.stationId}"
+						sortOrder="ascending" paginatorPosition="bottom"
 						paginatorTemplate="{FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink}"
 						paginator="true" rows="10">
 
@@ -283,8 +282,8 @@
 							</h:outputText>
 						</p:column>
 						<p:column headerText="سعة التانك"
-							style="width: 20% ; text-align:center">
-							<h:outputText value="4000">
+							style="width: 10% ; text-align:center">
+							<h:outputText value="#{gunR.gasTank}">
 							</h:outputText>
 						</p:column>
 						<p:summaryRow>
@@ -337,8 +336,9 @@
 			<h:form>
 				<p:dialog position="center" widgetVar="whsdlftAdd" responsive="true"
 					id="dlg" dynamic="true" hideEffect="explode" showEffect="fade"
-					width="70%" closable="true" resizable="true" modal="true" dir="rtl">
-					<h:panelGroup id="panelGroup" width="70%">
+					height="500" width="70%" closable="true" resizable="true"
+					modal="true" dir="rtl">
+					<h:panelGroup id="panelGroup" width="100%">
 						<p:fieldset legend="بيانات رصيد اول الفتره " width="100%">
 							<div class="ui-g">
 								<div class="ui-g-2">
@@ -376,12 +376,49 @@
 								</div>
 							</div>
 							<div class="iamge-box-footer" align="left">
-								<p:commandButton value="حفظ"
-									onsuccess="PF('whsdlftAdd').hide();"
-									icon="ui-icon ui-icon-save" process="@all"
-									action="#{revenuesBean.addFirst}" update="panelGroup">
+								<p:commandButton value="حفظ" icon="ui-icon ui-icon-save"
+									process="@all" action="#{revenuesBean.addFirst}"
+									update="panelGroup ble">
 								</p:commandButton>
-								<p:spacer height="4"></p:spacer>
+							</div>
+							<br />
+
+							<p:dataTable id="ble" var="fread" sortBy="#{fread.readDate}"
+								sortOrder="descending" value="#{revenuesBean.readList}"
+								emptyMessage="لايوجد بيانات" rowIndexVar="rowIndex"
+								paginatorPosition="bottom"
+								paginatorTemplate="{FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink}"
+								paginator="true" rows="5">
+								<p:column headerText="رقم" style="width: 5%">
+									<h:outputText value="#{rowIndex+1}" />
+								</p:column>
+								<p:column headerText="التاريخ "
+									style="width:20% ; text-align:center" filterBy="#{snd.sndDate}"
+									filterMatchMode="contains">
+									<h:outputText value="#{fread.readDate}">
+										<f:convertDateTime pattern="yyyy/MM/dd" />
+									</h:outputText>
+								</p:column>
+								<p:column headerText="نوع الوقود"
+									style="width: 20% ; text-align:center" filterBy="#{snd.name}"
+									filterMatchMode="contains">
+									<h:outputText value="#{fread.gasName}" />
+								</p:column>
+								<p:column headerText="القراءة"
+									style="width: 20% ; text-align:center" filterBy="#{snd.amount}"
+									filterMatchMode="contains">
+									<h:outputText value="#{fread.amount}">
+										<f:convertNumber pattern="################.##"></f:convertNumber>
+									</h:outputText>
+								</p:column>
+								<p:column headerText="حذف" style="width:5%">
+									<p:commandButton update="ble" immediate="true"
+										style="background-color:red" icon="ui-icon ui-icon-remove"
+										title="حذف" action="#{revenuesBean.deletefread(fread)}">
+									</p:commandButton>
+								</p:column>
+							</p:dataTable>
+							<div class="iamge-box-footer" align="left">
 								<p:commandButton styleClass="orange-btn" value="عودة"
 									icon="ui-icon ui-icon-arrow-back" immediate="true"
 									onclick="PF('whsdlftAdd').hide();" />

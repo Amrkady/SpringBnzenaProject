@@ -8,6 +8,7 @@ import com.entities.Attachment;
 import com.entities.Constantsasoul;
 import com.entities.Expensis;
 import com.entities.ExpensisTypes;
+import com.entities.FirstDayAmount;
 import com.entities.Gas;
 import com.entities.GasGuns;
 import com.entities.GasStationSuppliers;
@@ -19,6 +20,7 @@ import com.entities.SndSrfQbd;
 import com.entities.Suppliers;
 import com.entities.Users;
 import com.models.GasModel;
+import com.models.RevuensModel;
 
 public interface CommonDao {
 
@@ -75,5 +77,17 @@ public interface CommonDao {
 	public List<GeneralPay> findAllGeneralPayByDates(Date dateFrom, Date dateTo);
 
 	public List<Constantsasoul> findAsoulByTypeId(Integer expensisType);
+
+	public List<SndSrfQbd> LoadAllSands(Date dateFrom, Date dateTo, Integer sndType);
+
+	public List<RevuensModel> getFinancialMuneDates(Date beginDate, Date endDate);
+
+	public List<SndSrfQbd> LoadAllAsoul(Date dateFrom, Date dateTo);
+
+	public List<SndSrfQbd> LoadAllSndsWithoutTaxa(Date dateFrom, Date dateTo);
+
+	public List<SndSrfQbd> findGeneralSndByType(Integer type, Integer stationId);
+
+	public List<FirstDayAmount> loadAllfRead(Integer stId);
 
 }

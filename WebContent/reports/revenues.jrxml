@@ -11,7 +11,7 @@
 	<queryString language="SQL">
 		<![CDATA[SELECT  s.station_name stationName , gs.name gasName, sum(g.liters_num) litrNum,
  g.liter_price litrPrice , sum(g.total_price) total
- FROM thorapet_bnzena.guns_revenus g , thorapet_bnzena.gas  gs, thorapet_bnzena.stations  s
+ FROM thorape3_bnzena.guns_revenus g , thorape3_bnzena.gas  gs, thorape3_bnzena.stations  s
 where (g.station_id = $P{stationId} or $P{stationId} = -1) and
 s.id=g.station_id and
 gs.id = g.gas_id and
@@ -234,7 +234,7 @@ order  by g.gas_id  , g.rev_date desc;]]>
 	<summary>
 		<band height="217">
 			<staticText>
-				<reportElement x="349" y="0" width="82" height="22" forecolor="#0000FF" uuid="179002c2-4c6e-4c8f-b7ab-81dff06fc00c"/>
+				<reportElement x="330" y="0" width="101" height="22" forecolor="#0000FF" uuid="179002c2-4c6e-4c8f-b7ab-81dff06fc00c"/>
 				<box>
 					<topPen lineWidth="1.0" lineColor="#000000"/>
 					<leftPen lineWidth="1.0" lineColor="#000000"/>

@@ -12,8 +12,8 @@
 	<queryString language="SQL">
 		<![CDATA[SELECT   DATE_FORMAT(g.sup_date,'%d/%m/%Y') AS supdate  , sp.name supName , 
 g.price total  , g.sadad sadad
-FROM banzenadb.gas_station_suppliers g 
-left join banzenadb.suppliers  sp on g.supplier_id = sp.id 
+FROM thorape3_bnzena.gas_station_suppliers g 
+left join thorape3_bnzena.suppliers  sp on g.supplier_id = sp.id 
 where  g.station_id = $P{stationId}
 and g.supplier_id = $P{supId}
 and

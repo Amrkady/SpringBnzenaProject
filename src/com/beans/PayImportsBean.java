@@ -59,22 +59,22 @@ public class PayImportsBean {
 						gmList.addAll(list);
 					}
 				}
-				for (GeneralPay generalPay : gmList) {
-					departmentServiceImpl.save(generalPay);
-				}
 
 			}
 		}
 		return "";
 	}
 
-	public String addGas() {
+	public String save() {
 		try {
-//			if (sssAdd != null) {
-//				departmentServiceImpl.save(sssAdd);
-//				MsgEntry.addInfoMessage(Utils.loadMessagesFromFile("success.operation"));
-//				sssAdd = new GunsRevenus();
-//			}
+			for (GeneralPay generalPay : gmList) {
+				if (generalPay.getId() == null) {
+					departmentServiceImpl.save(generalPay);
+				} else {
+					departmentServiceImpl.update(generalPay);
+				}
+			}
+			MsgEntry.addInfoMessage(Utils.loadMessagesFromFile("success.operation"));
 		} catch (Exception e) {
 			MsgEntry.addErrorMessage(Utils.loadMessagesFromFile("error.operation"));
 			e.printStackTrace();
@@ -95,11 +95,11 @@ public class PayImportsBean {
 			if (monValue != null && accountValue != null) {
 				double dif = accountValue.doubleValue() - monValue.doubleValue();
 				generalPay.setDeficitExcess(new BigDecimal(dif).setScale(2, RoundingMode.HALF_UP));
-				try {
-					departmentServiceImpl.update(generalPay);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
+//				try {
+//					departmentServiceImpl.update(generalPay);
+//				} catch (Exception e) {
+//					e.printStackTrace();
+//				}
 
 			}
 		}
@@ -107,32 +107,17 @@ public class PayImportsBean {
 
 	public String printAll() {
 		try {
-			String reportName = "/reports/revenues.jasper";
+			String reportName = "/reports/revenuesAndPays.jasper";
 			Map<String, Object> parameters = new HashMap<String, Object>();
-			parameters.put("stationId", stId);
-			String fromDate = "1";
-			String toDate = "1";
-			String fromD = "1";
-			String toD = "1";
-			if (dateTo == null || dateFrom == null) {
-				dateTo = null;
-				dateFrom = null;
-			} else {
-				SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-				fromDate = sdf.format(dateFrom);
-				toDate = sdf.format(dateTo);
-				sdf = new SimpleDateFormat("dd/MM/yyyy");
-				fromD = sdf.format(dateFrom);
-				toD = sdf.format(dateTo);
-			}
-			parameters.put("dateFrom", fromDate);
-			parameters.put("dateTo", toDate);
-			parameters.put("dateF", fromD);
-			parameters.put("dateT", toD);
 			String headerPath = FacesContext.getCurrentInstance().getExternalContext()
 					.getRealPath("/reports/logoreport.png");
+			SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+			String fromDate = sdf.format(dateFrom);
+			String toDate = sdf.format(dateTo);
+			parameters.put("dateFrom", fromDate);
+			parameters.put("dateTo", toDate);
 			parameters.put("header", headerPath);
-			Utils.printPdfReport(reportName, parameters);
+			Utils.printPdfReportFromListDataSource(reportName, parameters, gmList);
 
 		} catch (Exception e) {
 			e.printStackTrace();

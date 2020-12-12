@@ -27,7 +27,7 @@
 				<br />
 				<p:dataTable id="myTable" var="rent" value="#{rentsBean.rentsList}"
 					emptyMessage="لايوجد بيانات" rowIndexVar="rowIndex" editable="true"
-					widgetVar="cellemp" paginatorPosition="bottom"
+					 paginatorPosition="bottom"
 					sortBy="#{rent.rentDate}" sortOrder="descending"
 					paginatorTemplate="{FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink}"
 					paginator="true" rows="10">
@@ -85,7 +85,7 @@
 			</h:form>
 			<h:form>
 				<p:dialog position="center" widgetVar="whsdlAdd" responsive="true"  dynamic="true"
-					hideEffect="explode" showEffect="fade" width="60%" closable="true"
+					hideEffect="explode" showEffect="fade" width="60%" closable="true" 
 					resizable="true" modal="true" dir="rtl">
 					<h:panelGroup id="panelGroupAdd" width="60%">
 						<p:fieldset legend="بيانات الايجار " width="100%">

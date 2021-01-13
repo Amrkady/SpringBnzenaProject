@@ -20,17 +20,18 @@
 				<h1 style="color: #1565C0; text-align: center;">واردات المحطة</h1>
 				<div class="image-box-footer" align="left">
 					<p:commandButton id="cBadd" value="اضافة " immediate="true"
-						icon="ui-icon ui-icon-plus" onclick="PF('whsdlAdd').show();">
+						styleClass="green-btn" icon="ui-icon ui-icon-plus"
+						onclick="PF('whsdlAdd').show();">
 					</p:commandButton>
 					<p:spacer width="10" height="10"></p:spacer>
 					<p:commandButton value="طباعة الواردات" process="@all"
 						icon="ui-icon ui-icon-print " immediate="true"
-						action="#{importsBean.printAll}"
+						action="#{importsBean.printAll}" styleClass="purple-btn"
 						onclick="this.form.target='_blank'" ajax="false">
 					</p:commandButton>
-					<p:commandButton value="كشف حساب" icon="ui-icon ui-icon-search"
-						immediate="true" action="#{importsBean.printAccount}"
-						onclick="this.form.target='_blank'" ajax="false">
+					<p:commandButton value="كشف حساب" immediate="true"
+						icon="ui-icon ui-icon-search"
+						onclick="PF('firstAmountAdd').show();">
 					</p:commandButton>
 				</div>
 				<h:panelGroup id="png">
@@ -40,8 +41,7 @@
 						</div>
 						<div class="ui-g-3">
 							<p:selectOneMenu style="width:70%" value="#{importsBean.supType}">
-								<f:selectItem itemLabel="اختر  نوع المورد"
-									noSelectionOption="true" />
+								<f:selectItem itemLabel="الكل" noSelectionOption="true" />
 								<f:selectItem itemLabel="خارجي" itemValue="1" />
 								<f:selectItem itemLabel="داخلي" itemValue="2" />
 								<f:ajax execute="@this png"
@@ -50,23 +50,22 @@
 							</p:selectOneMenu>
 						</div>
 						<div class="ui-g-1">
-							<p:outputLabel id="txt" value="المورد" />
+							<p:outputLabel value="المورد" />
 						</div>
-						<div class="ui-g-2">
+						<div class="ui-g-3">
 
-							<p:selectOneMenu style="width:100%"
+							<p:selectOneMenu style="width:80%"
 								rendered="#{!(importsBean.enableShow)}"
 								value="#{importsBean.supplierId}" id="lt1">
-								<f:selectItem itemLabel="اختر   المورد" noSelectionOption="true" />
+								<f:selectItem itemLabel="الكل" noSelectionOption="true" />
 								<f:selectItems value="#{importsBean.supsList}" var="sup"
 									itemLabel="#{sup.name}" itemValue="#{sup.id}" />
 								<p:ajax process="@this" />
 							</p:selectOneMenu>
-							<p:selectOneMenu style="width:100%" id="lt2"
+							<p:selectOneMenu style="width:80%" id="lt2"
 								rendered="#{importsBean.enableShow}"
 								value="#{importsBean.supplierId}">
-								<f:selectItem itemLabel=" اختر  المورد "
-									noSelectionOption="true" />
+								<f:selectItem itemLabel="الكل" noSelectionOption="true" />
 								<f:selectItems value="#{importsBean.stationsList}" var="st"
 									itemLabel="#{st.name}" itemValue="#{st.id}" />
 								<p:ajax process="@this" />
@@ -94,6 +93,20 @@
 							</p:calendar>
 
 						</div>
+					</div>
+					<div class="ui-g">
+						<div class="ui-g-1">
+							<h:outputLabel value="نوع الوقود " />
+						</div>
+						<div class="ui-g-3">
+							<p:selectOneMenu style="width:80%" value="#{importsBean.gasId}">
+								<f:selectItem itemLabel="الكل" noSelectionOption="true" />
+								<f:selectItems value="#{importsBean.gasList}" var="gs"
+									itemLabel="#{gs.name}" itemValue="#{gs.id}" />
+								<p:ajax process="@this" update="myTable"
+									listener="#{importsBean.loadListByDates}" />
+							</p:selectOneMenu>
+						</div>
 						<div class="ui-g-1">
 							<p:commandButton styleClass="green-btn" process="png"
 								action="#{importsBean.loadListByDates}" value="استعلام"
@@ -101,6 +114,12 @@
 							</p:commandButton>
 						</div>
 					</div>
+					<div class="image-box-footer" align="left">
+						<p:commandButton styleClass="orange-btn" immediate="true"
+							onclick="PF('sadadAdd').show();" value="سداد">
+						</p:commandButton>
+					</div>
+
 				</h:panelGroup>
 				<br />
 				<p:dataTable id="myTable" var="sss" value="#{importsBean.sssList}"
@@ -195,11 +214,98 @@
 								footerText="#{importsBean.listTotalSumDecimal}" />
 							<p:column />
 							<p:column />
-							
+
 						</p:row>
 
 					</p:columnGroup>
 				</p:dataTable>
+			</h:form>
+			<h:form>
+				<p:dialog position="center" widgetVar="sadadAdd" height="300"
+					responsive="true" dynamic="true" hideEffect="explode"
+					showEffect="fade" width="60%" closable="true" resizable="true"
+					modal="true" dir="rtl">
+					<h:panelGroup id="pngsadadAdd" width="60%">
+						<p:fieldset legend="بيانات عملية السداد " width="100%">
+							<div class="ui-g">
+								<div class="ui-g-2">
+									<h:outputLabel value="التاريخ" />
+								</div>
+								<div class="ui-g-3">
+									<p:calendar style="width:100%" required="true"
+										requiredMessage="ادخل التاريخ" pattern="yyyy/MM/dd"
+										value="#{importsBean.sssAdd.supDate}">
+									</p:calendar>
+								</div>
+								<div class="ui-g-2">
+									<h:outputLabel value="المورد" />
+								</div>
+								<div class="ui-g-3">
+									<p:selectOneMenu style="width:100%"
+										value="#{importsBean.sssAdd.supplierId}" required="true"
+										requiredMessage="المورد  مطلوب">
+										<f:selectItem itemLabel="اختر   المورد"
+											noSelectionOption="true" />
+										<f:selectItems value="#{importsBean.supsSadadList}" var="sup"
+											itemLabel="#{sup.name}" itemValue="#{sup.id}" />
+										<p:ajax process="@this" />
+									</p:selectOneMenu>
+								</div>
+							</div>
+							<div class="ui-g">
+								<div class="ui-g-2">
+									<h:outputLabel value="القيمة" />
+								</div>
+								<div class="ui-g-3">
+									<p:inputNumber value="#{importsBean.sssAdd.price}"
+										decimalPlaces="4" />
+								</div>
+							</div>
+							<div class="iamge-box-footer" align="left">
+								<p:commandButton value="حفظ" icon="ui-icon ui-icon-save"
+									onclick="PF('sadadAdd').hide();" process="@all"
+									action="#{importsBean.saveSadad}" update="form">
+								</p:commandButton>
+								<p:spacer height="4"></p:spacer>
+								<p:commandButton styleClass="orange-btn" value="عودة"
+									icon="ui-icon ui-icon-arrow-back" immediate="true"
+									onclick="PF('sadadAdd').hide();" />
+							</div>
+						</p:fieldset>
+					</h:panelGroup>
+				</p:dialog>
+			</h:form>
+			<h:form>
+				<p:dialog position="center" widgetVar="firstAmountAdd" height="300"
+					responsive="true" dynamic="true" hideEffect="explode"
+					showEffect="fade" width="60%" closable="true" resizable="true"
+					modal="true" dir="rtl">
+					<h:panelGroup id="firstAmount" width="60%">
+						<p:fieldset legend="رصيد بداية الفترة" width="100%">
+							<div class="ui-g">
+								<div class="ui-g-2">
+									<h:outputLabel value="القيمة" />
+								</div>
+								<div class="ui-g-3">
+									<p:inputNumber value="#{importsBean.firstAmountValue}">
+										<p:ajax process="@this" />
+									</p:inputNumber>
+								</div>
+							</div>
+							<div class="iamge-box-footer" align="left">
+								<p:commandButton value="طباعة" icon="ui-icon ui-icon-print"
+									immediate="true" action="#{importsBean.printAccount}"
+									styleClass="purple-btn" onclick="this.form.target='_blank'"
+									ajax="false">
+								</p:commandButton>
+								<p:spacer height="4"></p:spacer>
+								<p:commandButton styleClass="orange-btn" value="عودة"
+									icon="ui-icon ui-icon-arrow-back" immediate="true"
+									onclick="PF('firstAmountAdd').hide();" />
+							</div>
+						</p:fieldset>
+					</h:panelGroup>
+				</p:dialog>
 			</h:form>
 			<h:form>
 				<p:dialog position="center" widgetVar="whsdlAdd" height="500"
@@ -308,7 +414,8 @@
 									<h:outputLabel value="سعر الليتر" />
 								</div>
 								<div class="ui-g-3">
-									<p:inputNumber value="#{importsBean.sssAdd.literPrice}" />
+									<p:inputNumber value="#{importsBean.sssAdd.literPrice}"
+										decimalPlaces="4" />
 								</div>
 								<p:spacer height="10" width="10"></p:spacer>
 								<div class="ui-g-2">
@@ -327,19 +434,19 @@
 								<div class="ui-g-3">
 									<p:inputNumber value="#{importsBean.sssAdd.price}" />
 								</div>
-<!-- 								<p:spacer height="10" width="10"></p:spacer> -->
-<!-- 								<div class="ui-g-2"> -->
-<!-- 									<h:outputLabel value="نوع السداد" /> -->
-<!-- 								</div> -->
-<!-- 								<div class="ui-g-3"> -->
-<!-- 									<p:selectOneMenu style="width:100%" -->
-<!-- 										value="#{importsBean.sssAdd.sadType}"> -->
-<!-- 										<f:selectItem itemLabel="اختر " noSelectionOption="true" /> -->
-<!-- 										<f:selectItem itemLabel="فاتورة" itemValue="0" /> -->
-<!-- 										<f:selectItem itemLabel="سداد" itemValue="1" /> -->
-<!-- 										<p:ajax process="@this" /> -->
-<!-- 									</p:selectOneMenu> -->
-<!-- 								</div> -->
+								<!-- 								<p:spacer height="10" width="10"></p:spacer> -->
+								<!-- 								<div class="ui-g-2"> -->
+								<!-- 									<h:outputLabel value="نوع السداد" /> -->
+								<!-- 								</div> -->
+								<!-- 								<div class="ui-g-3"> -->
+								<!-- 									<p:selectOneMenu style="width:100%" -->
+								<!-- 										value="#{importsBean.sssAdd.sadType}"> -->
+								<!-- 										<f:selectItem itemLabel="اختر " noSelectionOption="true" /> -->
+								<!-- 										<f:selectItem itemLabel="فاتورة" itemValue="0" /> -->
+								<!-- 										<f:selectItem itemLabel="سداد" itemValue="1" /> -->
+								<!-- 										<p:ajax process="@this" /> -->
+								<!-- 									</p:selectOneMenu> -->
+								<!-- 								</div> -->
 							</div>
 
 							<div class="iamge-box-footer" align="left">

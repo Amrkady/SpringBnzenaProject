@@ -58,7 +58,7 @@
 							</f:facet>
 							<f:facet name="input">
 								<p:inputNumber value="#{gas.price}" required="true"
-									requiredMessage="السعر مطلوب" style="width:100%" />
+									requiredMessage="السعر مطلوب" decimalPlaces="4" style="width:100%" />
 							</f:facet>
 						</p:cellEditor>
 					</p:column>
@@ -110,7 +110,7 @@
 								</div>
 								<div class="ui-g-2">
 									<p:inputNumber value="#{gasBean.gasAdd.price}" required="true"
-										requiredMessage="السعر مطلوب" />
+										decimalPlaces="4" requiredMessage="السعر مطلوب" />
 								</div>
 							</div>
 							<div class="ui-g">

@@ -435,6 +435,15 @@
 								</h:outputText>
 							</div>
 						</div>
+						<div class="image-box-footer" align="left">
+							<p:commandButton class="bb" value="طباعة"
+								rendered="#{financailBean.enablePrint}"
+								style="width:10%; align:left" icon="ui-icon ui-icon-print "
+								onclick="this.form.target='_blank'" ajax="false"
+								action="#{financailBean.printGenaralMouzna}">
+							</p:commandButton>
+
+						</div>
 					</p:tab>
 					<p:tab title="الخصوم المتداولة" style="font-width : bold;">
 						<!-- 						<h:form id="asd"> -->
@@ -451,6 +460,7 @@
 								</h:panelGroup>
 							</div>
 						</div>
+						
 						<!-- 						</h:form> -->
 					</p:tab>
 				</p:accordionPanel>

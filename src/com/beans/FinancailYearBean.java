@@ -3,8 +3,10 @@ package com.beans;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.text.DateFormat;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -43,26 +45,20 @@ public class FinancailYearBean {
 	private List<SndSrfQbd> sandsList = new ArrayList<>();
 
 	private double bankSum;
-
 	private double boxSum;
-
 	private double totalBankSum;
-
 	private double totalBoxSum;
-
 	private double bankSumSrf;
-
 	private double boxSumSrf;
-
 	private double paysTotalSum;
-
 	private double expensisTotalSum;
 	private double totalRev;
 
+	private double asoulSum;
+	private double suppliersSum;
+
 	private List<RevuensModel> revList = new ArrayList<RevuensModel>();
-
 	private List<SndSrfQbd> asoulList = new ArrayList<SndSrfQbd>();
-
 	private List<SndSrfQbd> sndList = new ArrayList<SndSrfQbd>();
 
 	@PostConstruct
@@ -103,7 +99,10 @@ public class FinancailYearBean {
 
 			// snd sarf type = 2
 			sandsList = departmentServiceImpl.LoadAllSands(dateFrom, dateTo, 2);
-			expensisTotalSum = sandsList.stream().mapToDouble(fdet -> fdet.getAmount()).sum();
+
+			expensisTotalSum = sandsList.stream()
+					.filter(fdet -> fdet.getExpensisTypesId() != 9 && fdet.getExpensisTypesId() != 1)
+					.mapToDouble(fdet -> fdet.getAmount()).sum();
 
 			bankSumSrf = sandsList.stream().filter(fdet -> fdet.getPayType().equalsIgnoreCase("1"))
 					.mapToDouble(fdet -> fdet.getAmount()).sum();
@@ -118,7 +117,25 @@ public class FinancailYearBean {
 			revList = accountsServiceImpl.getFinancialMuneDates(dateFrom, dateTo);
 			totalRev = revList.stream().mapToDouble(fdet -> fdet.getProfit().doubleValue()).sum();
 			asoulList = accountsServiceImpl.LoadAllAsoul(dateFrom, dateTo);
+			asoulSum = asoulList.stream().mapToDouble(fdet -> fdet.getAmount()).sum();
 			sndList = accountsServiceImpl.LoadAllSndsWithoutTaxa(dateFrom, dateTo);
+			// (rev.sndType == 2 and rev.expensisTypesId == 1) ///////////// suppliers
+			suppliersSum = sandsList.stream().filter(fdet -> (fdet.getSndType() == 2 && fdet.getExpensisTypesId() == 1))
+					.mapToDouble(fdet -> fdet.getAmount()).sum();
+
+			Calendar c = Calendar.getInstance();
+			c.setTime(dateFrom); // Now use from date.
+			c.add(Calendar.DATE, 29); // Adding 29 days
+			DateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+			Date to = null;
+			try {
+				to = sdf.parse(sdf.format(c.getTime()));
+			} catch (ParseException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			// String output = sdf.format(c.getTime());
+			accountsServiceImpl.findFirstAmountByDates(dateFrom, to, null, null);
 
 		}
 
@@ -169,10 +186,33 @@ public class FinancailYearBean {
 			parameters.put("income", paysTotalSum);
 			parameters.put("outcome", expensisTotalSum);
 			parameters.put("year", year.toString());
+			parameters.put("asoulSum", asoulSum);
+			parameters.put("suppliersSum", suppliersSum);
 			String headerPath = FacesContext.getCurrentInstance().getExternalContext()
 					.getRealPath("/reports/logoreport.png");
 			parameters.put("header", headerPath);
 			Utils.printPdfReport(reportName, parameters);
+
+		} catch (Exception e) {
+			// TODO: handle exception
+		}
+		return "";
+	}
+
+	public String printGenaralMouzna() {
+		System.out.print("print >>>>>>>.");
+		try {
+			String reportName = "/reports/generalMouzna.jasper";
+			Map<String, Object> parameters = new HashMap<String, Object>();
+			parameters.put("bank", totalBankSum);
+			parameters.put("boxs", totalBoxSum);
+			double sum = revList.stream().mapToDouble(fdet -> fdet.getProfit().doubleValue()).sum();
+			parameters.put("part", sum);
+			parameters.put("year", year.toString());
+			String headerPath = FacesContext.getCurrentInstance().getExternalContext()
+					.getRealPath("/reports/logoreport.png");
+			parameters.put("header", headerPath);
+			Utils.printPdfReportFromListDataSource(reportName, parameters, asoulList);
 
 		} catch (Exception e) {
 			// TODO: handle exception
@@ -396,6 +436,22 @@ public class FinancailYearBean {
 
 	public void setTotalRev(double totalRev) {
 		this.totalRev = totalRev;
+	}
+
+	public double getAsoulSum() {
+		return asoulSum;
+	}
+
+	public void setAsoulSum(double asoulSum) {
+		this.asoulSum = asoulSum;
+	}
+
+	public double getSuppliersSum() {
+		return suppliersSum;
+	}
+
+	public void setSuppliersSum(double suppliersSum) {
+		this.suppliersSum = suppliersSum;
 	}
 
 }

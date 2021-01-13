@@ -4,6 +4,7 @@
 	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="One Empty Record"/>
 	<parameter name="stationId" class="java.lang.Integer"/>
 	<parameter name="supId" class="java.lang.Integer"/>
+	<parameter name="gasId" class="java.lang.Integer"/>
 	<parameter name="stfromId" class="java.lang.Integer"/>
 	<parameter name="dateFrom" class="java.lang.String"/>
 	<parameter name="dateTo" class="java.lang.String"/>
@@ -25,7 +26,9 @@ and (g.supplier_id = $P{supId} or $P{supId}=-1)
 and (g.from_station_id = $P{stfromId} or $P{stfromId} =-1)
 and
 g.sadad = 0
+and (g.gas_id = $P{gasId} or $P{gasId}=-1)
 and
+
 (g.sup_date BETWEEN CAST($P{dateFrom} AS DATE) AND CAST($P{dateTo} AS DATE) or $P{dateTo} ="1")
 order  by  g.sup_date desc;]]>
 	</queryString>
@@ -265,9 +268,6 @@ order  by  g.sup_date desc;]]>
 			</textField>
 		</band>
 	</detail>
-	<columnFooter>
-		<band height="39"/>
-	</columnFooter>
 	<pageFooter>
 		<band height="66" splitType="Stretch">
 			<rectangle>

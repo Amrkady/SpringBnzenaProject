@@ -67,8 +67,8 @@ public class AccountsServiceImpl implements AccountsService {
 
 	@Override
 	public List<GasStationSuppliers> loadsssByDates(Date dateFrom, Date dateTo, Integer supplierId, Integer suppType,
-			Integer stationId) {
-		List ls = commonDao.findsssByDates(dateFrom, dateTo, supplierId, suppType, stationId);
+			Integer stationId, Integer gasId) {
+		List ls = commonDao.findsssByDates(dateFrom, dateTo, supplierId, suppType, stationId, gasId);
 		return ls;
 	}
 
@@ -158,4 +158,9 @@ public class AccountsServiceImpl implements AccountsService {
 		return ls;
 	}
 
+	@Override
+	public List<FirstDayAmount> findFirstAmountByDates(Date dateFrom, Date dateTo, Integer stationId, Integer gasId) {
+		List ls = commonDao.findFirstAmountByDates(dateFrom, dateTo, stationId, gasId);
+		return ls;
+	}
 }

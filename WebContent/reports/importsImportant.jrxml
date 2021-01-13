@@ -5,13 +5,14 @@
 	<parameter name="stationId" class="java.lang.Integer"/>
 	<parameter name="supId" class="java.lang.Integer"/>
 	<parameter name="dateFrom" class="java.lang.String"/>
+	<parameter name="firstAmount" class="java.math.BigDecimal"/>
 	<parameter name="dateTo" class="java.lang.String"/>
 	<parameter name="dateF" class="java.lang.String"/>
 	<parameter name="dateT" class="java.lang.String"/>
 	<parameter name="header" class="java.lang.String"/>
 	<queryString language="SQL">
 		<![CDATA[SELECT   DATE_FORMAT(g.sup_date,'%d/%m/%Y') AS supdate  , sp.name supName , 
-g.price total  , g.sadad sadad
+g.price total  , g.sadad sadad , g.bill_no bill
 FROM thorape3_bnzena.gas_station_suppliers g 
 left join thorape3_bnzena.suppliers  sp on g.supplier_id = sp.id 
 where  g.station_id = $P{stationId}
@@ -23,7 +24,14 @@ order  by  g.sup_date desc;]]>
 	<field name="supdate" class="java.lang.String"/>
 	<field name="supName" class="java.lang.String"/>
 	<field name="sadad" class="java.lang.Integer"/>
+	<field name="bill" class="java.lang.Integer"/>
 	<field name="total" class="java.math.BigDecimal"/>
+	<variable name="sumBills" class="java.math.BigDecimal" calculation="Sum">
+		<variableExpression><![CDATA[$F{sadad} == 0 ? $F{total} : 0.0]]></variableExpression>
+	</variable>
+	<variable name="sumSada" class="java.math.BigDecimal" calculation="Sum">
+		<variableExpression><![CDATA[$F{sadad} != 0 ? $F{total} : 0.0]]></variableExpression>
+	</variable>
 	<background>
 		<band splitType="Stretch"/>
 	</background>
@@ -48,7 +56,7 @@ order  by  g.sup_date desc;]]>
 	<columnHeader>
 		<band height="110">
 			<staticText>
-				<reportElement x="444" y="72" width="104" height="38" forecolor="#0000FF" uuid="edbd82d7-50eb-4a7a-9707-bb898b1ebf37"/>
+				<reportElement x="440" y="72" width="104" height="38" forecolor="#0000FF" uuid="edbd82d7-50eb-4a7a-9707-bb898b1ebf37"/>
 				<box>
 					<topPen lineWidth="1.0" lineColor="#000000"/>
 					<leftPen lineWidth="1.0" lineColor="#000000"/>
@@ -61,7 +69,7 @@ order  by  g.sup_date desc;]]>
 				<text><![CDATA[تاريخ الحركة]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="340" y="72" width="104" height="38" forecolor="#0000FF" uuid="f8a8ecd7-5062-4c0d-afba-70e348ce0b35"/>
+				<reportElement x="340" y="72" width="100" height="38" forecolor="#0000FF" uuid="f8a8ecd7-5062-4c0d-afba-70e348ce0b35"/>
 				<box>
 					<topPen lineWidth="1.0" lineColor="#000000"/>
 					<leftPen lineWidth="1.0" lineColor="#000000"/>
@@ -74,7 +82,7 @@ order  by  g.sup_date desc;]]>
 				<text><![CDATA[نوع الحركة]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="225" y="72" width="115" height="38" forecolor="#0000FF" uuid="b7598833-fd41-4932-a124-3fad41154d24"/>
+				<reportElement x="128" y="72" width="111" height="38" forecolor="#0000FF" uuid="b7598833-fd41-4932-a124-3fad41154d24"/>
 				<box>
 					<topPen lineWidth="1.0" lineColor="#000000"/>
 					<leftPen lineWidth="1.0" lineColor="#000000"/>
@@ -87,7 +95,7 @@ order  by  g.sup_date desc;]]>
 				<text><![CDATA[مدين]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="120" y="72" width="105" height="38" forecolor="#0000FF" uuid="2547c394-5daf-4df3-95b9-b50c2565d54f"/>
+				<reportElement x="7" y="72" width="121" height="38" forecolor="#0000FF" uuid="2547c394-5daf-4df3-95b9-b50c2565d54f"/>
 				<box>
 					<topPen lineWidth="1.0" lineColor="#000000"/>
 					<leftPen lineWidth="1.0" lineColor="#000000"/>
@@ -104,7 +112,7 @@ order  by  g.sup_date desc;]]>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font fontName="Arial" size="18" isBold="true"/>
 				</textElement>
-				<text><![CDATA[كشف حساب عميل ]]></text>
+				<text><![CDATA[كشف حساب مورد]]></text>
 			</staticText>
 			<textField>
 				<reportElement x="227" y="32" width="274" height="30" uuid="5e18eab2-e429-4110-ab12-3a4a7455607f"/>
@@ -120,8 +128,15 @@ order  by  g.sup_date desc;]]>
 				</textElement>
 				<textFieldExpression><![CDATA[$P{dateT} != "1" ? ("  حتى "+$P{dateT}).replaceAll("0", "\\\u0660").replaceAll("1", "\\\u0661") .replaceAll("2", "\\\u0662").replaceAll("3", "\\\u0663").replaceAll("4", "\\\u0664").replaceAll("5", "\\\u0665").replaceAll("6", "\\\u0666").replaceAll("7", "\\\u0667").replaceAll("8", "\\\u0668").replaceAll("9", "\\\u0669"):""]]></textFieldExpression>
 			</textField>
+			<textField>
+				<reportElement x="127" y="2" width="188" height="30" uuid="2146f099-14d0-4797-838c-aa0e75e7dcc9"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="Arial" size="18" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[" شركة " + $F{supName}]]></textFieldExpression>
+			</textField>
 			<staticText>
-				<reportElement x="4" y="72" width="116" height="38" forecolor="#0000FF" uuid="65b295f2-9b7d-4657-9f1c-5b985a36cf2f"/>
+				<reportElement x="239" y="72" width="101" height="38" forecolor="#0000FF" uuid="2edbab66-e05b-4bde-8c20-e8e916d1b1bd"/>
 				<box>
 					<topPen lineWidth="1.0" lineColor="#000000"/>
 					<leftPen lineWidth="1.0" lineColor="#000000"/>
@@ -131,21 +146,14 @@ order  by  g.sup_date desc;]]>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font fontName="Arial" size="14" isBold="true"/>
 				</textElement>
-				<text><![CDATA[الرصيد]]></text>
+				<text><![CDATA[رقم الفاتور]]></text>
 			</staticText>
-			<textField>
-				<reportElement x="127" y="2" width="188" height="30" uuid="2146f099-14d0-4797-838c-aa0e75e7dcc9"/>
-				<textElement textAlignment="Right" verticalAlignment="Middle">
-					<font fontName="Arial" size="18" isBold="true"/>
-				</textElement>
-				<textFieldExpression><![CDATA[" شركة " + $F{supName}]]></textFieldExpression>
-			</textField>
 		</band>
 	</columnHeader>
 	<detail>
 		<band height="21" splitType="Stretch">
 			<textField>
-				<reportElement x="444" y="0" width="104" height="20" uuid="b70f67be-4bfe-41de-9fec-c5cf160dadf3"/>
+				<reportElement x="440" y="0" width="104" height="20" uuid="b70f67be-4bfe-41de-9fec-c5cf160dadf3"/>
 				<box>
 					<topPen lineWidth="1.0"/>
 					<leftPen lineWidth="1.0"/>
@@ -158,7 +166,7 @@ order  by  g.sup_date desc;]]>
 				<textFieldExpression><![CDATA[$F{supdate}.replaceAll("0", "\\\u0660").replaceAll("1", "\\\u0661") .replaceAll("2", "\\\u0662").replaceAll("3", "\\\u0663").replaceAll("4", "\\\u0664").replaceAll("5", "\\\u0665").replaceAll("6", "\\\u0666").replaceAll("7", "\\\u0667").replaceAll("8", "\\\u0668").replaceAll("9", "\\\u0669")]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="340" y="0" width="104" height="20" uuid="81255935-4cbf-4654-b22f-f2354e14b05c"/>
+				<reportElement x="340" y="0" width="100" height="20" uuid="81255935-4cbf-4654-b22f-f2354e14b05c"/>
 				<box>
 					<topPen lineWidth="1.0"/>
 					<leftPen lineWidth="1.0"/>
@@ -171,7 +179,7 @@ order  by  g.sup_date desc;]]>
 				<textFieldExpression><![CDATA[$F{sadad} == 0 ? "فاتورة " : "سداد"]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="225" y="0" width="115" height="20" uuid="1309d0bb-f92e-4a70-83b4-58f01f7bfe37"/>
+				<reportElement x="128" y="0" width="111" height="20" uuid="1309d0bb-f92e-4a70-83b4-58f01f7bfe37"/>
 				<box>
 					<topPen lineWidth="1.0"/>
 					<leftPen lineWidth="1.0"/>
@@ -181,10 +189,10 @@ order  by  g.sup_date desc;]]>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font fontName="Arial" size="12"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{sadad} == 0 ? $F{total} : "0.0"]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{sadad} != 0 ? $F{total} : "0.0"]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="120" y="0" width="105" height="20" uuid="9ec7837c-4f9e-43a3-9d31-9584020dfcb1"/>
+				<reportElement x="7" y="0" width="121" height="20" uuid="9ec7837c-4f9e-43a3-9d31-9584020dfcb1"/>
 				<box>
 					<topPen lineWidth="1.0"/>
 					<leftPen lineWidth="1.0"/>
@@ -194,10 +202,10 @@ order  by  g.sup_date desc;]]>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font fontName="Arial" size="12"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{sadad} != 0 ? $F{total} : "0.0 "]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{sadad} == 0 ? $F{total} : "0.0 "]]></textFieldExpression>
 			</textField>
-			<textField>
-				<reportElement x="4" y="0" width="116" height="20" uuid="8eb51fbe-3797-4ddd-a1a2-e802e904c595"/>
+			<textField isBlankWhenNull="true">
+				<reportElement x="239" y="0" width="101" height="20" uuid="4e4f7e32-60da-47f7-93e6-c7f9e610ee95"/>
 				<box>
 					<topPen lineWidth="1.0"/>
 					<leftPen lineWidth="1.0"/>
@@ -207,15 +215,12 @@ order  by  g.sup_date desc;]]>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font fontName="Arial" size="12"/>
 				</textElement>
-				<textFieldExpression><![CDATA[" "]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{bill}]]></textFieldExpression>
 			</textField>
 		</band>
 	</detail>
-	<columnFooter>
-		<band height="39"/>
-	</columnFooter>
 	<pageFooter>
-		<band height="66" splitType="Stretch">
+		<band height="58" splitType="Stretch">
 			<rectangle>
 				<reportElement x="0" y="6" width="554" height="50" backcolor="#6148AB" uuid="9a47938d-d835-4656-81a3-6b41b42317d2"/>
 			</rectangle>
@@ -228,4 +233,93 @@ order  by  g.sup_date desc;]]>
 			</staticText>
 		</band>
 	</pageFooter>
+	<summary>
+		<band height="138">
+			<textField>
+				<reportElement x="6" y="0" width="121" height="39" uuid="e7326b2e-b15c-4775-b735-bb92fc9e3c2f"/>
+				<box>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial" size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{sumBills}.setScale( 3, RoundingMode.HALF_UP )]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="127" y="0" width="112" height="39" uuid="9512793f-f20b-464a-ac09-7dcaf4e40217"/>
+				<box>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial" size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{sumSada}.setScale( 3, RoundingMode.HALF_UP )]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="239" y="0" width="89" height="38" uuid="d20abbbe-746d-43e9-97cb-198b257c6dea"/>
+				<box>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial" size="12"/>
+				</textElement>
+				<text><![CDATA[الاجمالى]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="30" y="94" width="107" height="39" uuid="c953b1d9-f2c4-485d-a28a-5b8ff5bab34c"/>
+				<box>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial" size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{sumSada}.doubleValue() +$P{firstAmount}.doubleValue()  - $V{sumBills}.doubleValue()]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="228" y="94" width="107" height="39" uuid="dc746b7d-83ae-479b-ad83-36e998dedf9a"/>
+				<box>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial" size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{firstAmount}.setScale( 3, RoundingMode.HALF_UP )]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="236" y="63" width="89" height="38" uuid="23e56640-bcf1-4392-b004-1a55f60a2c5e"/>
+				<box padding="0">
+					<pen lineWidth="1.0" lineStyle="Dotted" lineColor="#FFFFFF"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial" size="12"/>
+				</textElement>
+				<text><![CDATA[رصيد بداية الفترة]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="39" y="61" width="89" height="38" uuid="2478b96a-b315-47d1-8aad-cb3382b9277a"/>
+				<box padding="0">
+					<pen lineWidth="1.0" lineColor="#FFFFFF"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial" size="12"/>
+				</textElement>
+				<text><![CDATA[رصيد نهاية الفترة]]></text>
+			</staticText>
+		</band>
+	</summary>
 </jasperReport>

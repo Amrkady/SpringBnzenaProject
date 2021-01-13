@@ -29,11 +29,10 @@
 						action="#{payImportsBean.printAll}" styleClass="orange-btn"
 						onclick="this.form.target='_blank'" ajax="false">
 					</p:commandButton>
-					<!-- 					<p:commandButton value="كشف حساب"  -->
-					<!-- 						icon="ui-icon ui-icon-print" immediate="true" -->
-					<!-- 						action="#{importsBean.printAccount}" -->
-					<!-- 						onclick="this.form.target='_blank'" ajax="false"> -->
-					<!-- 					</p:commandButton> -->
+					<p:spacer width="10" height="10"></p:spacer>
+					<p:commandButton styleClass="purple-btn" immediate="true"
+						onclick="PF('firstAmountAdd').show();" value="الموازنة التقديرية">
+					</p:commandButton>
 				</div>
 
 				<br />
@@ -122,58 +121,108 @@
 							<f:convertNumber pattern="##################.##"></f:convertNumber>
 						</h:outputLabel>
 					</p:column>
-
-					<!-- 						<p:column headerText="سعة التانك" -->
-					<!-- 							style="width: 20% ; text-align:center"> -->
-					<!-- 							<h:outputText value="4000"> -->
-					<!-- 							</h:outputText> -->
-					<!-- 						</p:column> -->
-					<!-- 						<p:summaryRow> -->
-					<!-- 							<p:column colspan="2" footerText="الاجمالى" -->
-					<!-- 								style="FONT-WEIGHT:bold ;color : #F85F3E " > -->
-					<!-- 								<h:outputText -->
-					<!-- 									value="الاجمالى"> -->
-
-					<!-- 								</h:outputText> -->
-					<!-- 								</p:column> -->
-					<!-- 							<p:column colspan="1" -->
-					<!-- 								style="FONT-WEIGHT:bold ;color : white  ;text-align:center"> -->
-					<!-- 								<h:outputText -->
-					<!-- 									value="#{revenuesBean.gmList.stream().map(fdet->fdet.firstAmount).sum()}"> -->
-					<!-- 									<f:convertNumber pattern="##################.##"></f:convertNumber> -->
-					<!-- 								</h:outputText> -->
-					<!-- 							</p:column> -->
-					<!-- 							<p:column colspan="1" -->
-					<!-- 								style="FONT-WEIGHT:bold ;color : white ;text-align:center "> -->
-					<!-- 								<h:outputText -->
-					<!-- 									value="#{revenuesBean.gmList.stream().map(fdet->fdet.importsAmount).sum()}"> -->
-					<!-- 									<f:convertNumber pattern="##################.##"></f:convertNumber> -->
-					<!-- 								</h:outputText> -->
-					<!-- 							</p:column> -->
-					<!-- 							<p:column colspan="1" -->
-					<!-- 								style="FONT-WEIGHT:bold ;color : white ;text-align:center "> -->
-					<!-- 								<h:outputText -->
-					<!-- 									value="#{revenuesBean.gmList.stream().map(fdet->fdet.litrsAmount).sum()}"> -->
-					<!-- 									<f:convertNumber pattern="##################.##"></f:convertNumber> -->
-					<!-- 								</h:outputText> -->
-					<!-- 							</p:column> -->
-					<!-- 							<p:column colspan="1" -->
-					<!-- 								style="FONT-WEIGHT:bold ;color : white ;text-align:center"> -->
-					<!-- 								<h:outputText -->
-					<!-- 									value="#{revenuesBean.gmList.stream().map(fdet->fdet.lastAmount).sum()}"> -->
-					<!-- 									<f:convertNumber pattern="##################.##"></f:convertNumber> -->
-					<!-- 								</h:outputText> -->
-					<!-- 							</p:column> -->
-					<!-- 							<p:column colspan="1" -->
-					<!-- 								style="FONT-WEIGHT:bold ;color :white ;text-align:center"> -->
-					<!-- 								<h:outputText value="12000"> -->
-					<!-- 									<f:convertNumber pattern="##################.##"></f:convertNumber> -->
-					<!-- 								</h:outputText> -->
-					<!-- 							</p:column> -->
-
-					<!-- 						</p:summaryRow> -->
 				</p:dataTable>
 
+			</h:form>
+			<h:form>
+				<p:dialog position="center" widgetVar="firstAmountAdd" height="300"
+					responsive="true" dynamic="true" hideEffect="explode"
+					showEffect="fade" width="60%" closable="true" resizable="true"
+					modal="true" dir="rtl">
+					<h:panelGroup width="100%">
+						<p:fieldset legend="اسعار الوقود بداية ونهاية الفترة" width="100%">
+							<div class="ui-g">
+								<div class="ui-g-3">
+									<h:outputLabel value="سعر بدية الفتره 91" />
+								</div>
+								<div class="ui-g-3">
+									<p:inputNumber value="#{payImportsBean.first91}"
+										decimalPlaces="4">
+										<p:ajax process="@this" />
+									</p:inputNumber>
+								</div>
+								<p:spacer height="30" width="20"></p:spacer>
+
+								<div class="ui-g-3">
+									<h:outputLabel value="سعر نهاية الفتره 91" />
+								</div>
+								<div class="ui-g-2">
+									<p:inputNumber value="#{payImportsBean.last91}"
+										decimalPlaces="4">
+										<p:ajax process="@this" />
+									</p:inputNumber>
+								</div>
+
+
+							</div>
+							<div class="ui-g">
+								<div class="ui-g-3">
+									<h:outputLabel value="سعر بداية الفتره 95" />
+								</div>
+								<div class="ui-g-3">
+									<p:inputNumber value="#{payImportsBean.first95}" decimalPlaces="4" >
+										<p:ajax process="@this" />
+									</p:inputNumber>
+								</div>
+								<p:spacer height="30" width="20"></p:spacer>
+								<div class="ui-g-3">
+									<h:outputLabel value="سعر نهاية الفتره 95" />
+								</div>
+								<div class="ui-g-2">
+									<p:inputNumber value="#{payImportsBean.last95}" decimalPlaces="4" >
+										<p:ajax process="@this" />
+									</p:inputNumber>
+								</div>
+							</div>
+							<div class="ui-g">
+								<div class="ui-g-3">
+									<h:outputLabel value=" سعر الديزل بداية الفترة" />
+								</div>
+								<div class="ui-g-3">
+									<p:inputNumber value="#{payImportsBean.firstD}"
+										decimalPlaces="4">
+										<p:ajax process="@this" />
+									</p:inputNumber>
+								</div>
+								<p:spacer height="30" width="20"></p:spacer>
+								<div class="ui-g-3">
+									<h:outputLabel value=" سعر الديزل نهاية الفترة" />
+								</div>
+								<div class="ui-g-2">
+									<p:inputNumber value="#{payImportsBean.lastD}"
+										decimalPlaces="4">
+										<p:ajax process="@this" />
+									</p:inputNumber>
+								</div>
+
+
+							</div>
+							<div class="ui-g">
+
+								<div class="ui-g-3">
+									<h:outputLabel value="مصروفات الاقامات" />
+								</div>
+								<div class="ui-g-3">
+									<p:inputNumber value="#{payImportsBean.eqamaPrice}">
+										<p:ajax process="@this" />
+									</p:inputNumber>
+								</div>
+							</div>
+
+							<div class="iamge-box-footer" align="left">
+								<p:commandButton value="طباعة الموازنة التقديرية"
+									icon="ui-icon ui-icon-print" immediate="true"
+									action="#{payImportsBean.printMouzna}" styleClass="purple-btn"
+									onclick="this.form.target='_blank'" ajax="false">
+								</p:commandButton>
+								<p:spacer height="4"></p:spacer>
+								<p:commandButton styleClass="orange-btn" value="عودة"
+									icon="ui-icon ui-icon-arrow-back" immediate="true"
+									onclick="PF('firstAmountAdd').hide();" />
+							</div>
+						</p:fieldset>
+					</h:panelGroup>
+				</p:dialog>
 			</h:form>
 		</ui:define>
 	</ui:composition>

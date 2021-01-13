@@ -60,7 +60,7 @@ public interface CommonDao {
 	public List<Attachment> findAttachmentsByStationId(Integer stationId);
 
 	public List<GasStationSuppliers> findsssByDates(Date dateFrom, Date dateTo, Integer supplierId, Integer suppType,
-			Integer stationId);
+			Integer stationId, Integer gasId);
 
 	public List<GunsRevenus> findRevsByDates(Date dateFrom, Date dateTo, Integer gasId, Integer stationId);
 
@@ -89,5 +89,7 @@ public interface CommonDao {
 	public List<SndSrfQbd> findGeneralSndByType(Integer type, Integer stationId);
 
 	public List<FirstDayAmount> loadAllfRead(Integer stId);
+
+	public List<FirstDayAmount> findFirstAmountByDates(Date dateFrom, Date dateTo, Integer stationId, Integer gasId);
 
 }

@@ -1,0 +1,297 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.6.0.final using JasperReports Library version 6.6.0  -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="Bills_snad" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="b3d43872-09ef-4080-8e66-7a23b6142bd2">
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="One Empty Record"/>
+	<parameter name="first95" class="java.lang.Double"/>
+	<parameter name="first91" class="java.lang.Double"/>
+	<parameter name="firstd" class="java.lang.Double"/>
+	<parameter name="last95" class="java.lang.Double"/>
+	<parameter name="last91" class="java.lang.Double"/>
+	<parameter name="lastd" class="java.lang.Double"/>
+	<parameter name="dateFrom" class="java.lang.String"/>
+	<parameter name="dateTo" class="java.lang.String"/>
+	<parameter name="header" class="java.lang.String"/>
+	<queryString language="SQL">
+		<![CDATA[select 1 from duel]]>
+	</queryString>
+	<field name="stationName" class="java.lang.String"/>
+	<field name="gasName" class="java.lang.String"/>
+	<field name="litrPayAmount" class="java.math.BigDecimal"/>
+	<field name="firstAmount" class="java.math.BigDecimal"/>
+	<field name="importsAmount" class="java.math.BigDecimal"/>
+	<field name="deffiernceAmount" class="java.math.BigDecimal"/>
+	<field name="monitorsAmount" class="java.math.BigDecimal"/>
+	<field name="deficitExcess" class="java.math.BigDecimal"/>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<pageHeader>
+		<band height="88">
+			<rectangle>
+				<reportElement x="0" y="0" width="553" height="80" uuid="220731d0-4658-4f71-8a14-b5cd7cbb6776"/>
+			</rectangle>
+			<staticText>
+				<reportElement x="356" y="20" width="194" height="40" forecolor="#0000FF" uuid="e1f83c71-3cf0-4547-9eb8-b987b0d5b3ee"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial" size="34" isBold="true" isUnderline="false"/>
+				</textElement>
+				<text><![CDATA[مجموعة ذرا]]></text>
+			</staticText>
+			<image hAlign="Center">
+				<reportElement x="275" y="2" width="86" height="77" uuid="b5abcd5a-c848-44a6-8c14-4506dcadaad8"/>
+				<imageExpression><![CDATA[$P{header}]]></imageExpression>
+			</image>
+		</band>
+	</pageHeader>
+	<columnHeader>
+		<band height="110">
+			<staticText>
+				<reportElement x="493" y="72" width="81" height="38" forecolor="#0000FF" uuid="edbd82d7-50eb-4a7a-9707-bb898b1ebf37"/>
+				<box>
+					<topPen lineWidth="1.0" lineColor="#000000"/>
+					<leftPen lineWidth="1.0" lineColor="#000000"/>
+					<bottomPen lineWidth="1.0" lineColor="#000000"/>
+					<rightPen lineWidth="1.0" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial" size="14" isBold="true"/>
+				</textElement>
+				<text><![CDATA[المحطة]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="352" y="72" width="79" height="38" forecolor="#0000FF" uuid="f8a8ecd7-5062-4c0d-afba-70e348ce0b35"/>
+				<box>
+					<topPen lineWidth="1.0" lineColor="#000000"/>
+					<leftPen lineWidth="1.0" lineColor="#000000"/>
+					<bottomPen lineWidth="1.0" lineColor="#000000"/>
+					<rightPen lineWidth="1.0" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial" size="14" isBold="true"/>
+				</textElement>
+				<text><![CDATA[كمية اللترات المباعة ]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="276" y="72" width="76" height="38" forecolor="#0000FF" uuid="2547c394-5daf-4df3-95b9-b50c2565d54f"/>
+				<box>
+					<topPen lineWidth="1.0" lineColor="#000000"/>
+					<leftPen lineWidth="1.0" lineColor="#000000"/>
+					<bottomPen lineWidth="1.0" lineColor="#000000"/>
+					<rightPen lineWidth="1.0" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial" size="14" isBold="true"/>
+				</textElement>
+				<text><![CDATA[رصيد بداية الفتره]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="136" y="3" width="274" height="30" uuid="fc27afb4-c92c-4916-af7b-920b2b2c9b2d"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial" size="18" isBold="true"/>
+				</textElement>
+				<text><![CDATA[تقرير مشتريات ومبيعات المحطات]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="218" y="26" width="274" height="30" uuid="5e18eab2-e429-4110-ab12-3a4a7455607f"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial" size="18" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{dateFrom} != "1" ?( "من  "+$P{dateFrom}).replaceAll("0", "\\\u0660").replaceAll("1", "\\\u0661") .replaceAll("2", "\\\u0662").replaceAll("3", "\\\u0663").replaceAll("4", "\\\u0664").replaceAll("5", "\\\u0665").replaceAll("6", "\\\u0666").replaceAll("7", "\\\u0667").replaceAll("8", "\\\u0668").replaceAll("9", "\\\u0669"):""]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="66" y="26" width="220" height="30" uuid="49e182ee-95c0-44e8-b1f0-0df69eb7cfeb"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="Arial" size="18" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{dateTo} != "1" ? ("  حتى   "+$P{dateTo}).replaceAll("0", "\\\u0660").replaceAll("1", "\\\u0661") .replaceAll("2", "\\\u0662").replaceAll("3", "\\\u0663").replaceAll("4", "\\\u0664").replaceAll("5", "\\\u0665").replaceAll("6", "\\\u0666").replaceAll("7", "\\\u0667").replaceAll("8", "\\\u0668").replaceAll("9", "\\\u0669"):""]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="121" y="72" width="81" height="38" forecolor="#0000FF" uuid="151bc8e9-601f-4977-b92a-6b183458e9a0"/>
+				<box>
+					<topPen lineWidth="1.0" lineColor="#000000"/>
+					<leftPen lineWidth="1.0" lineColor="#000000"/>
+					<bottomPen lineWidth="1.0" lineColor="#000000"/>
+					<rightPen lineWidth="1.0" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial" size="14" isBold="true"/>
+				</textElement>
+				<text><![CDATA[طبقا للحسابات]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="202" y="72" width="74" height="38" forecolor="#0000FF" uuid="2068b668-34b3-45d8-a7be-f930d8831969"/>
+				<box>
+					<topPen lineWidth="1.0" lineColor="#000000"/>
+					<leftPen lineWidth="1.0" lineColor="#000000"/>
+					<bottomPen lineWidth="1.0" lineColor="#000000"/>
+					<rightPen lineWidth="1.0" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial" size="14" isBold="true"/>
+				</textElement>
+				<text><![CDATA[ردود المحطات]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="431" y="72" width="62" height="38" forecolor="#0000FF" uuid="f6f57b04-bc2f-413e-a699-75fc89e08f4f"/>
+				<box>
+					<topPen lineWidth="1.0" lineColor="#000000"/>
+					<leftPen lineWidth="1.0" lineColor="#000000"/>
+					<bottomPen lineWidth="1.0" lineColor="#000000"/>
+					<rightPen lineWidth="1.0" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial" size="14" isBold="true"/>
+				</textElement>
+				<text><![CDATA[نوع الوقود]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="45" y="72" width="76" height="38" forecolor="#0000FF" uuid="efaa17e6-bd8e-464e-af95-8dc58c42bf65"/>
+				<box>
+					<topPen lineWidth="1.0" lineColor="#000000"/>
+					<leftPen lineWidth="1.0" lineColor="#000000"/>
+					<bottomPen lineWidth="1.0" lineColor="#000000"/>
+					<rightPen lineWidth="1.0" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial" size="14" isBold="true"/>
+				</textElement>
+				<text><![CDATA[طبقا للمشرفين]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="-18" y="72" width="63" height="38" forecolor="#0000FF" uuid="22ea822e-de5a-4958-8bf9-97296ace24d1"/>
+				<box>
+					<topPen lineWidth="1.0" lineColor="#000000"/>
+					<leftPen lineWidth="1.0" lineColor="#000000"/>
+					<bottomPen lineWidth="1.0" lineColor="#000000"/>
+					<rightPen lineWidth="1.0" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial" size="14" isBold="true"/>
+				</textElement>
+				<text><![CDATA[العجز / الزيادة]]></text>
+			</staticText>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="20" splitType="Stretch">
+			<textField>
+				<reportElement x="493" y="0" width="81" height="20" uuid="b70f67be-4bfe-41de-9fec-c5cf160dadf3"/>
+				<box>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial" size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{stationName}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="352" y="0" width="79" height="20" uuid="81255935-4cbf-4654-b22f-f2354e14b05c"/>
+				<box>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial" size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA[(""+$F{litrPayAmount}.setScale( 2, RoundingMode.HALF_UP )).replaceAll("0", "\\\u0660").replaceAll("1", "\\\u0661") .replaceAll("2", "\\\u0662").replaceAll("3", "\\\u0663").replaceAll("4", "\\\u0664").replaceAll("5", "\\\u0665").replaceAll("6", "\\\u0666").replaceAll("7", "\\\u0667").replaceAll("8", "\\\u0668").replaceAll("9", "\\\u0669")]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="276" y="0" width="76" height="20" uuid="9ec7837c-4f9e-43a3-9d31-9584020dfcb1"/>
+				<box>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial" size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA[(""+$F{firstAmount}.setScale( 2, RoundingMode.HALF_UP )).replaceAll("0", "\\\u0660").replaceAll("1", "\\\u0661") .replaceAll("2", "\\\u0662").replaceAll("3", "\\\u0663").replaceAll("4", "\\\u0664").replaceAll("5", "\\\u0665").replaceAll("6", "\\\u0666").replaceAll("7", "\\\u0667").replaceAll("8", "\\\u0668").replaceAll("9", "\\\u0669")]]></textFieldExpression>
+			</textField>
+			<textField pattern="###,###,###.##" isBlankWhenNull="true">
+				<reportElement x="121" y="0" width="81" height="20" uuid="7b2d0dd7-8679-44db-9be6-9f18fa64bf09"/>
+				<box>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial" size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA[(""+$F{deffiernceAmount}.setScale( 2, RoundingMode.HALF_UP )).replaceAll("0", "\\\u0660").replaceAll("1", "\\\u0661") .replaceAll("2", "\\\u0662").replaceAll("3", "\\\u0663").replaceAll("4", "\\\u0664").replaceAll("5", "\\\u0665").replaceAll("6", "\\\u0666").replaceAll("7", "\\\u0667").replaceAll("8", "\\\u0668").replaceAll("9", "\\\u0669")]]></textFieldExpression>
+			</textField>
+			<textField pattern="###,###,###.##">
+				<reportElement x="201" y="0" width="75" height="20" uuid="28fa885c-2aa9-4a22-b035-bfa266868def"/>
+				<box>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial" size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA[(""+$F{importsAmount}.setScale( 2, RoundingMode.HALF_UP )).replaceAll("0", "\\\u0660").replaceAll("1", "\\\u0661") .replaceAll("2", "\\\u0662").replaceAll("3", "\\\u0663").replaceAll("4", "\\\u0664").replaceAll("5", "\\\u0665").replaceAll("6", "\\\u0666").replaceAll("7", "\\\u0667").replaceAll("8", "\\\u0668").replaceAll("9", "\\\u0669")]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="431" y="0" width="62" height="20" uuid="083ab081-670d-47f2-a41e-475561c9c883"/>
+				<box>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial" size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{gasName}]]></textFieldExpression>
+			</textField>
+			<textField pattern="###,###,###.##" isBlankWhenNull="true">
+				<reportElement x="45" y="0" width="76" height="20" uuid="990204ff-bf62-4a0d-ba41-07352efb30db"/>
+				<box>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial" size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA[(""+$F{monitorsAmount}.setScale( 2, RoundingMode.HALF_UP )).replaceAll("0", "\\\u0660").replaceAll("1", "\\\u0661") .replaceAll("2", "\\\u0662").replaceAll("3", "\\\u0663").replaceAll("4", "\\\u0664").replaceAll("5", "\\\u0665").replaceAll("6", "\\\u0666").replaceAll("7", "\\\u0667").replaceAll("8", "\\\u0668").replaceAll("9", "\\\u0669")]]></textFieldExpression>
+			</textField>
+			<textField pattern="###,###,###.##" isBlankWhenNull="true">
+				<reportElement x="-18" y="0" width="63" height="20" uuid="1626decb-a32b-484d-b8a3-0844d3fda26f"/>
+				<box>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial" size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA[(""+$F{deficitExcess}.setScale( 2, RoundingMode.HALF_UP )).replaceAll("0", "\\\u0660").replaceAll("1", "\\\u0661") .replaceAll("2", "\\\u0662").replaceAll("3", "\\\u0663").replaceAll("4", "\\\u0664").replaceAll("5", "\\\u0665").replaceAll("6", "\\\u0666").replaceAll("7", "\\\u0667").replaceAll("8", "\\\u0668").replaceAll("9", "\\\u0669")]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<pageFooter>
+		<band height="66" splitType="Stretch">
+			<rectangle>
+				<reportElement x="0" y="6" width="554" height="50" backcolor="#6148AB" uuid="9a47938d-d835-4656-81a3-6b41b42317d2"/>
+			</rectangle>
+			<staticText>
+				<reportElement x="15" y="16" width="530" height="30" forecolor="#FFFCFC" uuid="d315d795-50be-42fc-a819-c836f6c329b5"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle" markup="none">
+					<font fontName="Arial" size="16" isBold="true"/>
+				</textElement>
+				<text><![CDATA[المملكة العربية السعودية - القصيم - البكيرية - ت :  0163364455  ]]></text>
+			</staticText>
+		</band>
+	</pageFooter>
+</jasperReport>

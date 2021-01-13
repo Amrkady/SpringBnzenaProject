@@ -255,11 +255,16 @@ public class CommonDaoImpl extends HibernateTemplate implements CommonDao {
 	@Override
 	@Transactional
 	public List<GasStationSuppliers> findsssByDates(Date dateFrom, Date dateTo, Integer supplierId, Integer suppType,
-			Integer stationId) {
+			Integer stationId, Integer gasId) {
 		Criteria criteria = sessionFactory.getCurrentSession().createCriteria(GasStationSuppliers.class);
 		if (stationId != -1) {
 			criteria.add(Restrictions.eq("stationId", stationId));
 		}
+
+		if (gasId != null) {
+			criteria.add(Restrictions.eq("gasId", gasId));
+		}
+
 		if (dateFrom != null) {
 			criteria.add(Restrictions.ge("supDate", dateFrom));
 		}
@@ -327,6 +332,7 @@ public class CommonDaoImpl extends HibernateTemplate implements CommonDao {
 		if (supType != null) {
 			criteria.add(Restrictions.eq("expensisType", supType));
 		}
+		criteria.add(Restrictions.ne("expensisType", 9));
 		List<Expensis> list = criteria.list();
 		return list;
 	}
@@ -457,10 +463,15 @@ public class CommonDaoImpl extends HibernateTemplate implements CommonDao {
 
 	@SuppressWarnings("unchecked")
 	@Transactional
+	@Override
 	public List<FirstDayAmount> findFirstAmountByDates(Date dateFrom, Date dateTo, Integer stationId, Integer gasId) {
 		Criteria criteria = sessionFactory.getCurrentSession().createCriteria(FirstDayAmount.class);
-		criteria.add(Restrictions.eq("stationId", stationId));
-		criteria.add(Restrictions.eq("gasId", gasId));
+		if (stationId != null) {
+			criteria.add(Restrictions.eq("stationId", stationId));
+		}
+		if (gasId != null) {
+			criteria.add(Restrictions.eq("gasId", gasId));
+		}
 		criteria.add(Restrictions.ge("readDate", dateFrom));
 		criteria.add(Restrictions.le("readDate", dateTo));
 		List<FirstDayAmount> ssslist = criteria.list();
@@ -521,6 +532,7 @@ public class CommonDaoImpl extends HibernateTemplate implements CommonDao {
 				Gas gss = (Gas) findEntityById(Gas.class, gas.getId());
 				gm.setStationName(st.getName());
 				gm.setGasName(gss.getName());
+				gm.setLitrPrice(gss.getPrice());
 				values.add(gm);
 				litrsSum = new BigDecimal(0);
 				litSum = 0d;

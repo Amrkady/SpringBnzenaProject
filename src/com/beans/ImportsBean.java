@@ -42,6 +42,7 @@ public class ImportsBean {
 	private GasStationSuppliers sssAdd = new GasStationSuppliers();
 	private Integer stId;
 	private List<Suppliers> supsList = new ArrayList<Suppliers>();
+	private List<Suppliers> supsSadadList = new ArrayList<Suppliers>();
 	private boolean show = false;
 	private boolean enableShow = false;
 	private Date dateFrom;
@@ -53,6 +54,8 @@ public class ImportsBean {
 	private BigDecimal listTotalSumDecimal;
 	private double listTotalLitrs;
 	private BigDecimal listTotalLitrsDecimal;
+	private BigDecimal firstAmountValue;
+	private Integer gasId;
 
 	@PostConstruct
 	public void init() {
@@ -63,6 +66,7 @@ public class ImportsBean {
 			sssList = accountsServiceImpl.loadsssList(stId);
 			gasList = departmentServiceImpl.loadGass(stId);
 			if (sssList != null && sssList.size() > 0) {
+				supsSadadList = departmentServiceImpl.loadSuppliers(stId);
 				listTotalSum = sssList.stream().filter(fdet -> fdet.getPrice() != 0.0d)
 						.mapToDouble(fdet -> fdet.getPrice()).sum();
 
@@ -82,11 +86,14 @@ public class ImportsBean {
 	public String loadListByDates() {
 		sssList = new ArrayList<GasStationSuppliers>();
 		if (supType == null || supType.isEmpty()) {
-			sssList = accountsServiceImpl.loadsssByDates(dateFrom, dateTo, supplierId, null, stId);
+			sssList = accountsServiceImpl.loadsssByDates(dateFrom, dateTo, supplierId, null, stId, gasId);
 		} else {
 
-			sssList = accountsServiceImpl.loadsssByDates(dateFrom, dateTo, supplierId, Integer.parseInt(supType), stId);
+			sssList = accountsServiceImpl.loadsssByDates(dateFrom, dateTo, supplierId, Integer.parseInt(supType), stId,
+					gasId);
 		}
+		listTotalLitrsDecimal = new BigDecimal(0);
+		listTotalSumDecimal = new BigDecimal(0);
 		if (sssList != null && sssList.size() > 0) {
 			listTotalSum = sssList.stream().filter(fdet -> fdet.getPrice() != 0.0d).mapToDouble(fdet -> fdet.getPrice())
 					.sum();
@@ -113,6 +120,8 @@ public class ImportsBean {
 				departmentServiceImpl.save(sssAdd);
 				MsgEntry.addInfoMessage(Utils.loadMessagesFromFile("success.operation"));
 				sssList = accountsServiceImpl.loadsssList(stId);
+				listTotalLitrsDecimal = new BigDecimal(0);
+				listTotalSumDecimal = new BigDecimal(0);
 				if (sssList != null && sssList.size() > 0) {
 					listTotalSum = sssList.stream().filter(fdet -> fdet.getPrice() != 0.0d)
 							.mapToDouble(fdet -> fdet.getPrice()).sum();
@@ -133,6 +142,23 @@ public class ImportsBean {
 			e.printStackTrace();
 		}
 		return "";
+	}
+
+	public String saveSadad() {
+		try {
+			if (sssAdd != null) {
+				sssAdd.setSadad(1);
+				sssAdd.setStationId(stId);
+				departmentServiceImpl.save(sssAdd);
+				MsgEntry.addInfoMessage(Utils.loadMessagesFromFile("success.operation"));
+				sssAdd = new GasStationSuppliers();
+			}
+		} catch (Exception e) {
+			MsgEntry.addErrorMessage(Utils.loadMessagesFromFile("error.operation"));
+			e.printStackTrace();
+		}
+		return "";
+
 	}
 
 	public void loadSuppliersSearch(AjaxBehaviorEvent event) {
@@ -178,6 +204,8 @@ public class ImportsBean {
 				departmentServiceImpl.delete(gs);
 				MsgEntry.addInfoMessage(Utils.loadMessagesFromFile("success.delete"));
 				sssList = accountsServiceImpl.loadsssList(stId);
+				listTotalLitrsDecimal = new BigDecimal(0);
+				listTotalSumDecimal = new BigDecimal(0);
 				if (sssList != null && sssList.size() > 0) {
 					listTotalSum = sssList.stream().filter(fdet -> fdet.getPrice() != 0.0d)
 							.mapToDouble(fdet -> fdet.getPrice()).sum();
@@ -206,6 +234,8 @@ public class ImportsBean {
 			departmentServiceImpl.update(gs);
 			MsgEntry.addInfoMessage(Utils.loadMessagesFromFile("success.update"));
 			sssList = accountsServiceImpl.loadsssList(stId);
+			listTotalLitrsDecimal = new BigDecimal(0);
+			listTotalSumDecimal = new BigDecimal(0);
 			if (sssList != null && sssList.size() > 0) {
 				listTotalSum = sssList.stream().filter(fdet -> fdet.getPrice() != 0.0d)
 						.mapToDouble(fdet -> fdet.getPrice()).sum();
@@ -259,7 +289,10 @@ public class ImportsBean {
 				parameters.put("dateTo", toDate);
 				parameters.put("dateF", fromD);
 				parameters.put("dateT", toD);
+				parameters.put("firstAmount", firstAmountValue);
+
 				parameters.put("supId", supplierId);
+
 				String headerPath = FacesContext.getCurrentInstance().getExternalContext()
 						.getRealPath("/reports/logoreport.png");
 				parameters.put("header", headerPath);
@@ -309,6 +342,11 @@ public class ImportsBean {
 					parameters.put("supId", -1);
 					parameters.put("stfromId", supplierId);
 				}
+			}
+			if (gasId != null && gasId > 0) {
+				parameters.put("gasId", gasId);
+			} else {
+				parameters.put("gasId", -1);
 			}
 			String headerPath = FacesContext.getCurrentInstance().getExternalContext()
 					.getRealPath("/reports/logoreport.png");
@@ -464,6 +502,30 @@ public class ImportsBean {
 
 	public void setListTotalLitrsDecimal(BigDecimal listTotalLitrsDecimal) {
 		this.listTotalLitrsDecimal = listTotalLitrsDecimal;
+	}
+
+	public BigDecimal getFirstAmountValue() {
+		return firstAmountValue;
+	}
+
+	public void setFirstAmountValue(BigDecimal firstAmountValue) {
+		this.firstAmountValue = firstAmountValue;
+	}
+
+	public List<Suppliers> getSupsSadadList() {
+		return supsSadadList;
+	}
+
+	public void setSupsSadadList(List<Suppliers> supsSadadList) {
+		this.supsSadadList = supsSadadList;
+	}
+
+	public Integer getGasId() {
+		return gasId;
+	}
+
+	public void setGasId(Integer gasId) {
+		this.gasId = gasId;
 	}
 
 }

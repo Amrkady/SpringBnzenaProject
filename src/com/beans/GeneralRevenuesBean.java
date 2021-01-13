@@ -63,6 +63,8 @@ public class GeneralRevenuesBean {
 	private BigDecimal listTotalSumDecimal;
 	private BigDecimal litersTotalSumDecimal;
 
+	private Integer gasIdFilter;
+
 	@PostConstruct
 	public void init() {
 		// gunsRevenuList = accountsServiceImpl.loadAllGunsRevenusList();
@@ -94,8 +96,10 @@ public class GeneralRevenuesBean {
 			stId = -1;
 		}
 		expensisList = accountsServiceImpl.loadExpensisByDates(dateFrom, dateTo, null, stId);
-		gunsRevenuList = accountsServiceImpl.loadRevsByDates(dateFrom, dateTo, null, stId);
-		sssList = accountsServiceImpl.loadsssByDates(dateFrom, dateTo, null, null, stId);
+		gunsRevenuList = accountsServiceImpl.loadRevsByDates(dateFrom, dateTo, gasIdFilter, stId);
+		sssList = accountsServiceImpl.loadsssByDates(dateFrom, dateTo, null, null, stId, gasIdFilter);
+		listTotalSumDecimal = new BigDecimal(0);
+		litersTotalSumDecimal = new BigDecimal(0);
 		if (gunsRevenuList != null && gunsRevenuList.size() > 0) {
 			listTotalSum = gunsRevenuList.stream().filter(fdet -> fdet.getTotalPrice() != 0.0d)
 					.mapToDouble(fdet -> fdet.getTotalPrice()).sum();
@@ -140,6 +144,7 @@ public class GeneralRevenuesBean {
 	public void loadGass(AjaxBehaviorEvent event) {
 		if (stId != null) {
 			gasList = departmentServiceImpl.loadGass(stId);
+			loadListByDates();
 		}
 
 	}
@@ -535,6 +540,14 @@ public class GeneralRevenuesBean {
 
 	public void setLitersTotalSumDecimal(BigDecimal litersTotalSumDecimal) {
 		this.litersTotalSumDecimal = litersTotalSumDecimal;
+	}
+
+	public Integer getGasIdFilter() {
+		return gasIdFilter;
+	}
+
+	public void setGasIdFilter(Integer gasIdFilter) {
+		this.gasIdFilter = gasIdFilter;
 	}
 
 }

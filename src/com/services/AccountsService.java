@@ -30,7 +30,7 @@ public interface AccountsService {
 	public List<ExpensisTypes> loadAllExpensisTypes(Integer general);
 
 	public List<GasStationSuppliers> loadsssByDates(Date dateFrom, Date dateTo, Integer supplierId, Integer suppType,
-			Integer stationId);
+			Integer stationId, Integer gasId);
 
 	public List<GunsRevenus> loadRevsByDates(Date dateFrom, Date dateTo, Integer gasId, Integer stationId);
 
@@ -61,5 +61,7 @@ public interface AccountsService {
 	public List<SndSrfQbd> findGeneralSndByType(Integer type, Integer stationId);
 
 	public List<FirstDayAmount> loadAllfRead(Integer stId);
+
+	public List<FirstDayAmount> findFirstAmountByDates(Date dateFrom, Date dateTo, Integer stationId, Integer gasId);
 	
 }

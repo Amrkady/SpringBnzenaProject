@@ -8,6 +8,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 
 import org.hibernate.annotations.Formula;
 import org.hibernate.annotations.GenericGenerator;
@@ -32,10 +33,9 @@ public class GeneralPay {
 	@Column(name = "station_id")
 	private Integer stationId;
 
-
 	@Column(name = "firstAmount")
 	private BigDecimal firstAmount;
-	
+
 	@Column(name = "litrPayAmount")
 	private BigDecimal litrPayAmount;
 
@@ -59,6 +59,9 @@ public class GeneralPay {
 
 	@Formula("(select g.name from gas g where g.id = gas_id)")
 	private String gasName;
+
+	@Transient
+	private double litrPrice;
 
 	public Integer getId() {
 		return id;
@@ -154,6 +157,14 @@ public class GeneralPay {
 
 	public void setDeficitExcess(BigDecimal deficitExcess) {
 		this.deficitExcess = deficitExcess;
+	}
+
+	public double getLitrPrice() {
+		return litrPrice;
+	}
+
+	public void setLitrPrice(double litrPrice) {
+		this.litrPrice = litrPrice;
 	}
 
 }

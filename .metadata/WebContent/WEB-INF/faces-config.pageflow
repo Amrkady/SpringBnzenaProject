@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<pageflow:Pageflow xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:pageflow="http://www.sybase.com/suade/pageflow" id="pf15838311149220" configfile="/engineeringOffice/WebContent/WEB-INF/faces-config.xml">
+<pageflow:Pageflow xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:pageflow="http://www.sybase.com/suade/pageflow" id="pf15838311149220" configfile="/banzenaMNGApp/WebContent/WEB-INF/faces-config.xml">
   <nodes xsi:type="pageflow:PFPage" name="*" x="122" y="2482" id="pf15842964817750" referenceLink="//@navigationRule.17/@fromViewId|" outlinks="pf15903320966470 pf15903320966471 pf15979238894690 pf15979238894691 pf15979238894692 pf15979238894693 pf15979238894694 pf15979238894695 pf15979238894696 pf15979238894697 pf15983581488140 pf15983581488141 pf15983581488142 pf15983581488143 pf15983581488144 pf16021089719210 pf16021089719211 pf16043460428700" path="*"/>
   <nodes xsi:type="pageflow:PFPage" name="pages/customers.xhtml" x="122" y="240" id="pf15842964817752" referenceLink="//@navigationRule.0/@navigationCase.0/@toViewId|" path="/pages/customers.xhtml"/>
   <nodes xsi:type="pageflow:PFPage" name="pages/bill_sand.xhtml" x="122" y="687" id="pf15843936209531" referenceLink="//@navigationRule.1/@navigationCase.0/@toViewId|" path="/pages/bill_sand.xhtml"/>
@@ -35,22 +35,22 @@
   <nodes xsi:type="pageflow:PFPage" name="pages/expensisTypeScreen.xhtml" id="pf16021089719232" referenceLink="//@navigationRule.15/@navigationCase.0/@toViewId|" inlinks="pf16021089719210" path="/pages/expensisTypeScreen.xhtml"/>
   <nodes xsi:type="pageflow:PFPage" name="pages/generalPays.xhtml" id="pf16021089719233" referenceLink="//@navigationRule.17/@navigationCase.0/@toViewId|" inlinks="pf16021089719211" path="/pages/generalPays.xhtml"/>
   <nodes xsi:type="pageflow:PFPage" name="pages/financialYear.xhtml" id="pf16043460428751" referenceLink="//@navigationRule.17/@navigationCase.0/@toViewId|" inlinks="pf16043460428700" path="/pages/financialYear.xhtml"/>
-  <links id="pf15903320966470" target="pf15903320966473" source="pf15842964817750" outcome="login" redirect="true"/>
-  <links id="pf15903320966471" target="pf15903320966474" source="pf15842964817750" outcome="success" redirect="true"/>
-  <links id="pf15979238894690" target="pf15979238894719" source="pf15842964817750" outcome="gasScreen" redirect="true"/>
-  <links id="pf15979238894691" target="pf159792388947110" source="pf15842964817750" outcome="station" redirect="true"/>
-  <links id="pf15979238894692" target="pf159792388947111" source="pf15842964817750" outcome="gunScreen" redirect="true"/>
-  <links id="pf15979238894693" target="pf159792388947112" source="pf15842964817750" outcome="supplier" redirect="true"/>
-  <links id="pf15979238894694" target="pf159792388947113" source="pf15842964817750" outcome="shops" redirect="true"/>
-  <links id="pf15979238894695" target="pf159792388947114" source="pf15842964817750" outcome="imports" redirect="true"/>
-  <links id="pf15979238894696" target="pf15979238894718" source="pf15842964817750" outcome="users" redirect="true"/>
-  <links id="pf15979238894697" target="pf159792388947115" source="pf15842964817750" outcome="home" redirect="true"/>
-  <links id="pf15983581488140" target="pf15983581488155" source="pf15842964817750" outcome="rents" redirect="true"/>
-  <links id="pf15983581488141" target="pf15983581488156" source="pf15842964817750" outcome="exposis" redirect="true"/>
-  <links id="pf15983581488142" target="pf15983581488157" source="pf15842964817750" outcome="revns" redirect="true"/>
-  <links id="pf15983581488143" target="pf15983581488158" source="pf15842964817750" outcome="generalrevns" redirect="true"/>
-  <links id="pf15983581488144" target="pf15983581488159" source="pf15842964817750" outcome="generalexposis" redirect="true"/>
-  <links id="pf16021089719210" target="pf16021089719232" source="pf15842964817750" outcome="expensisType" redirect="true"/>
-  <links id="pf16021089719211" target="pf16021089719233" source="pf15842964817750" outcome="generalPays" redirect="true"/>
-  <links id="pf16043460428700" target="pf16043460428751" source="pf15842964817750" outcome="financialYear" redirect="true"/>
+  <links id="pf15903320966470" target="pf15903320966473" source="pf15842964817750"/>
+  <links id="pf15903320966471" target="pf15903320966474" source="pf15842964817750"/>
+  <links id="pf15979238894690" target="pf15979238894719" source="pf15842964817750"/>
+  <links id="pf15979238894691" target="pf159792388947110" source="pf15842964817750"/>
+  <links id="pf15979238894692" target="pf159792388947111" source="pf15842964817750"/>
+  <links id="pf15979238894693" target="pf159792388947112" source="pf15842964817750"/>
+  <links id="pf15979238894694" target="pf159792388947113" source="pf15842964817750"/>
+  <links id="pf15979238894695" target="pf159792388947114" source="pf15842964817750"/>
+  <links id="pf15979238894696" target="pf15979238894718" source="pf15842964817750"/>
+  <links id="pf15979238894697" target="pf159792388947115" source="pf15842964817750"/>
+  <links id="pf15983581488140" target="pf15983581488155" source="pf15842964817750"/>
+  <links id="pf15983581488141" target="pf15983581488156" source="pf15842964817750"/>
+  <links id="pf15983581488142" target="pf15983581488157" source="pf15842964817750"/>
+  <links id="pf15983581488143" target="pf15983581488158" source="pf15842964817750"/>
+  <links id="pf15983581488144" target="pf15983581488159" source="pf15842964817750"/>
+  <links id="pf16021089719210" target="pf16021089719232" source="pf15842964817750"/>
+  <links id="pf16021089719211" target="pf16021089719233" source="pf15842964817750"/>
+  <links id="pf16043460428700" target="pf16043460428751" source="pf15842964817750"/>
 </pageflow:Pageflow>

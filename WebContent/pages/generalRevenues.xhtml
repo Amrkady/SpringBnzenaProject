@@ -40,36 +40,36 @@
 						<div class="ui-g-1">
 							<p:outputLabel value="المحطة" />
 						</div>
-						<div class="ui-g-2">
-							<p:selectOneMenu style="width:100%" id="lt2"
+						<div class="ui-g-3">
+							<p:selectOneMenu style="width:70%" id="lt2"
 								value="#{generalRevenuesBean.stId}">
 								<f:selectItem itemLabel=" اختر  المحطة "
 									noSelectionOption="true" />
 								<f:selectItems value="#{generalRevenuesBean.stationsList}"
 									var="st" itemLabel="#{st.name}" itemValue="#{st.id}" />
-								<!-- 								<p:ajax process="@this" update="form:gs" -->
-								<!-- 									listener="#{generalRevenuesBean.loadGass}" /> -->
+								<p:ajax process="@this" update="myTable png1 gs"
+									listener="#{generalRevenuesBean.loadGass}" />
 							</p:selectOneMenu>
 						</div>
-						<!-- 						<p:spacer height="10" width="50"></p:spacer> -->
-						<!-- 						<div class="ui-g-1"> -->
-						<!-- 							<p:outputLabel value="نوع الوقود" /> -->
-						<!-- 						</div> -->
-						<!-- 						<div class="ui-g-2"> -->
-						<!-- 							<p:selectOneMenu style="width:70%" id="gs" -->
-						<!-- 								value="#{generalRevenuesBean.gasId}"> -->
-						<!-- 								<f:selectItem itemLabel="اختر نوع الوقود" -->
-						<!-- 									noSelectionOption="true" /> -->
-						<!-- 								<f:selectItems value="#{generalRevenuesBean.gasList}" var="gs" -->
-						<!-- 									itemLabel="#{gs.name}" itemValue="#{gs.id}" /> -->
-						<!-- 							</p:selectOneMenu> -->
-						<!-- 						</div> -->
-						<!-- 					</div> -->
-						<!-- 					<div class="ui-g"> -->
+						<div class="ui-g-1">
+							<h:outputLabel value="نوع الوقود " />
+						</div>
+						<div class="ui-g-3">
+							<p:selectOneMenu style="width:70%" id="gs"
+								value="#{generalRevenuesBean.gasIdFilter}">
+								<f:selectItem itemLabel="الكل" noSelectionOption="true" />
+								<f:selectItems value="#{generalRevenuesBean.gasList}" var="gs"
+									itemLabel="#{gs.name}" itemValue="#{gs.id}" />
+								<p:ajax process="@this" update="myTable png1"
+									listener="#{generalRevenuesBean.loadListByDates}" />
+							</p:selectOneMenu>
+						</div>
+					</div>
+					<div class="ui-g">
 						<div class="ui-g-1">
 							<p:outputLabel value="من تاريخ"></p:outputLabel>
 						</div>
-						<div class="ui-g-2">
+						<div class="ui-g-3">
 							<p:calendar style="width:100%" id="dtfrom" pattern="yyyy-MM-dd"
 								value="#{generalRevenuesBean.dateFrom}">
 								<!-- 								<p:ajax process="@form" event="blur" immediate="true" delay="100" update="vcs:cnt,vcs:calc"  -->
@@ -80,7 +80,7 @@
 						<div class="ui-g-1">
 							<p:outputLabel value="الي تاريخ"></p:outputLabel>
 						</div>
-						<div class="ui-g-2">
+						<div class="ui-g-3">
 							<p:calendar style="width:100%" id="dtto" pattern="yyyy-MM-dd"
 								value="#{generalRevenuesBean.dateTo}">
 							</p:calendar>

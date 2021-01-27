@@ -218,7 +218,7 @@ public class PayImportsBean {
 			mm.setProfitProp(
 					(mm.getRevAmount() + mm.getSecondAmount() - mm.getFirstAmount() - mm.getExpAmount()));
 
-			mm.setProfitAfterLost(mm.getProfitProp() + mm.getLostGas());
+			mm.setProfitAfterLost(mm.getProfitProp() + mm.getLostGas() - stat.getEqamaCost());
 
 			mouznaModelList.add(mm);
 
@@ -238,6 +238,9 @@ public class PayImportsBean {
 			String toDate = sdf.format(dateTo);
 			parameters.put("dateFrom", fromDate);
 			parameters.put("dateTo", toDate);
+			expensisList = accountsServiceImpl.loadExpensisByDates(dateFrom, dateTo, null, -1);
+			eqamaPrice = eqamaPrice + expensisList.stream().filter(fdet -> fdet.getStationId() == null)
+					.mapToDouble(fdet -> fdet.getExpensisQuantity()).sum();
 			parameters.put("eqamaPrice", eqamaPrice);
 			parameters.put("header", headerPath);
 			Utils.printPdfReportFromListDataSource(reportName, parameters, mouznaModelList);

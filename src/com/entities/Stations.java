@@ -7,6 +7,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 
 import org.hibernate.annotations.GenericGenerator;
 
@@ -55,6 +56,17 @@ public class Stations {
 
 	@Column(name = "rent_end_date")
 	private Date rentEndDate;
+
+	@Transient
+	private double eqamaCost;
+
+	public double getEqamaCost() {
+		return eqamaCost;
+	}
+
+	public void setEqamaCost(double eqamaCost) {
+		this.eqamaCost = eqamaCost;
+	}
 
 	public Integer getId() {
 		return id;

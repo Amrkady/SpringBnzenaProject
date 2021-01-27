@@ -34,7 +34,7 @@
 	<variable name="total6" class="java.math.BigDecimal" calculation="Sum">
 		<variableExpression><![CDATA[$F{profitAfterLost}]]></variableExpression>
 	</variable>
-	<variable name="afterqama" class="java.math.BigDecimal">
+	<variable name="afterqama" class="java.lang.Double">
 		<variableExpression><![CDATA[$V{total6}.doubleValue() - $P{eqamaPrice}]]></variableExpression>
 	</variable>
 	<background>
@@ -270,9 +270,9 @@
 		</band>
 	</pageFooter>
 	<summary>
-		<band height="50">
+		<band height="41">
 			<staticText>
-				<reportElement x="710" y="16" width="66" height="18" forecolor="#0000FF" uuid="fcbc90f7-350c-43cc-bce9-dc537032d7cf"/>
+				<reportElement x="677" y="1" width="99" height="20" forecolor="#0000FF" uuid="fcbc90f7-350c-43cc-bce9-dc537032d7cf"/>
 				<box>
 					<topPen lineWidth="1.0" lineColor="#000000"/>
 					<leftPen lineWidth="1.0" lineColor="#000000"/>
@@ -285,7 +285,7 @@
 				<text><![CDATA[الاجمالى]]></text>
 			</staticText>
 			<textField pattern="#########.##">
-				<reportElement x="571" y="15" width="139" height="20" uuid="83fe19e3-cf5c-4442-a895-0ed4a5b3ecef"/>
+				<reportElement x="560" y="1" width="117" height="20" uuid="83fe19e3-cf5c-4442-a895-0ed4a5b3ecef"/>
 				<box>
 					<topPen lineWidth="1.0"/>
 					<leftPen lineWidth="1.0"/>
@@ -298,7 +298,7 @@
 				<textFieldExpression><![CDATA[$V{total1}.setScale( 3, RoundingMode.HALF_UP )]]></textFieldExpression>
 			</textField>
 			<textField pattern="#########.##">
-				<reportElement x="467" y="15" width="104" height="20" uuid="81573bdc-8305-4e06-a9da-88aef83bd318"/>
+				<reportElement x="467" y="1" width="93" height="20" uuid="81573bdc-8305-4e06-a9da-88aef83bd318"/>
 				<box>
 					<topPen lineWidth="1.0"/>
 					<leftPen lineWidth="1.0"/>
@@ -311,7 +311,7 @@
 				<textFieldExpression><![CDATA[$V{total2}.setScale( 3, RoundingMode.HALF_UP )]]></textFieldExpression>
 			</textField>
 			<textField pattern="#########.##" isBlankWhenNull="true">
-				<reportElement x="362" y="15" width="105" height="20" uuid="9192dff8-eb96-460e-ba81-f5ddf9b8de18"/>
+				<reportElement x="362" y="1" width="105" height="20" uuid="9192dff8-eb96-460e-ba81-f5ddf9b8de18"/>
 				<box>
 					<topPen lineWidth="1.0"/>
 					<leftPen lineWidth="1.0"/>
@@ -324,7 +324,7 @@
 				<textFieldExpression><![CDATA[$V{total3}.setScale( 3, RoundingMode.HALF_UP )]]></textFieldExpression>
 			</textField>
 			<textField pattern="#########.##" isBlankWhenNull="true">
-				<reportElement x="252" y="15" width="110" height="20" uuid="fc317da6-d2ff-4430-af96-aa938f95d53a"/>
+				<reportElement x="252" y="1" width="110" height="20" uuid="fc317da6-d2ff-4430-af96-aa938f95d53a"/>
 				<box>
 					<topPen lineWidth="1.0"/>
 					<leftPen lineWidth="1.0"/>
@@ -337,7 +337,7 @@
 				<textFieldExpression><![CDATA[$V{total4}.setScale( 3, RoundingMode.HALF_UP )]]></textFieldExpression>
 			</textField>
 			<textField pattern="#########.##" isBlankWhenNull="true">
-				<reportElement x="145" y="15" width="107" height="20" uuid="3aa6f74f-304b-4796-addb-5ae4ed47c047"/>
+				<reportElement x="145" y="1" width="107" height="20" uuid="3aa6f74f-304b-4796-addb-5ae4ed47c047"/>
 				<box>
 					<topPen lineWidth="1.0"/>
 					<leftPen lineWidth="1.0"/>
@@ -350,7 +350,7 @@
 				<textFieldExpression><![CDATA[$V{total5}.setScale( 3, RoundingMode.HALF_UP )]]></textFieldExpression>
 			</textField>
 			<textField pattern="#########.##" isBlankWhenNull="true">
-				<reportElement x="30" y="16" width="115" height="19" uuid="a69c666a-f824-47ac-b5c7-271b34341c9e"/>
+				<reportElement x="30" y="1" width="115" height="20" uuid="a69c666a-f824-47ac-b5c7-271b34341c9e"/>
 				<box>
 					<topPen lineWidth="1.0"/>
 					<leftPen lineWidth="1.0"/>
@@ -360,7 +360,7 @@
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font fontName="Arial" size="12"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$V{afterqama}.setScale( 3, RoundingMode.HALF_UP )]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$V{afterqama}]]></textFieldExpression>
 			</textField>
 		</band>
 	</summary>
